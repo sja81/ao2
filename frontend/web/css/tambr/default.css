@@ -1,0 +1,53 @@
+/*******************************************************
+ *
+ * IP Styles
+ *
+ *******************************************************/
+
+/* Adjust minimum height of page area */ 
+#content-sidebar, #content-full{ min-height: 500px; margin-top: 20px;}
+
+/** Adjust width of content columns **/
+/*#content-sidebar #content{ width: 77%; }*/
+#content-sidebar #content{ width: 74%; }
+#content-full #content { width: 100%; }
+
+/* Adjust width of sidebar */
+.sidebar {
+	width: 23%;
+	margin-top: 3%;
+}
+
+/* Adjust line height of page elements */
+#content h4, aside h4,
+#content p, aside p,
+#content blockquote, aside blockquote,
+#content ul, aside ul,
+#content fieldset, aside fieldset,
+#content form, aside form,
+#content ol, aside ol,
+#content dl, aside dl,
+#content dir, aside dir,
+#content menu, aside menu { line-height:1.7 }
+#content-sidebar #content a{
+	font-weight: 500;
+    color: #133045;
+}
+
+/* Style post/page main headings (h1) */
+#content .entry-title { 
+
+}
+
+/* Style category/archive/etc main headings (h1) */
+#content .archive-title { 
+
+}
+
+/* Styles for category/archive/search/etc subheadings (h2) */
+#content .archive-subtitle { 
+
+}
+.entry-content a{
+	color: #133045;
+}

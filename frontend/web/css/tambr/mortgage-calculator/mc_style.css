@@ -1,0 +1,134 @@
+.aios-mortgage-calculator-standalone p {
+    color: #898989;
+    font-size: inherit;
+}
+
+.aios-mortgage-calculator-standalone-form-title {
+    color: #636363;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+.aios-mortgage-calculator-standalone-form-reminder {
+    font-size: inherit;
+    font-weight: 500;
+    color: #6d6d6d;
+}
+
+.aios-mortgage-calculator-standalone-mort-row {
+    margin: 0 -1%;
+}
+
+.aios-mortgage-calculator-standalone-mort-row::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+
+
+.aios-mortgage-calculator-standalone label {
+    margin-bottom: 8px;
+}
+
+.aios-mortgage-calculator-standalone label, 
+.aios-mortgage-calculator-standalone input {
+    display: block;
+    font-size: inherit;
+    color: #6d6d6d;
+    font-weight: 400;
+}
+
+.aios-mortgage-calculator-standalone input{
+  width: 100%;
+    height: 2.4em;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.aios-mortgage-calculator-standalone-full-input{
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  padding: 0 1%; 
+  margin-bottom: 1em;
+}
+
+.aios-mortgage-calculator-standalone-half-input{
+	box-sizing: border-box;
+	float: left;
+	width: 50%;
+	padding: 0 1%; 
+	margin-bottom: 1em;
+}
+
+.aios-mortgage-calculator-standalone .half-input span{
+  font-size: 13px;
+    color: #6d6d6d;
+    font-weight: 400;
+}
+
+.aios-mortgage-calculator-standalone-mortgage-buttons button {
+    box-sizing: border-box;
+    width: 49%;
+    float: left;
+    -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 0;
+  border-radius: 3px;
+  height: 28px;
+  color: #fff;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.aios-mortgage-calculator-standalone-mortgage-buttons button:hover {
+    background: #595959;
+}
+
+.aios-mortgage-calculator-standalone-reset {
+    margin-right: 2%;
+    background: #c2c2c2;
+}
+.aios-mortgage-calculator-standalone-calculate{
+  background: #707070;
+}
+
+.aios-mortgage-calculator-standalone-calculation-result {
+    margin: 30px 0;
+	font-weight:bold;
+}
+
+.aios-mortgage-calculator-standalone-calculation-result input[disabled=""] {
+    background: #e1e1e1;
+    border: 1px solid #cacaca;
+}
+
+.aios-mortgage-calculator-standalone-disclaimer p {
+    font-size: inherit;
+}
+
+.aios-mortgage-calculator-standalone-error-tooltip {
+	color:red;
+	font-weight:bold;
+}
+
+.aios-mortgage-calculator-standalone input.aios-mortgage-calculator-standalone-error {
+	border-color:red;
+}
+
+@media only screen and (max-width: 767px) {
+  .aios-mortgage-calculator-standalone .aios-mortgage-calculator-standalone-half-input{
+      width: 100%;
+	  float:none;
+  }
+
+}

@@ -1,0 +1,1 @@
+V prípade doby určitej sa Zmluva uzatvára na dobu {{mesiace}} mesiacov, slovom:  {{mesiace_slovom}}  počnúc dňom uzatvorenia tejto Zmluvy.

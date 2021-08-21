@@ -1,0 +1,30 @@
+<?php
+namespace common\models;
+
+use Yii;
+
+final class PropertyCategories
+{
+    /**
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getAllActiveCategories()
+    {
+        return Yii::$app->db->createCommand("select id, nazov from config_objekty_kategorie where status=1")->queryAll();
+    }
+
+    /**
+     * @param int $id poradove cislo hlavnej kategori
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getAllActivSubCategories(int $id)
+    {
+        return Yii::$app
+            ->db
+            ->createCommand("select id, nazov from config_objekty_pod_kategorie where status=1 and kategoria_id=:id")
+            ->bindValue(':id', $id)
+            ->queryAll() ?? [];
+    }
+}

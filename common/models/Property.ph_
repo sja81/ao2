@@ -1,0 +1,74 @@
+<?php
+namespace common\models;
+
+use Yii;
+use common\entities\PropertyEntity;
+
+final class Property
+{
+
+    /**
+     * @param array $params
+     * @return mixed
+     * @throws \Exception
+     */
+    public function saveNewProperty(Array $params)
+    {
+        $data = $params['property'];
+
+        $entity = new PropertyEntity();
+        $entity->town = $data['KU_obec_nazov'];
+        $entity->country = $data['country'];
+        $entity->region = $data['region'];
+        $entity->zip = $data['zip'];
+        $entity->district = $data['KU_okres_nazov'];
+        $entity->created_at = (new \DateTime('now'))->format('Y-m-d H:i:s');
+        $entity->created_by = Yii::$app->user->identity->id;
+        $entity->ulica = $data['KU_ulica'];
+        $entity->list_vlast = $data['list_vlast'];
+        $entity->supis_cis = $data['supis_cis'];
+        $entity->orient_cisl = $data['orient_cisl'];
+        $entity->cislo_byt = $data['cislo_byt'];
+        $entity->parc_cislo = $data['parc_cislo'];
+        $entity->druh_nehnut = $data['druh_nehnut'];
+        $entity->kat_uzemie = $data['KU_uzemie_nazov'];
+        $entity->kat_uzemie_kod = $data['KU_uzemie_kod'];
+        $entity->obec_kod = $data['KU_obec_kod'];
+        $entity->okres_kod = $data['KU_okres_kod'];
+
+        $entity->save();
+
+        if(!$entity) {
+            throw new \Exception('Nehnutelnost nebol ulozeny!!!',404);
+        }
+
+        return $entity->id;
+    }
+
+    /**
+     * @param int $id
+     * @return array|false
+     * @throws \yii\db\Exception
+     */
+    public function getPropertyByContractId(int $id)
+    {
+        $sql = "
+            select 
+              p.* 
+            from 
+              property p
+            join 
+              contract_property cp on cp.property_id=p.id 
+            where
+              cp.contract_id = :id
+        ";
+
+        $property = Yii::$app->db->createCommand($sql)->bindValue(':id',$id)->queryOne();
+
+        if(!$property) {
+            throw new \Exception("Zmluva neobsahuje nehnutelnost",404);
+        }
+
+        return $property;
+    }
+}

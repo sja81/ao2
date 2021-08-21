@@ -1,0 +1,1 @@
+<li>kúpna cena nehnuteľnosti {{suma}},- &euro; (slovom: {{suma_slovom}},- &euro;)</li>

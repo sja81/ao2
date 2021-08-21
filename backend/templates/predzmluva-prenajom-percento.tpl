@@ -1,0 +1,1 @@
+<li> {{percento}} % z nájmu nehnuteľnosti</li>

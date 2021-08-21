@@ -1,0 +1,390 @@
+#floating-side-btn{
+	width: 380px;
+	top: 50%;
+	left: -171px;
+	transform: translateY(-50%) rotate(-90deg);
+	font-size: 0;
+}
+	.sorter-side{
+		background-color: rgba(150,150,150,0.83);
+		width: 190px;
+		font-size: 20px;
+		line-height: 38px;
+		transition: background-color 0.2s linear;
+	}
+		.sorter-side.active,
+		.sorter-side:hover{
+			background-color: rgba(192,169,104,0.83);
+		}
+
+.listing-sorter{
+	font-size: 36px;
+}
+	.sorter-price-desc{
+		margin-left: -10px;
+	}
+
+.listing-search{
+
+}
+	#listing-search{
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		border-radius: 0 !important;
+
+		display: block;
+		background: transparent;
+		border: none;
+		border-bottom: solid 1px #7d7d7d;
+		font-size: 22px;
+		padding: 7px 40px 7px 0 !important;
+		color: #bdbdbd;
+		min-width: 300px;
+		text-transform: uppercase !important;
+		transition: color 0.3s linear;
+	}
+		#listing-search:focus{
+			color: #000;
+		}
+			#listing-search-button{
+				position: absolute;
+				top: 6px;
+				right: 8px;
+				padding: 0 !important;
+				border: 0 !important;
+				outline: 0 !important;
+				background: transparent;
+				font-size: 23px;
+				color: #003466;
+			}
+
+.expro-container:after{
+	content: '';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.expro-slider{margin-bottom: 4px;}
+.expro-slider a.slick-arrow{
+	background-color: rgba(2,11,35,0.6) !important;
+	color: #FFF !important;
+	width: 60px;
+	height: 137px;
+	text-align: center;
+	line-height: 137px;
+	opacity: 0;
+	transition: opacity 0.2s linear;
+}
+	.expro-slider:hover a.slick-arrow{
+		opacity: 1;
+	}
+	.expro-slider a.slick-prev{left: 0;}
+		.expro-slider a.slick-prev:before{content: "\b0001";}
+	.expro-slider a.slick-next{right: 0;}
+		.expro-slider a.slick-next:before{content: "\b0002";}
+	.expro-slide{
+		position: relative;
+		cursor: pointer;
+		font-size: 16px;
+		line-height: 2.2em;
+	}
+		.expro-slide:after{
+			content: '';
+			display: inline-block;
+			background-color: rgba(0,0,0,0.34);
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 1;
+		}
+		.expro-slider__content{
+			display: block;
+			position: absolute;
+			right: 50px;
+			bottom: 30px;
+			left: 50px;
+			border-left: solid 3px #c49144;
+			border-radius: 0 !important;
+			padding-left: 30px;
+			z-index: 2;
+
+			color: #FFF;
+			text-transform: uppercase;
+			transition: bottom 0.2s linear;
+		}
+			.expro-slider__content--address{
+				font-size: 1.563em;
+			}
+				.expro-slider__content--street,
+				.expro-slider__content--city{
+					display: block;
+				}
+			.expro-slider__content--price{
+				font-size: 2.438em;
+			}
+				.expro-slider__content--listed{
+					font-weight: 400;
+					font-size: 16px;
+				}
+		.expro-slider__overlay{
+			display: block;
+			/*background-color: rgba(3,34,65,0.93);*/
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 3;
+			overflow: hidden;
+
+			transition: opacity 0.3s linear;
+			opacity: 0;
+		}
+			.expro-slide:hover .expro-slider__overlay{
+				opacity: 1;
+			}
+			.expro-slide:hover .expro-slider__content{
+				bottom: 100px;
+			}
+			.expro-slider__overlay--logo{
+				display: block;
+				font-size: 20vw;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%,-50%) scale(0.9);
+				z-index: 0;
+				opacity: 0.24;
+
+				transition: transform 0.3s linear;
+			}
+				.expro-slide:hover .expro-slider__overlay--logo{
+					transform: translate(-50%,-50%) scale(1);
+				}
+				.column-set-two .expro-slider__overlay--logo{
+					font-size: 30vw;
+				}
+			.expro-slider__overlay--details{
+				font-size: 1.268em;
+			}
+				.expro-slider__overlay--divider{
+					width: 1px;
+					height: 34px;
+				}
+			.expro-slide .secondary-button,
+			.expro-expandable-slide .secondary-button{
+				background-color: #c49144;
+				border-color: #c49144;
+				color: #001b52;
+			}
+				.expro-expandable-slide .secondary-button{
+					background-color: transparent !important;
+					border-color: #FFF !important;
+					color: #FFF !important;
+				}
+				.expro-expandable-slide .secondary-button:hover{
+					border-color: #c49144 !important;
+					color: #FFF !important;
+				}
+				.expro-slider__overlay .secondary-button,
+				.expro-expandable-slide .secondary-button{
+					position: absolute;
+					left: 50px;
+					bottom: 30px;
+					z-index: 1;
+				}
+		.expro-link{}
+	.expro-expandable-slide{
+		display: block;
+		position: relative;
+		color: #FFF;
+		overflow: hidden;
+	}
+		.expro-expandable-slide:after{
+			content: '';
+			display: inline-block;
+			background-color: rgba(0,0,0,0.34);
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 0;
+		}
+		.expro-expandable-slide canvas{
+			display: block;
+			width: 100%;
+			margin-bottom: 4px;
+		}
+		.expro-expandable-slide .container{
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 1;
+		}
+			.expro-expandable-slide__container{
+				position: absolute;
+				top: 50px;
+				left: 15px;
+				padding-left: 40px;
+				border-left: solid 4px #c49144;
+			}
+				.expro-expandable-slide__address{
+					font-size: 2.592em;
+					line-height: 1em;
+					text-transform: uppercase;
+				}
+				.expro-expandable-slide__price{
+					font-size: 4.079em;
+				}
+			.expro-expandable-slide__close{
+				position: absolute;
+				top: 50px;
+				right: 15px;
+				font-size: 83px;
+				cursor: pointer;
+				transform: scale(0.8);
+				transition: all 0.2s linear;
+			}
+				.expro-expandable-slide__close:hover{
+					transform: scale(1);
+					color: #c49144;
+				}
+			.expro-expandable-slide .secondary-button{
+				position: absolute;
+				right: 15px;
+				bottom: 50px;
+				z-index: 1;
+			}
+
+.secondary-back-to-listings{
+	line-height: 30px;
+	padding-top: 17px;
+	padding-bottom: 17px;
+	padding-left: 15px;
+	padding-right: 15px;
+	max-width: 525px;
+	height: auto;
+}
+
+@media( min-width: 992px ){
+	.expro-slide{
+		width: 33.333333%;
+	}
+	.column-set-two .expro-slide{
+		width: 50% !important;
+	}
+}
+@media( max-width: 991px ){
+	.expro-slider__overlay--logo,
+	.column-set-two .expro-slider__overlay--logo{
+		font-size: 60vw;
+	}
+    .listing-grid .expro-slide {
+		float: none !important;
+		margin: auto;
+		max-width: 532px;
+    }
+}
+@media(max-width: 600px) {
+	.expro-expandable-slide{}
+		.expro-expandable-slide canvas{
+			height: 500px !important;
+		}
+		.expro-expandable-slide__container{
+			top: 15px;
+			right: 60px;
+			padding-left: 15px;
+			font-size: 13px;
+		}
+		.expro-expandable-slide__close{
+			top: 15px;
+			font-size: 40px;
+			transform: scale(1);
+		}
+}
+
+
+.listing-grid .expro-slide{
+	width: 100%;
+}
+	.listing-grid .expro-slide:before{
+		content: '';
+		display: inline-block;
+		background-color: #FFF;
+		position: absolute;
+		bottom: 0;
+		z-index: 4;
+	}
+
+@media( min-width: 992px ){
+	.listing-grid .expro-slide{
+		float: left;
+		width: 33.333333%;
+	}
+		.listing-grid .expro-slide:before{
+			width: 4px;
+			height: 100%;
+			top: 0;
+			right: 100%;
+		}
+	.listing-grid .expro-container,
+	.listing-grid .expro-expandable-slide{
+		margin-top: 4px;
+	}
+	.listing-grid .expro-expandable-slide canvas{
+		margin-bottom: 0;
+	}
+}
+@media( max-width: 991px ){
+	.listing-grid .expro-slide:before{
+		height: 4px;
+		width: 100%;
+		left: 0;
+	}
+		.expro-slider a.slick-arrow{
+			display: none !important;
+		}
+	#get-in-touch{
+		margin-top: 50px !important;
+	}
+	.listing-cta{
+		text-align: center;
+	}
+}
+@media(max-width: 500px){
+	.expro-slider__overlay--details {
+		display: none !important;
+	}
+
+	.listing-search,
+	#listing-search{
+		width: 100%;
+	}
+
+	.secondary-back-to-listings{
+		margin-left: 15px !important;
+		margin-right: 15px !important;
+		width: auto !important;
+	}
+}
+
+@media(max-width: 360px){
+    
+    .listing__similar .expro-slide:hover, .listing-grid .expro-slide:hover {
+        line-height: 26px;
+    }
+    
+    .listing__similar .expro-slide:hover .expro-slider__content--address, .listing-grid .expro-slide:hover .expro-slider__content--address {
+        font-size: 20px;
+    }
+    
+    .listing__similar .expro-slide:hover .expro-slider__content--price, .listing-grid .expro-slide:hover .expro-slider__content--price {
+        font-size: 24px;
+    }
+}

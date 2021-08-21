@@ -1,0 +1,526 @@
+$(document).ready(function(){
+    if($('.fa-polozka').length < 2) {
+        $('.fa-polozka .odstranit-polozku').hide();
+    }
+});
+
+var counter = parseInt($('.fa-polozka').length,10)-1;
+var dphPolozky = [];
+var sdphPolozky = [];
+var prenesenaDan = '0';
+
+// zmena ci je dodavatel platcom DPH alebo nie je
+$('#dodavatel-vatpayer').on('change',function(){
+    if ($(this).val() === '1') {
+        $('.zalFaSkryt').show();
+        $('.prenesenaDan').show();
+    } else {
+        $('.zalFaSkryt').hide();
+        $('.prenesenaDan').hide();
+    }
+    $('#zalohovafa').trigger('change');
+    spocitaj();
+});
+
+$('#inv-polozky').sortable();
+
+$('#faktura-mena').on('change',function(){
+    $('.money').each(function(){
+        $(this).html($('#faktura-mena option:selected').val());
+    });
+});
+
+$('#add-item').on('click',function(e){
+    e.preventDefault();
+
+    if ($('.fa-polozka').length < 2) {
+        $('.fa-polozka .odstranit-polozku').show();
+    }
+    ++counter;
+    var el = $('#row-0');
+    el.clone().attr('id','row-'+counter).insertAfter(el).appendTo('#inv-polozky');
+    $('#row-'+counter).find('select').attr('id','popis-'+counter);
+    $('#row-'+counter).find('#mj-0').attr('id','mj-'+counter);
+    $('#row-'+counter).find('#mnozstvo-0').attr('id','mnozstvo-'+counter);
+    $('#row-'+counter).find('#dmnozstvo-0').attr('id','dmnozstvo-'+counter);
+    $('#row-'+counter).find('#dmnozstvo-'+counter).html('');
+    $('#row-'+counter).find('#dmnozstvo-'+counter).html('Spolu = ');
+    $('#row-'+counter).find('#cena-0').attr('id','cena-'+counter);
+    $('#row-'+counter).find('#dph-0').attr('id','dph-'+counter);
+    $('#row-'+counter).find('#cena2-0').attr('id','cena2-'+counter);
+    $('#row-'+counter).find('#totalcena-0').attr('id','totalcena-'+counter);
+    $('#row-'+counter).find('#dtotalcena-0').attr('id','dtotalcena-'+counter);
+    $('#row-'+counter).find('#dtotalcena-'+counter ).html('');
+    $('#row-'+counter).find('#datum-realizacie-0').attr('id','datum-realizacie-'+counter);
+    $('#row-'+counter).find('#popis-text-0').attr('id','popis-text-'+counter);
+    $('#row-'+counter).find('#popis-text-'+counter).empty();
+    $('#row-'+counter).find('#sdph-0').attr('id','sdph-'+counter);
+    $('#row-'+counter).find('#totaldph-0').attr('id','totaldph-'+counter);
+    $('#row-'+counter).find('#dtotaldph-0').attr('id','dtotaldph-'+counter);
+    $('#row-'+counter).find('#totalcena2-0').attr('id','totalcena2-'+counter);
+    $('#row-'+counter).find('#dtotalcena2-0').attr('id','dtotalcena2-'+counter);
+
+    $('#row-'+counter).find('#mnozstvo-'  + counter).val('1');
+    $('#row-'+counter).find('#totalcena-'  + counter).val('');
+    $('#row-'+counter).find('#sdph-'  + counter).val(0);
+    $('#row-'+counter).find('#cena-'  + counter ).val('');
+    $('#row-'+counter).find('#totaldph-'  + counter).val('');
+    $('#row-'+counter).find('#cena2-'  + counter ).val('');
+    $('#row-'+counter).find('#totalcena2-'  + counter).val('');
+    $('#row-'+counter).find('#dtotaldph-'+counter ).html('');
+    $('#row-'+counter).find('#dtotalcena2-'+counter).html('');
+    $('#row-'+counter).find('#popis-'+counter).attr('name','Polozky['+counter+'][polozka_id]');
+    $('#row-'+counter).find('#datum-realizacie-'+counter).attr('name','Polozky['+counter+'][datum_realizacie]');
+    $('#row-'+counter).find('#popis-text-'+counter).attr('name','Polozky['+counter+'][popis_polozky]');
+    $('#row-'+counter).find('#mj-'+counter).attr('name','Polozky['+counter+'][merna_jednotka]');
+    $('#row-'+counter).find('#mnozstvo-'+counter).attr('name','Polozky['+counter+'][mnozstvo]');
+    $('#row-'+counter).find('#cena-'+counter).attr('name','Polozky['+counter+'][cena]');
+    $('#row-'+counter).find('#totalcena-'+counter).attr('name','Polozky['+counter+'][total_cena]');
+    $('#row-'+counter).find('#dph-'+counter).attr('name','Polozky['+counter+'][dph]');
+    $('#row-'+counter).find('#totaldph-'+counter).attr('name','Polozky['+counter+'][total_dph]');
+    $('#row-'+counter).find('#sdph-'+counter).attr('name','Polozky['+counter+'][sdph]');
+    $('#row-'+counter).find('#cena2-'+counter).attr('name','Polozky['+counter+'][cena_s_dph]');
+    $('#row-'+counter).find('#totalcena2-'+counter).attr('name','Polozky['+counter+'][total_cena_s_dph]');
+
+    $('#row-'+counter).find('#pol-0').attr('id','pol-'+counter);
+    $('#row-'+counter).find('#pol-'+counter).attr('data-id','0');
+});
+
+$(document).on('click', '.odstranit-polozku', function(event) {
+    if (window.confirm('Naozaj chcete zmaza položku?')) {
+        event.preventDefault();
+        var el = $(this).parents('.fa-polozka');
+        el.remove();
+        spocitaj();
+        var toRemove = $(this).data('id');
+        if ($('.fa-polozka').length < 2) {
+            $('.fa-polozka .odstranit-polozku').hide();
+            $('.fa-polozka').attr('id', 'row-0');
+            $('.fa-polozka').find('[id^="popis-"]').attr('id', 'popis-0');
+            $('.fa-polozka').find('[id^="popis-"]').attr('id', 'popis-text-0');
+            $('.fa-polozka').find('[id^="datum-realizacie-"]').attr('id', 'datum-realizacie-0');
+            $('.fa-polozka').find('[id^="mj-"]').attr('id', 'mj-0');
+            $('.fa-polozka').find('[id^="mnozstvo-"]').attr('id', 'mnozstvo-0');
+            $('.fa-polozka').find('[id^="dmnozstvo-"]').attr('id', 'dmnozstvo-0');
+            $('.fa-polozka').find('[id^="cena-"]').attr('id', 'cena-0');
+            $('.fa-polozka').find('[id^="totalcena-"]').attr('id', 'totalcena-0');
+            $('.fa-polozka').find('[id^="dtotalcena-"]').attr('id', 'dtotalcena-0');
+            $('.fa-polozka').find('[id^="dph-"]').attr('id', 'dph-0');
+            $('.fa-polozka').find('[id^="totaldph-"]').attr('id', 'totaldph-0');
+            $('.fa-polozka').find('[id^="sdph-"]').attr('id', 'sdph-0');
+            $('.fa-polozka').find('[id^="dtotaldph-"]').attr('id', 'dtotaldph-0');
+            $('.fa-polozka').find('[id^="cena2-"]').attr('id', 'cena2-0');
+            $('.fa-polozka').find('[id^="totalcena2-"]').attr('id', 'totalcena2-0');
+            $('.fa-polozka').find('[id^="dtotalcena2-"]').attr('id', 'dtotalcena2-0');
+        }
+        if ($(this).data('action') == 'edit' && $(this).data('id') > 0) {
+            $.ajax({
+                url: '/backoffice/accounting/ajax-delete-invoice-item',
+                dataType: 'json',
+                method: 'post',
+                data: {itemid:toRemove},
+                success: function(r){
+                }
+            });
+        }
+    }
+});
+
+// zmena typu faktury (faktura, zalohova, dobropis)
+$('#zalohovafa').on('change', function() {
+    if ($(this).val() == '1') {
+        //$('.zalFaSkryt').hide();
+        $('.no-zaloha').hide();
+        $('#uhradene').val('');
+        spocitaj();
+    } else {
+        $('.zalFaSkryt').show();
+        $('.no-zaloha').show();
+        if ($('#dodavatel-vatpayer').val() === '1') {
+            $('.zalFaSkryt').show();
+            $('.prenesenaDan').show();
+        } else {
+            $('.zalFaSkryt').hide();
+            $('.prenesenaDan').hide();
+        }
+    }
+});
+
+$(document).on('keyup blur', '#zlava', function(event){
+    spocitaj();
+});
+
+$(document).on('change', 'select[id*="popis-"]', function(){
+    var id = $(this).attr('id');
+    var toRemove = 'popis-';
+    var elInt = id.replace(toRemove,'');
+    var polozka = JSON.parse($(this).val());
+    $('#mj-'+elInt).val(polozka.merna_jednotka);
+    if ($('#dodavatel-vatpayer').val() === '1') {
+        $('#dph-'+elInt).val(polozka.dph);
+    }
+    $('#cena-'+elInt).val(polozka.cena_za_jednotku).trigger('keyup');
+    spocitaj();
+});
+
+//zmena mnozstva
+$(document).on('keyup blur', 'input[id*="mnozstvo-"]', function(){
+    var id = $(this).attr('id');
+    var toRemove = 'mnozstvo-';
+    var elInt = id.replace(toRemove,'');
+    var newVal = $(this).val();
+    $(this).val(newVal.replace(',', '.'));
+    $('#cena-'+elInt).trigger('keyup');
+});
+
+// zmena dph(%)
+$(document).on('keyup blur', 'input[id*="dph-"]', function(){
+    var id = $(this).attr('id');
+    var toRemove = 'dph-';
+    var elInt = id.replace(toRemove,'');
+    var newVal = $(this).val();
+    $(this).val(newVal.replace(',', '.'));
+    $('#cena-'+elInt).trigger('keyup');
+});
+
+$(document).on('keyup blur', '#uhradene', function(){
+    var cena = $(this).val();
+    cena = viewNum(cena,2);
+    $(this).val(cena);
+    spocitaj();
+    $('#s-zalohy').html(formatMoney(cena, 2, ',', '.'));
+});
+
+$(document).on('change', '#prenesenaDan', function(){
+    if($('#prenesenaDan').is(':checked')) {
+        $('input[id^="dph-"]').each(function () {
+            var id = $(this).attr('id');
+            var toRemove = 'dph-';
+            var index = id.replace(toRemove,'');
+            dphPolozky[index] = $('input[id="dph-' + index + '"]').val();
+            sdphPolozky[index] = $('input[id="sdph-' + index + '"]').val();
+            $(this).val('0');
+            $(this).prop('disabled', true);
+            if (sdphPolozky[index] === 1) {
+                $('input[id="cena2-' + index + '"]').trigger('keyup');
+            } else if (sdphPolozky[index] === 0) {
+                $('input[id="cena-' + index + '"]').trigger('keyup');
+            }
+        });
+        prenesenaDan = '1';
+    } else {
+        $('input[id^="dph-"]').each(function () {
+            var id = $(this).attr('id');
+            var toRemove = 'dph-';
+            var index = id.replace(toRemove,'');
+            if($(this).val() > 0) {
+                dphPolozky[index] = $(this).val();
+            }
+            sdphPolozky[index] = $('input[id="sdph-' + index + '"]').val();
+            $(this).val(dphPolozky[index]);
+            $(this).prop('disabled', false);
+            if (sdphPolozky[index] === 1) {
+                $('input[id="cena2-' + index + '"]').trigger('keyup');
+            } else if (sdphPolozky[index] === 0) {
+                $('input[id="cena-' + index + '"]').trigger('keyup');
+            }
+        });
+        prenesenaDan = '0';
+    }
+    spocitaj();
+});
+
+$(document).on('keyup blur','input[id*="pol-zlava-percent-"]',function(){
+    var exp=4,
+        elInt = $(this).attr('id').replace('pol-zlava-percent-','');
+
+    // zlava v %
+    var percent = parseFloat($(this).val());
+    percent = isNaN(percent) ? 0 : percent;
+    // jednotkova cena
+    var jCena = parseFloat($('#cena-'+elInt).val().replace(',','.'));
+    // jCena * mnozstvo
+    var cena = parseFloat($('#totalcena-'+elInt).val().replace(',','.'));
+    // zlava na jednotkovu cenu
+    var jHodnota = roundNum(jCena * percent / 100,2);
+    // zlava z totalnej ceny
+    var hodnota = roundNum(cena * percent / 100,2);
+    $('#pol-zlava-hod-'+elInt).val(hodnota);
+    $('#dpol-zlava-hod-'+elInt).html(viewNum(hodnota,2) + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    var dph = parseFloat($('#dph-'+elInt).val().replace(',','.'));
+    var dphHodnota = roundNum( (cena - hodnota) * dph / 100, 2);
+    $('#totaldph-'+elInt).val(dphHodnota);
+    $('#dtotaldph-'+elInt).html(dphHodnota + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    $('#sdph-'+elInt).val(0);
+    var dphJHodnota = roundNum( (jCena-jHodnota) * dph / 100,2);
+    $('#cena2-'+elInt).val(jCena + dphJHodnota);
+    $('#totalcena2-'+elInt).val(cena + dphHodnota);
+    $('#dtotalcena2-'+elInt).html(cena + dphHodnota + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    spocitaj();
+});
+
+$(document).on('keyup blur','input[id*="pol-zlava-abshod-"]',function(){
+    var exp=4,
+        elInt = $(this).attr('id').replace('pol-zlava-abshod-','');
+    var cena = $('#cena-'+elInt).val().replace(',','.');
+
+    var absHodnota = parseFloat($(this).val());
+    absHodnota = isNaN(absHodnota) ? 0 : absHodnota;
+    $('#pol-zlava-hod-'+elInt).val(absHodnota);
+    $('#dpol-zlava-hod-'+elInt).html(viewNum(absHodnota,2) + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+});
+
+
+/* bez dph */
+$(document).on('keyup blur', 'input[id*="cena-"]', function(){
+    var exp = 4;
+
+    var id = $(this).attr('id');
+    var toRemove = 'cena-';
+    var elInt = id.replace(toRemove,'');
+
+    var mnozstvo = 'mnozstvo-' + elInt;
+    var dmnozstvo = 'dmnozstvo-' + elInt;
+    var dph = 'dph-' + elInt;
+    var totalcena = 'totalcena-' + elInt;
+    var dtotalcena = 'dtotalcena-' + elInt;
+    var totaldph = 'totaldph-' + elInt;
+    var dtotaldph = 'dtotaldph-' + elInt;
+    var cena2 = 'cena2-' + elInt;
+    var totalcena2 = 'totalcena2-' + elInt;
+    var dtotalcena2 = 'dtotalcena2-' + elInt;
+    var sdph = 'sdph-' + elInt;
+
+    var mnozstvoVal = $('#'+mnozstvo).val();
+    mnozstvoVal = parseFloat(mnozstvoVal.replace(',', '.'));
+    mnozstvoVal = parseFloat(mnozstvoVal);
+
+    var cenaBezDPHJednVal = $(this).val();
+    var cenaBezDPHJednView = viewNum(cenaBezDPHJednVal,exp);
+    $(this).val(cenaBezDPHJednView);
+    cenaBezDPHJednVal = parseFloat(cenaBezDPHJednVal.replace(',', '.'));
+
+
+    var dphJednVal = $('#'+dph).val();
+    dphJednVal = parseFloat(dphJednVal.replace(',', '.'));
+    var baseDphVal = parseFloat(dphJednVal);
+    dphJednVal = roundNum(cenaBezDPHJednVal * (baseDphVal/100),2);
+
+    var CenaSDPHJednVal = roundNum(cenaBezDPHJednVal + dphJednVal,2);
+    $('#'+cena2).val(CenaSDPHJednVal);
+
+    var CenaBezDPHTotalVal = cenaBezDPHJednVal * mnozstvoVal;
+    var dphTotalVal = roundNum(CenaBezDPHTotalVal * (baseDphVal/100),2);
+    var CenaSDPHTotalVal = roundNum(CenaBezDPHTotalVal + dphTotalVal,2);
+    CenaBezDPHTotalVal = roundNum(CenaBezDPHTotalVal,2);
+
+    $('#'+dmnozstvo).html('Spolu = ');
+    $('#'+totalcena).val(CenaBezDPHTotalVal);
+    $('#'+dtotalcena).html(CenaBezDPHTotalVal + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    $('#'+totaldph).val(dphTotalVal);
+    $('#'+dtotaldph).html(dphTotalVal + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    $('#'+totalcena2).val(CenaSDPHTotalVal);
+    $('#'+dtotalcena2).html(CenaSDPHTotalVal + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    $('#'+sdph).val(0);
+
+    spocitaj();
+});
+
+/*s dph*/
+$(document).on('keyup blur', 'input[id*="cena2-"]', function(){
+    var exp = 4;
+
+    var id = $(this).attr('id');
+    var toRemove = 'cena2-';
+    var elInt = id.replace(toRemove,'');
+    var mnozstvo = 'mnozstvo-' + elInt;
+    var dmnozstvo = 'dmnozstvo-' + elInt;
+    var dph = 'dph-' + elInt;
+    var cena = 'cena-' + elInt;
+    var totalcena = 'totalcena-' + elInt;
+    var dtotalcena = 'dtotalcena-' + elInt;
+    var totaldph = 'totaldph-' + elInt;
+    var dtotaldph = 'dtotaldph-' + elInt;
+    var totalcena2 = 'totalcena2-' + elInt;
+    var dtotalcena2 = 'dtotalcena2-' + elInt;
+    var sdph = 'sdph-' + elInt;
+
+    var mnozstvoVal = $('#'+mnozstvo).val();
+    mnozstvoVal = parseFloat(mnozstvoVal.replace(',', '.'));
+    mnozstvoVal = parseFloat(mnozstvoVal);
+
+    var cenaSDPHJednVal = $(this).val();
+    var cenaSDPHValJednView = viewNum(cenaSDPHJednVal,exp);
+    $(this).val(cenaSDPHValJednView);
+    cenaSDPHJednVal = parseFloat(cenaSDPHJednVal.replace(',', '.'));
+
+    var dphJednVal = $('#'+dph).val();
+    dphJednVal = parseFloat(dphJednVal.replace(',', '.'));
+    var baseDphVal = parseFloat(dphJednVal);
+    var dphJednView = roundNum(cenaSDPHJednVal - cenaSDPHJednVal / (1+(baseDphVal/100)),exp);
+
+    var cenaBezDPHJedn = roundNum(cenaSDPHJednVal-dphJednView,exp);
+    $('#'+cena).val(cenaBezDPHJedn);
+
+    var cenaSDPHTotal = cenaSDPHJednVal * mnozstvoVal;
+    var dphTotalVal = roundNum(cenaSDPHTotal - cenaSDPHTotal / (1+(baseDphVal/100)),2);
+    var cenaBezDPHTotalVal = roundNum(cenaSDPHTotal-dphTotalVal,2);
+    cenaSDPHTotal = roundNum(cenaSDPHTotal,2);
+
+    $('#'+dmnozstvo).html('Spolu = ');
+    $('#'+totaldph).val(dphTotalVal);
+    $('#'+dtotaldph).html(dphTotalVal + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    $('#'+totalcena).val(cenaBezDPHTotalVal);
+    $('#'+dtotalcena).html(cenaBezDPHTotalVal + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    $('#'+totalcena2).val(cenaSDPHTotal);
+    $('#'+dtotalcena2).html(cenaSDPHTotal + ' <span class="money">'+$('#faktura-mena').val() + '</span>');
+    $('#'+sdph).val(1);
+
+    spocitaj();
+});
+
+function spocitaj() {
+    var e = 2,
+        totalcena = 0,
+        totalcena2 = 0,
+        totaldph = 0,
+        totalzlava = 0,
+        zlavaVal = parseFloat($('#zlava').val().replace(',', '.')),
+        uhradene = parseFloat($('#uhradene').val().replace(',','.')),
+        spolubezzliav = 0;
+
+    $('input[id*="totalcena-"]').each(function(){
+        var elInt = $(this).attr('id').replace('totalcena-','');
+        var totalCena2 = parseFloat($('#totalcena2-'+elInt).val());
+        var c = parseFloat($(this).val().replace(',','.'));
+
+        totalzlava += parseFloat($('#pol-zlava-hod-'+elInt).val().replace(',','.'));
+        totaldph += parseFloat($('#totaldph-'+elInt).val().replace(',','.'));
+
+        totalcena = totalcena + c;
+    });
+
+    var platca = $('#dodavatel-vatpayer').val();
+    var zaklad = (platca === '1') ? totalcena2 : totalcena;
+    var kuhrade = roundNum(zaklad - uhradene,e);
+
+    totalcena = roundNum(totalcena,e);
+    spolubezzliav = roundNum(totalcena - totalzlava,e);
+    totalcena2 = roundNum(totalcena2,e);
+    totaldph = roundNum(totaldph,e);
+
+
+    $('#s-spolubezzliav').html(formatMoney(totalcena,2,',','.'));
+    $('#s-spolu').html(formatMoney(spolubezzliav,2,',','.'));
+    $('#s-spoludph').html(formatMoney(totalcena2,2,',','.'));
+    $('#s-dph').html(formatMoney(totaldph,2,',','.'));
+
+    /*var szlava = 0;
+    if (zlava != 0) {
+        szlava += totalcena * (1 - zlava/100);
+    }
+    if (totalZlava != 0) {
+        szlava += totalZlava;
+    }*/
+
+    $('#s-zlava').html(formatMoney(roundNum(totalzlava*(-1),e),2,',','.'));
+    //$('#s-zlavadph').html(formatMoney(roundNum(totalcena2,e),2,',','.'));
+
+    $('#s-kuhrade').html(formatMoney(kuhrade,2,',','.'));
+    $('#h-suma').val(totalcena);
+    $('#h-sumadph').val(totalcena2);
+    $('#h-kuhrade').val(kuhrade);
+}
+$('#dodavatel-town').select2({
+    theme: 'bootstrap',
+    placeholder: 'Zvoľte mesto',
+    tags: false
+});
+$('#dodavatel-town').on('select2:select',function(){
+    var mesto = JSON.parse($(this).val());
+    $('#dodavatel-zip').val(mesto.psc);
+    $('#dodavatel-country').val(mesto.nazov_statu);
+});
+
+$('#get-odber').select2({
+    theme: 'bootstrap',
+    placeholder: 'Vyberte odberateľa a alebo vyplňte políčka'
+});
+
+$(document).on('select2:select','#get-odber',function(){
+    var odber = JSON.parse($(this).val());
+    $('#odberatel-name').val(odber.obchodne_meno);
+    var meno = odber.name_first + ' ' + odber.name_last;
+    if (odber.ac_deg_before !== '') {
+        meno += ', ' + odber.ac_deg_before;
+    }
+    if (odber.ac_deg_after !== '') {
+        meno += ', ' + odber.ac_deg_after;
+    }
+    $('#odberatel-contactperson').val(meno);
+    var ulica = odber.address;
+    if (odber.customer_type !== 'osoba') {
+        ulica = odber.ulica;
+    }
+    var psc = odber.zip;
+    if (odber.customer_type !== 'osoba'){
+        psc = odber.psc;
+    }
+    $('#odberatel-zip').val(psc);
+    var stat = odber.country;
+    if (odber.customer_type !== 'osoba'){
+        stat = odber.stat;
+    }
+    $('#odberatel-country').val(stat);
+    var mesto = odber.town;
+    if (odber.customer_type !== 'osoba'){
+        mesto = odber.mesto;
+    }
+    $('#odberatel-town option').each(function(){
+        var vl_str = $(this).val();
+        if (vl_str.length !== 0) {
+            var vl = JSON.parse(vl_str);
+            var psc1 = vl.psc.replace(' ','');
+            if ( psc1 == psc && vl.nazov_obce == mesto) {
+                $(this).attr('selected',true).trigger('change');
+            }
+        }
+    });
+    $('#odberatel-address').val(ulica);
+    $('#odberatel-ico').val(odber.ico);
+    $('#odberatel-dic').val(odber.dic);
+    $('#odberatel-icdph').val(odber.icdph);
+});
+
+$('#odberatel-town').select2({
+    theme: 'bootstrap',
+    placeholder: 'Zvoľte mesto'
+});
+$('#dodacia-town').select2({
+    theme: 'bootstrap',
+    placeholder: 'Zvoľte mesto'
+});
+
+$('#odberatel-town').on('select2:select',function(){
+    var mesto = JSON.parse($(this).val());
+    $('#odberatel-zip').val(mesto.psc);
+    $('#oberatel-country').val(mesto.nazov_statu);
+});
+
+$('#dodacia-town').on('select2:select',function(){
+    var mesto = JSON.parse($(this).val());
+    $('#dodacia-zip').val(mesto.psc);
+    $('#dodacia-country').val(mesto.nazov_statu);
+});
+
+$('#dodavatel-bank').on('change',function(){
+    var idx = $(this).find('option:selected').data('idx');
+    $('#dodavatel-iban').val($('#def-iban-'+idx).val());
+    $('#dodavatel-swift').val($('#def-swift-'+idx).val());
+    $('#faktura-mena option:contains("' + $('#def-curr-'+idx).val() + '")').attr('selected', 'selected');
+});
+
+$('#konst-symbol').select2({
+    theme: "bootstrap",
+    placeholder: "Vyberte konštantný symbol"
+});

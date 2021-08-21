@@ -1,0 +1,280 @@
+#req {
+    width: 100%;
+    height: auto;
+    position: relative;
+    clear: both;
+}
+
+#req .req-container {
+    width: 40%;
+    margin: 20px auto;
+    position: relative;
+}
+#req .req-container > h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+#req .req-container > ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+#req .req-container > ul > li > input {
+    margin-right: 10px;
+}
+#req .req-container section {
+    margin: 10px 0px 10px 0px;
+    padding: 5px;
+    width: 100%;
+}
+#req .req-container section div.row {
+    margin-bottom: 15px;
+}
+#req .req-container section > h4 {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(196, 148, 68);
+    border-radius: 3px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 20px;
+}
+#req .req-container section h5 {
+    width: 100%;
+    position: relative;
+    background-color: #1F323E;
+    padding: 8px;
+    margin: 0px 0px 20px 0px;
+    color: white;
+    border-radius: 3px;
+}
+#req .req-container section h6 {
+    width: 100%;
+    position: relative;
+    background-color: #969696;
+    padding: 8px;
+    margin: 0px 0px 20px 0px;
+    color: white;
+    border-radius: 3px;
+}
+#req .req-container section div.section-footer {
+    margin-top: 40px;
+    padding: 5px;
+    text-align: center;
+}
+#req input[type=text],
+#req input[type=tel],
+#req input[type=email],
+#req input[type=date],
+#req input[type=number],
+#req select,
+#req textarea {
+    border: 0;
+    border-bottom: solid 2px #133045;
+    background-image: none;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    display: block;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    outline: none !important;
+    color: #666666;
+    border-radius: 0px;
+}
+#req input[type=file]{
+    font-size: 12px;
+}
+#gdpr-win,
+#referal-code,
+#other-src,
+#personal-address,
+#education,
+#jobs,
+#other-info,
+#photo-cv,
+#bk-hypo,
+#bk-refinance,
+#bk-spotrebak,
+.client-other-addr,
+.payroll,
+.vyzivne,
+.sickleave-row,
+.maternity-row,
+.pension-row,
+#client-papers,
+#client-basic-data,
+#client-address,
+#client-personal-data,
+#client-docs,
+#family-data,
+#income-src,
+#client-jobs,
+#client-business,
+#client-cashflow,
+.inv-pension-row,
+#mortgage-calculator,
+#loan-calculator,
+#refinance-calculator
+{
+    /*display: none;*/
+}
+.sickleave,
+.maternity-leave,
+.inv-pension-to,
+#perm-work-cnt,
+#bus-owner-cnt
+{
+    visibility: hidden;
+}
+.radio-holder {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+.radio-holder:first-child {
+    margin-top: 10px;
+}
+.small-text {
+    font-size: 0.85rem;
+    font-style: italic;
+}
+#gdpr-text {
+    border: solid 1px #a0a0a0;
+    overflow: auto;
+    height: 250px;
+    padding: 10px;
+    position: relative;
+    background-color: #fff;
+}
+#gdpr-text::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* New scrollbar for GDPR text */
+#gdpr-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+#gdpr-text::-webkit-scrollbar-thumb {
+    background: #888;
+}
+#gdpr-text::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.consent-note{
+        font-size: 16px;
+}
+
+div.ui-datepicker{
+    font-size:14px;
+}
+
+.btn-sm {
+    margin-bottom: 0;
+    white-space: nowrap;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    padding: 5px;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    display: inline-block;
+    position: relative;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    color: #032241;
+    text-align: center;
+    text-decoration: none !important;
+    text-transform: uppercase;
+    vertical-align: top;
+    border: solid 2px #032241;
+    transition: all 0.2s linear;
+    z-index: 1;
+}
+
+.btn-sm:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    background-color: #c49444;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transition: all 0.2s linear;
+    z-index: -1;
+}
+.btn-sm:hover:after {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.aoreal {
+    font-family: Copperplate-Bold;
+}
+
+.suhrn-table {
+    width: 55%;
+    margin: 10px auto;
+}
+.card{
+    margin-bottom: 10px;
+}
+.close-icon {
+    cursor: pointer;
+}
+.card-block{
+}
+.card-footer{
+    padding-bottom: 10px;
+}
+
+/*
+Responsivity
+ */
+
+@media screen and (max-width: 575px) {
+    #req p{
+        font-size: 0.97em;
+    }
+    #client-req li {
+        font-size: 0.97em;
+    }
+    #req input[type=text],
+    #req select,
+    #req input[type=email],
+    #req input[type=tel],
+    .radio-holder
+    {
+        font-size: 0.78em;
+    }
+    #req .req-container {
+        width: 78%;
+    }
+    label.col-form-label,
+    label.form-label,
+    #req p {
+        font-size: 0.85em;
+    }
+    h4 {
+        font-size: 0.90em;
+    }
+    h5 {
+        font-size: 0.85em;
+    }
+    h6 {
+        font-size: 0.8em;
+    }
+    #req div[class^="col"] {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}

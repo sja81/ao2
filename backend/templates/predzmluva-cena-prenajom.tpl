@@ -1,0 +1,1 @@
+<li>výška nájomného {{suma}},- &euro; (slovom: {{suma_slovom}},- &euro;)</li>

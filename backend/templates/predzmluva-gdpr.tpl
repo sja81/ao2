@@ -1,0 +1,6 @@
+<div class="d1">
+    <div class="clanok">Čl. X.</div>
+    <div class="clanok-text">
+        Podpísaním tejto Zmluvy vlastník dáva výslovný súhlas, aby Poskytovateľ podľa Nariadenia Európskeho parlamentu a Rady (EÚ) 2016/679 zo dňa 27.04.2016 o ochrane fyzických osôb pri spracúvaní osobných údajov a o voľnom pohybe takýchto údajov, ktorým sa zrušuje smernica 95/46/ES (všeobecné nariadenie o ochrane údajov) (ďalej len ako „Nariadenie GDPR“) a zákona č. 18/2018 Z. z. o ochrane osobných údajov a o zmene a doplnení niektorých zákonov (ďalej len ako „ZOOÚ“) spracovával osobné údaje vlastníka v súlade s Nariadením GDPR a ZOOÚ tak, ako sú definované vo vyššie uvedených právnych predpisoch, ako aj s poskytovaním a sprístupňovaním jeho osobných údajov, a to výlučne pre potreby tejto Zmluvy a zmlúv s touto Zmluvou súvisiacich. Podpísaním tejto Zmluvy vlastník zároveň vyhlasuje, že Poskytovateľom bol riadne poučený o svojich právach vyplývajúcich z vyššie uvedených právnych predpisov.
+    </div>
+</div>

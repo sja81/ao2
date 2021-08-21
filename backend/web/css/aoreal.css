@@ -1,0 +1,62 @@
+.height30 {
+    height: 30px !important;
+}
+
+.odstranit-polozku {
+    float: right;
+    color: rgb(255, 255, 255);
+    text-shadow: rgba(0, 0, 0, 0.25) 0px -1px 0px;
+    background-color: rgb(218, 79, 73);
+    background-image: linear-gradient(rgb(238, 95, 91), rgb(189, 54, 47));
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+#fa-polozky .row {
+    margin-left: 0px;
+}
+.fa-polozka {
+    background-color: rgb(238, 238, 238);
+    margin-bottom: 20px;
+    box-shadow: rgb(221, 221, 221) 0px 0px 7px -1px;
+    position: relative;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(153, 153, 153);
+    border-image: initial;
+    border-radius: 3px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+.sidebar-nav > ul > li > a i, .sidebar-nav ul li a {
+    font-size: 12px !important;
+}
+
+a.edit-menu {
+    font-size: 12px !important;
+}
+a.edit-menu:hover {
+    color: black;
+    font-weight: 600;
+}
+
+#TemplateVariables,
+#TemplateBlocks {
+    margin-bottom: 20px;
+}
+
+#TemplateVariables h5,
+#TemplateBlocks h5 {
+    margin-bottom: 20px;
+}
+
+#TemplateVariables footer,
+#TemplateBlocks footer {
+    margin-top: 5px;
+}
+
+b {
+    font-weight: 800;
+}

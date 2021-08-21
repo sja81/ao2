@@ -1,0 +1,27 @@
+.sel-company,
+#frm-oprep {
+    display: none;
+}
+
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 2px dotted #CCCCCC;
+    cursor: crosshair;
+
+}
+
+.signature-pad {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width:100%;
+    height:196px;
+    background-color: white;
+}
