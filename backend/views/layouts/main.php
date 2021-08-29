@@ -98,15 +98,16 @@ RealAsset::register($this);
                     <?php
                     if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
                         ?>
-                    <!--<li>
+                    <li>
                         <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                             <i class="fas fa-users"></i><span class="hide-menu">Užívatelia</span>
                         </a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="/backoffice/applicant">Uchádzači</a></li>
-                            <!--<li><a href="/backoffice/users">Spolupracovníci</a></li>
+                            <!-- <li><a href="/backoffice/applicant">Uchádzači</a></li> -->
+                            <!-- <li><a href="/backoffice/users">Spolupracovníci</a></li> -->
+                            <li><a href="/backoffice/students">Študenti</a></li>
                         </ul>
-                    </li>-->
+                    </li>
                     <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calculator"><i class="fas fa-calculator"></i><span class="hide-menu">Kalkulačky</span></a></li>-->
                     <li> <a class="waves-effect waves-dark" href="/backoffice/documents"><i class="far fa-folder"></i><span class="hide-menu">Dokumenty</span></a></li>
                     <?php

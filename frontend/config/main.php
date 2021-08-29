@@ -44,7 +44,10 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => array(
-                'planner' => 'planner/index',
+		'test-mail' => 'test-mail/index',	
+                'students' => 'students/index',
+                'students/<action:[a-zA-Z0-9-]+>' => 'students/<action>',
+                'students/<action:[a-zA-Z0-9-]+>/<id:\d+>' => 'students/<action>',
                 'applicant' => 'applicant/index',
                 'applicant/<action:[a-zA-Z0-9-]+>' => 'applicant/<action>',
                 'app-request-eng' => 'app-request-eng/index',

@@ -50,47 +50,44 @@ class SlovakIdCardProcessor
         $text = str_replace("\n",'||', $text);
         $result['nationality'] = 1;
         $text = str_replace('SVK','',$text);
-        $text = str_replace('Štátne občianstvo / Nationality', '', $text);
-        $text = str_replace('||||','||',$text);
+        $text = preg_replace("/(Š|S)t(á|a)tne\s{0,}občianstvo\s{0,}\/\s{0,}Nationality/m", '', $text);
+        $text = preg_replace("/\s{0,}\+\s{0,}/m",'', $text);
+        $text = preg_replace("/SLOVENSKA REPUBLIKA\s{0,}SLOVAK REPUBLIC\s{0,}\|\|/m",'',$text);
+        $text = preg_replace("/OBČIANSKY PREUKAZ\s{0,}\/\s{0,}ID-CARD\|\|/m",'',$text);
+        $text = str_replace("<",'',$text);
+        $text = preg_replace("/\|{3,}/m",'||',$text);
         $text = preg_replace("/\s{0,}\|\|Address/m",'Address',$text);
 
-        if (preg_match_all("/Pohlavie\s{0,}\/\s{0,}Sex\s{0,}\|\|\s{0,}[M|F]{1}\s{0,}\|\|/m", $text, $matches)) {
-            $result['gender'] = strtolower(str_replace('||','',str_replace('Pohlavie / Sex||','', $matches[0][0])));
+        if (preg_match_all("/\s{0,}Priezvisko\s{0,}\/\s{0,}Surname\s{0,}\|\|\pL{1,}\s{0,}\|\|/mu", $text, $matches)) {
+            $result['name_first'] = trim(str_replace('||','',preg_replace("/\s{0,}Priezvisko\s{0,}\/\s{0,}Surname\s{0,}\|\|/mu",'',$matches[0][0])));
         }
-
-        if (preg_match_all("/\s{0,}Dátum\s{0,}narodenia\s{0,}\/\s{0,}Date\s{0,}of\s{0,}birth\s{0,}\|\|[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.{0,}\|\|/m", $text, $matches)) {
-            $dob = trim(str_replace('||','',str_replace('Dátum narodenia / Date of birth||','',$matches[0][0])));
+        if (preg_match_all("/\s{0,}Men(o|e)\s{0,}\/\s{0,}Given\s{0,}names\|\|[\w\s]{1,}\|\|/mu",$text, $matches)) {
+            $result['name_last'] = trim(str_replace('||','',preg_replace("/\s{0,}Men(o|e)\s{0,}\/\s{0,}Given\s{0,}names\|\|/mu",'',$matches[0][0])));
+        }
+        if (preg_match_all("/\s{0,}D(a|á)tum\s{0,}narodenia\s{0,}\/\s{0,}Date\s{0,}of\s{0,}birth\s{0,}\|\|[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.{0,}\|\|/m", $text, $matches)) {
+            $dob = trim(str_replace('||','',preg_replace("/D(á|a)tum\s{0,}narodenia\s{0,}\/\s{0,}Date\s{0,}of\s{0,}birth\|\|/m",'',$matches[0][0])));
             $result['birth_date'] = (new \DateTimeImmutable($dob))->format($dateFormat);
         }
-
-        if (preg_match_all("/\s{0,}Priezvisko\s{0,}\/\s{0,}Surname\|\|[\w\s]{1,}\|\|/m", $text, $matches)) {
-            $result['name_first'] = trim(str_replace('||','',str_replace('Priezvisko / Surname||','',$matches[0][0])));
+        if (preg_match_all("/\s{0,}D(a|á)tum\s{0,}platnosti\s{0,}\/\s{0,}Date\s{0,}of\s{0,}(expiry|exprs)\s{0,}\|\|[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.{0,}\s{0,}\|\|/m",$text,$matches)) {
+            $validity = trim(str_replace('||','', preg_replace("/\s{0,}D(a|á)tum\s{0,}platnosti\s{0,}\/\s{0,}Date\s{0,}of\s{0,}(expiry|exprs)\s{0,}\|\|/m",'',$matches[0][0]))) ;
+            $result['validity_date'] = (new \DateTimeImmutable($validity))->format($dateFormat);
         }
-
-        if (preg_match_all("/\s{0,}Meno\s{0,}\/\s{0,}Given\s{0,}names\|\|[\w\s]{1,}\|\|/m",$text, $matches)) {
-            $result['name_last'] = trim(str_replace('||','',str_replace('Meno / Given names||','',$matches[0][0])));
+        if (preg_match_all("/\s{0,}D(a|á)tum\s{0,}vydania\s{0,}\/\s{0,}Date\s{0,}of\s{0,}issue\s{0,}\|\|\s{0,}[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.{0,1}\s{0,}\|\|/m",$text,$matches)) {
+            $issued = trim(str_replace('||','', preg_replace("/\s{0,}D(a|á)tum\s{0,}vydania\s{0,}\/\s{0,}Date\s{0,}of\s{0,}issue\s{0,}\|\|/m",'',$matches[0][0]))) ;
+            $result['issue_date'] = (new \DateTimeImmutable($issued))->format($dateFormat);
         }
-
-        if (preg_match_all("/\s{0,}Rodné\s{0,}číslo\s{0,}\/\s{0,}Personal\s{0,}No.\s{0,}\|\|[0-9]{6}\/[0-9]{3,4}\|\|/m",$text,$matches)) {
-            $result['ssn'] = trim(str_replace('||','',str_replace('Rodné číslo / Personal No.||','',$matches[0][0])));
+        if (preg_match_all("/\s{0,}Rodné\s{0,}č(í|i)slo\s{0,}\/\s{0,}Personal\s{0,}No.\s{0,}\|\|[0-9]{6}\/[0-9]{3,4}\|\|/m",$text,$matches)) {
+            $result['ssn'] = trim(str_replace('||','',preg_replace("/\s{0,}Rodné\s{0,}č(í|i)slo\s{0,}\/\s{0,}Personal\s{0,}No.\s{0,}\|\|/m",'',$matches[0][0])));
         }
-
         if (preg_match_all("/\s{0}Čís[i|l]{1}o\s{0,}\/\s{0,}No\.\s{0,}\|\|[A-Z]{2,}[0-9]{6,}\|\|/m",$text, $matches)) {
             $result['doc_number'] = trim(str_replace('||','',preg_replace("/\s{0,}Čís[i|l]{1}o\s{0,}\/\s{0,}No.\s{0,}\|\|\s{0,}/m",'',$matches[0][0])));
         }
-
-        if (preg_match_all("/\s{0,}Dátum\s{0,}platnosti\s{0,}\/\s{0,}Date\s{0,}of\s{0,}expiry\s{0,}\|\|[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.{0,}\s{0,}\|\|/m",$text,$matches)) {
-            $validity = trim(str_replace('||','', preg_replace("/\s{0,}Dátum\s{0,}platnosti\s{0,}\/\s{0,}Date\s{0,}of\s{0,}expiry\s{0,}\|\|/m",'',$matches[0][0]))) ;
-            $result['validity_date'] = (new \DateTimeImmutable($validity))->format($dateFormat);
+        if (preg_match_all("/\s{0,}Vydal\s{0,}\/\s{0,}Issued\s{0,}by\s{0,}\|\|\s{0,}[\pL\s\-]{1,}\s{0,}\|\|/mu",$text, $matches)) {
+            $result['doc_issuer'] = trim(str_replace('||','',preg_replace("/\s{0,}Vydal\s{0,}\/\s{0,}Issued\s{0,}by\s{0,}\|\|/m",'',$matches[0][0])));
         }
 
-        if (preg_match_all("/\s{0,}Dátum\s{0,}vydania\s{0,}\/\s{0,}Date\s{0,}of\s{0,}issue\s{0,}\|\|\s{0,}[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.{0,1}\s{0,}\|\|/m",$text,$matches)) {
-            $issued = trim(str_replace('||','', preg_replace("/\s{0,}Dátum\s{0,}vydania\s{0,}\/\s{0,}Date\s{0,}of\s{0,}issue\s{0,}\|\|/m",'',$matches[0][0]))) ;
-            $result['issue_date'] = (new \DateTimeImmutable($issued))->format($dateFormat);
-        }
-
-        if (preg_match_all("/\s{0,}Vydal\s{0,}\/\s{0,}Issued\s{0,}by\s{0,}\|\|\s{0,}[\w\s0-9A-Z\-]{1,}\s{0,}\|\|/m",$text, $matches)) {
-            $result['doc_issuer'] = trim(str_replace('||','',preg_replace("/\s{0,}Vydal\s{0,}\/\s{0,}Issued\s{0,}by\s{0,}\|\|\s{0,}/m",'',$matches[0][0])));
+        if (preg_match_all("/\s{0,}Trval(ý|y)\s{0,}pobyt\s{0,}\/{0,}\s{0,}\|{0,}\|{0,}\s{0,}Address\s{0,}\|\|[\pL\s\d\/]{1,}\s{0,}\|\|Rodn/mu",$text,$matches)) {
+            $result['perm_address'] = trim(str_replace('||Rodn','',preg_replace("/\s{0,}Trval(ý|y)\s{0,}pobyt\s{0,}\/{0,}\s{0,}\|{0,}\|{0,}\s{0,}Address\s{0,}\|\|/m",'',$matches[0][0])));
         }
 
         if (preg_match_all("/\s{0,}Trvalý\s{0,}pobyt\s{0,}\/\s{0,}\|{0,}\|{0,}Address\s{0,}\|\|\s{0,}[\S\s]{1,}\s{0,}\|\|\s{0,}[\S\s]{1,}\s{0,}\|\|Rodné/m",$text, $matches)) {
@@ -99,15 +96,12 @@ class SlovakIdCardProcessor
             $result['perm_address'] = $address[0];
             $result['perm_town'] = $address[1];
         }
-
-        if ($result['gender'] == 'f') {
-            if (preg_match_all("/\s{0,}Rodné\s{0,}priezvisko\s{0,}\/\s{0,}[\S\s]{1,}\s{0,}\|\|\s{0,}Surname\s{0,}at\s{0,}birth\s{0,}\|\|/m",$text, $matches)) {
-                $result['maiden_name'] = trim(preg_replace("/\s{0,}\|\|\s{0,}Surname\s{0,}at\s{0,}birth\s{0,}\|\|/m",'',preg_replace("/\s{0,}Rodné\s{0,}priezvisko\s{0,}\/\s{0,}/m",'',$matches[0][0])));
-            }
-        } else {
-            $result['maiden_name'] = $result['name_last'];
+        if (preg_match_all("/Pohlavie\s{0,}\/\s{0,}Sex\s{0,}\|\|\s{0,}[M|F]{1}\s{0,}\|\|/m", $text, $matches)) {
+            $result['gender'] = strtolower(str_replace('||','',str_replace('Pohlavie / Sex||','', $matches[0][0])));
         }
-
+        if (preg_match_all("/\s{0,}Rodné\s{0,}priezvisko\s{0,}\/\s{0,}[\S\s]{1,}\s{0,}\|\|\s{0,}Surname\s{0,}at\s{0,}birth\s{0,}\|\|/m",$text, $matches)) {
+            $result['maiden_name'] = trim(preg_replace("/\s{0,}\|\|\s{0,}Surname\s{0,}at\s{0,}birth\s{0,}\|\|/m", '', preg_replace("/\s{0,}Rodné\s{0,}priezvisko\s{0,}\/\s{0,}/m", '', $matches[0][0])));
+        }
         if (preg_match_all("/\s{0,}Miesto\s{0,}narodenia\s{0,}\/\s{0,}[\S\s]{1,}\s{0,}\|\|\s{0,}P/m",$text, $matches)) {
             $result['birth_place'] = trim(preg_replace("/\s{0,}\|\|P/m",'',preg_replace("/\s{0,}Miesto\s{0,}narodenia\s{0,}\//m",'',$matches[0][0])));
         }
@@ -122,7 +116,7 @@ class SlovakIdCardProcessor
 
         $text .= $this->annotateText($this->images['predna']);
         $text .= $this->annotateText($this->images['zadna']);
-
+        var_dump($text); exit;
         $result[] = ["note"=>$text];
 
         $text = $this->processText($text);

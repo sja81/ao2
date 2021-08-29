@@ -1,0 +1,186 @@
+.text-note {
+    font-size: 1.5rem;
+}
+
+small.note-text {
+    font-size: 1.1rem;
+    color: #707070;
+}
+
+#students {
+    width: 100%;
+    height: auto;
+    position: relative;
+    clear: both;
+}
+
+#students .students-container {
+    width: 60%;
+    margin: 20px auto;
+    position: relative;
+}
+
+#students .students-container section {
+    margin: 10px 0px 10px 0px;
+    padding: 5px;
+    width: 100%;
+}
+#students .students-container section div.row {
+    margin-bottom: 15px;
+}
+#students .students-container section > h4 {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(196, 148, 68);
+    border-radius: 3px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 20px;
+}
+#students .students-container section h5 {
+    width: 100%;
+    position: relative;
+    background-color: #1F323E;
+    padding: 8px;
+    margin: 0px 0px 20px 0px;
+    color: white;
+    border-radius: 3px;
+}
+
+#students .students-container section h6 {
+    width: 100%;
+    position: relative;
+    background-color: #969696;
+    padding: 8px;
+    margin: 0px 0px 20px 0px;
+    color: white;
+    border-radius: 3px;
+}
+
+#students .students-container section div.section-footer {
+    margin-top: 40px;
+    padding: 5px;
+    text-align: center;
+}
+#students input[type=text],
+#students input[type=tel],
+#students input[type=email],
+#students input[type=date],
+#students input[type=number],
+#students select,
+#students textarea {
+    border: 0;
+    border-bottom: solid 2px #133045;
+    background-image: none;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    display: block;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    outline: none !important;
+    color: #666666;
+    border-radius: 0px;
+}
+#students input[type=file]{
+    font-size: 12px;
+}
+
+#gdpr-text {
+    border: solid 1px #a0a0a0;
+    overflow: auto;
+    height: 250px;
+    padding: 10px;
+    position: relative;
+    background-color: #fff;
+}
+#gdpr-text::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* New scrollbar for GDPR text */
+#gdpr-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+#gdpr-text::-webkit-scrollbar-thumb {
+    background: #888;
+}
+#gdpr-text::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.consent-note{
+    font-size: 16px;
+}
+
+.btn-sm {
+    margin-bottom: 0;
+    white-space: nowrap;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    padding: 5px;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    display: inline-block;
+    position: relative;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    color: #032241;
+    text-align: center;
+    text-decoration: none !important;
+    text-transform: uppercase;
+    vertical-align: top;
+    border: solid 2px #032241;
+    transition: all 0.2s linear;
+    z-index: 1;
+}
+
+.btn-sm:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    background-color: #c49444;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transition: all 0.2s linear;
+    z-index: -1;
+}
+.btn-sm:hover:after {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.thead-dark {
+    color: white;
+    font-weight: bold;
+    background-color: black;
+    font-size: 1.3rem;
+}
+
+.required {
+    color: red;
+    font-size: 2.3rem;
+}
+
+#vzdelanie,
+#dalsie-info,
+errormsg {
+    display: none;
+}
+
+.errormsg {
+    color: red;
+    font-size: 0.85em;
+    margin-top: 10px;
+}
