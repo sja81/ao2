@@ -17,7 +17,7 @@ $this->title="Šablóny dokumentov";
             <div class="card">
                 <div class="card-body">
 
-                    <div class="col-lg-3">
+                    <div class="col-md-12">
                         <a class="btn btn-success" href="<?= Url::to(['documents/add-document']) ?>">
                             <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať dokument') ?>
                         </a>
@@ -25,13 +25,13 @@ $this->title="Šablóny dokumentov";
                             <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať kategóriu') ?>
                         </button>
                     </div>
-                    <div class="col-lg-9 input-group rounded">
+                    <!--<div class="col-lg-9 input-group rounded"> -->
 <!--                        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"-->
 <!--                               aria-describedby="search-addon" />-->
 <!--                        <span class="input-group-text border-0" id="search-addon">-->
 <!--                        <i class="fas fa-search"></i>-->
 <!--                        </span>-->
-                    </div>
+                    <!-- </div>-->
 
                 </div>
             </div>
@@ -210,7 +210,7 @@ $js = <<<JS
 
     $('#btnTemplateCategoryAddSave').on('click',function(){
         var selectedCategory = [];
-        $('.dook').each(function(){
+        $('.cat-item').each(function(){
             if ($(this).is(':checked')) {
                 selectedCategory.push($(this).val());
             }

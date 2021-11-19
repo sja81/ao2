@@ -177,8 +177,8 @@ $this->title="Editovať šablónu";
             </div>
         </div>
     </div>
-    <div class="modal fade" id="TemplateVariableAddModal" tabindex="-1" role="dialog" aria-labelledby="TemplateVariableAddModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal fade bs-example-modal-lg" id="TemplateVariableAddModal" tabindex="-1" role="dialog" aria-labelledby="TemplateVariableAddModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="TemplateVariableAddModalLabel"><?= Yii::t('app','Pridať premennú') ?></h5>
@@ -190,7 +190,38 @@ $this->title="Editovať šablónu";
                     <div class="form-group row">
                         <label class="col-2 col-form-label"><?= Yii::t('app','Popis') ?></label>
                         <div class="col-10">
+                            <span>HU</span>
                             <input type="text" class="form-control" id="add-new-desc">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-10 offset-2">
+                            <span>SK</span>
+                            <input type="text" class="form-control" id="add-new-desc">
+                        </div>
+                    </div>
+
+                    <div class="form-group row m-t-20">
+                        <div class="col-sm">
+                            <select class="form-control dropdown">
+                                <option value="">Zvolte</option>
+                                <option value="">client</option>
+                            </select>
+                        </div>
+                        <div class="col-sm">
+                            <select class="form-control dropdown">
+                                <option value="">Zvolte</option>
+                                <option value="">address</option>
+                                <option value="">zip</option>
+                            </select>
+                        </div>
+                        <div class="col-sm">
+                            <select class="form-control dropdown">
+                                <option value="">Zvolte</option>
+                                <option value="">executor</option>
+                                <option value="">seller</option>
+                                <option value="">buyer</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">

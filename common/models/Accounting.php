@@ -35,7 +35,6 @@ class Accounting
     {
         if (is_null($invoice)) {
             $invoice = new Invoice();
-            $invoice->created_at = (new \DateTime('now'))->format('Y-m-d H:i:s');
             $invoice->status = Invoice::PENDING;
             $invoice->created_by = Yii::$app->user->identity->getId();
         }
@@ -79,7 +78,6 @@ class Accounting
                 'id',
                 'kurz_meny',
                 'status',
-                'created_at',
                 'created_by',
                 'reated_by',
                 'qr_kod'

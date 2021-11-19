@@ -18,6 +18,7 @@ class IndexAction extends Action
 
         if (Yii::$app->request->isPost) {
             $data = Yii::$app->request->post();
+            $studentId = $data['sid'];
             $tr = Yii::$app->db->beginTransaction();
             try {
                 $this->processPostData($data);
@@ -29,13 +30,15 @@ class IndexAction extends Action
         } else {
             $student = new Students();
             $student->save();
+            $studentId = $student->id;
+            unset($student);
         }
 
         return $this->controller->render('index',[
             'schools'   =>  School::find()->asArray()->all(),
             'staty'         => Stat::find()->where(['=','status',1])->all(),
             'jazyk'         => Jazyk::find()->asArray()->all(),
-            'studentId'       => $student->id
+            'studentId'       => $studentId
         ]);
     }
 

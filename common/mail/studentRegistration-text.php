@@ -9,4 +9,4 @@ V prípade, že máte akékoľvek otázky, neváhajte nám napísať na info@aor
 
 S pozdravom
 
-Tím Aoreal
+Tím AOReal

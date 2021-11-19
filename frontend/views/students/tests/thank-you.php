@@ -4,9 +4,8 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 
 $this->registerCSSFile('@web/css/schools.css?v=1.09',['depends'=>AppAsset::class]);
-$this->title = Yii::t('app','Chybná stránka');
+$this->title = Yii::t('app','Testy');
 ?>
-
 <main class="site-student">
     <div class="page-banner d-block position-relative raleway">
         <canvas style="background-image:url('/images/header-bg1.jpg');" width="1600" height="400"></canvas>
@@ -39,6 +38,16 @@ $this->title = Yii::t('app','Chybná stránka');
 
     <div id="students" class="container-fluid">
         <div class="students-container">
+            <section>
+                <h1 style="font-weight: bold"><?= Yii::t('app','Ďakujeme za vyplnenie testov'); ?></h1>
+                <p style="margin-top: 30px">
+                    <?= Yii::t('app','O výsledku Vás budeme informovať v čo najkratšom čase. Prajeme príjemný zvyšok dňa!'); ?>
+                </p>
+                <p style="margin-top: 20px">
+                    <?= Yii::t('app','Tím AOReal'); ?>
+                </p>
+            </section>
+
         </div>
     </div>
 </main>

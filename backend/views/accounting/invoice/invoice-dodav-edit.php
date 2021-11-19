@@ -126,7 +126,7 @@
     </div>
 </div>
 
-<div class="form-group row">
+<div class="form-group row zalFaSkryt"<?= $invoice->dodavatel->platca_dph == 0 ? ' style="display:none"': '' ?>>
     <label class="col-3 col-form-label">IČ DPH:</label>
     <div class="col-9">
         <input

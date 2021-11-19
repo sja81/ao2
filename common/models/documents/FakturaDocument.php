@@ -120,6 +120,9 @@ class FakturaDocument extends Documents
         }
         $content = file_get_contents($this->getTemplatePath().$template);
 
+        //$this->sumTotal = $this->invoice->suma;
+        //$this->sumTotalDPH = $this->invoice->suma_s_dph;
+
         foreach ($this->polozky as $it) {
             $result = $content;
             $posY = $this->mpdf->y;
@@ -135,9 +138,9 @@ class FakturaDocument extends Documents
             if ($this->platcaDPH) {
                 $result = str_replace('{{dph}}', $it->dph."%", $result);
                 $result = str_replace('{{total_cena_s_dph}}', HelpersNum::moneyFormat($it->total_cena_s_dph), $result);
-                $this->sumTotalDPH += $it->total_cena_s_dph;
+               // $this->sumTotalDPH += $it->total_cena_s_dph;
             }
-            $this->sumTotal += $it->total_cena;
+            //$this->sumTotal += $it->total_cena;
             $this->mpdf->WriteHTML($result);
         }
 

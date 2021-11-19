@@ -1,5 +1,4 @@
 <?php
-
 namespace frontend\actions\students;
 
 use Yii;

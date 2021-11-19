@@ -1,0 +1,33 @@
+main h5 {
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+}
+#attachments,
+#issue-links,
+#comments {
+    min-height: 50px;
+}
+.xt123 {
+    font-size: 12px;
+}
+.xt123 tr th:first-child {
+    width: 15%;
+}
+.contedit {
+    border: 1px #dee2e6 dotted;
+    background-color: #f8f9fa;
+    padding: 5px;
+}
+.editable {
+    cursor: pointer;
+}
+#title-save,
+#title-cancel,
+#lt-from,
+#addcomment {
+    display: none;
+}
+
+
+

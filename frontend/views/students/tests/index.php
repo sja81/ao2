@@ -49,8 +49,15 @@ $this->title = Yii::t('app','Testy');
                     <li><?= Yii::t('app','Test personality'); ?></li>
                     <li><?= Yii::t('app','Test písania'); ?></li>
                     <li><?= Yii::t('app','Videonahrávka'); ?></li>
+                    <?php
+                    if ($student->schoolId == 3) {
+                    ?>
+                        <li><?php echo Yii::t('app','Test pre programátorov') ?></li>
+                    <?php
+                    }
+                    ?>
                 </ol>
-                <a href="/students/peronal-test/<?= $_GET['id'] ?>" class="secondary-button mt30 text-uppercase"><?= Yii::t('app','Spustiť prvý test'); ?></a>
+                <a href="/students/personal-test/<?= $_GET['id'] ?>" class="secondary-button mt30 text-uppercase"><?= Yii::t('app','Spustiť prvý test'); ?></a>
             </section>
         </div>
     </div>

@@ -48,7 +48,7 @@ $this->title="Pridať šablónu";
                 <div class="form-row">
                     <div class="col-md-6 form-group">
                         <label class="control-label"><?= Yii::t('app','Verzia') ?></label>
-                        <input type="text" name="Dook[version]" class="form-control" value="1.0">
+                        <input type="text" name="Dook[version]" class="form-control" value="1">
                     </div>
                     <div class="col-md-6 form-group">
                         <label class="control-label"><?= Yii::t('app','Typ') ?></label>
@@ -188,8 +188,8 @@ $this->title="Pridať šablónu";
         </div>
     </div>
 </div>
-<div class="modal fade" id="TemplateVariableAddModal" tabindex="-1" role="dialog" aria-labelledby="TemplateVariableAddModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade bs-example-modal-lg" id="TemplateVariableAddModal" tabindex="-1" role="dialog" aria-labelledby="TemplateVariableAddModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="TemplateVariableAddModalLabel"><?= Yii::t('app','Pridať premennú') ?></h5>

@@ -402,7 +402,7 @@ $vatPayer = $invoice->dodavatel->platca_dph == 1;
                                     <tr class="font-weight-bolder">
                                         <td style="width: 80%; text-align: right">K úhrade:</td>
                                         <td style="text-align: right">
-                                            <span id="s-kuhrade"><?= HelpersNum::moneyFormat($invoice->k_uhrade) ?></span> <span class="money"><?= $invoice->mena ?></span>
+                                            <span id="s-kuhrade"><?= HelpersNum::moneyFormat($invoice->k_uhrade-$invoice->zaloha) ?></span> <span class="money"><?= $invoice->mena ?></span>
                                         </td>
                                     </tr>
                                 </table>

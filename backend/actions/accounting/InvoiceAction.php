@@ -25,6 +25,7 @@ class InvoiceAction extends Action
                     f.typ_faktury, 
                     fo.nazov AS 'odberatel',
                     f.k_uhrade,  
+                    f.zaloha,
                     f.status, 
                     f.splatnost, 
                     f.datum_vystavenia 

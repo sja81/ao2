@@ -656,6 +656,7 @@ $js = <<<JS
         var data = new FormData();
         data.append("op-predna",$("#op-predna-"+i)[0].files[0]);
         data.append("op-zadna",$("#op-zadna-"+i)[0].files[0]);
+        data.append("studentid",{$studentId});
         data.append("{$csrfName}","{$csrfToken}");
         $.ajax({
             url : "/students/upload-card",

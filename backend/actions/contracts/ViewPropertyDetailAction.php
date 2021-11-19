@@ -34,7 +34,7 @@ class ViewPropertyDetailAction  extends Action
 
         return $this->controller->render('detail',[
             'id_zmluva'     => $zmluva->cislo,
-            'sumar'         => $sumar['description'],
+            'sumar'         => !is_null($sumar) ? $sumar['description'] : '',
             'ucel'          => ZmluvaUcel::vratUcel($id),
             'zakladne_info' => NehnutelnostZakladneInfo::vratZakladneInformacie($nehnutId),
             'nehnutelnost'  => Nehnutelnost::findOne(['id'=>$nehnutId]),

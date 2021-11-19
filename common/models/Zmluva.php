@@ -145,7 +145,7 @@ class Zmluva extends ActiveRecord
                 LEFT JOIN
                 zmluva_zakaznik zz ON zz.zmluva_id = c.id
             {$whereStr}        
-                order by c.cislo        
+                order by c.cislo DESC       
             {$limitStr}    
         ";
 

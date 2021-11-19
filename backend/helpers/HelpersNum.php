@@ -2,7 +2,7 @@
 namespace backend\helpers;
 
 
-class HelpersNum
+class   HelpersNum
 {
     public static function getPageNumber(int $total, int $limit): int
     {
@@ -14,7 +14,7 @@ class HelpersNum
         return str_replace(","," ",$str);
     }
 
-    public static function moneyFormat(float $data, int $precision = 2, $decimalSeparator=',', $thousandSeparator=' ')
+    public static function moneyFormat(?float $data, int $precision = 2, $decimalSeparator=',', $thousandSeparator=' ')
     {
         return number_format($data,$precision,$decimalSeparator,$thousandSeparator);
     }

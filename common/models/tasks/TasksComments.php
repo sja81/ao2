@@ -7,6 +7,6 @@ class TasksComments extends ActiveRecord
 {
     public static function tableName()
     {
-        return 'tasks_comment';
+        return 'tasksComment';
     }
 }

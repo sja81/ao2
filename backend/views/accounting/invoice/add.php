@@ -1,7 +1,7 @@
 <?php
 use backend\assets\RealAsset;
 
-$this->title="Nová faktúra";
+$this->title=Yii::t('app','Nová faktúra');
 
 $this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css',['depends'=>RealAsset::class]);
 $this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css',['depends'=>RealAsset::class]);
@@ -40,7 +40,7 @@ $this->registerJSFile('@web/js/faktura.js?v=2.8',['depends'=>RealAsset::class]);
                     <div class="card-body">
                     <?= $this->render('invoice-dodav',[
                             'offices'            => $offices,
-                            'default_office'    => $default_office,
+                            //'default_office'    => $default_office,
                             'mesto'             => $mesto,
                             'banks'             => $banks
                     ]); ?>

@@ -7,7 +7,7 @@ class Invoice extends ActiveRecord
 {
     const PENDING = 1;
     const PAID = 2;
-    const CANCLLED = 3;
+    const DELETED = 3;
 
     /**
      * {@inheritdoc}

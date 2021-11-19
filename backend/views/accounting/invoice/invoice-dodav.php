@@ -11,10 +11,10 @@
     </div>
 </div>
 <div class="form-group row">
-    <input type="hidden" id="dodavatel-id" name="Dodavatel[dodavatel_id]" value="<?= $default_office->id ?>">
+    <input type="hidden" id="dodavatel-id" name="Dodavatel[dodavatel_id]">
     <label class="col-3 col-form-label">Spoločnosť:</label>
     <div class="col-9">
-        <input type="text" name="Dodavatel[nazov]" class="form-control" id="dodavatel-name" autocomplete="off" value="<?= $default_office->name ?>"
+        <input type="text" name="Dodavatel[nazov]" class="form-control" id="dodavatel-name" autocomplete="off"
         >
     </div>
 </div>
@@ -22,14 +22,14 @@
 <div class="form-group row">
     <label class="col-3 col-form-label">Kontaktná osoba:</label>
     <div class="col-9">
-        <input type="text" name="Dodavatel[kontaktna_osoba]" class="form-control" id="dodavatel-contactperson" autocomplete="off" value="<?= $default_office->contact_person ?>">
+        <input type="text" name="Dodavatel[kontaktna_osoba]" class="form-control" id="dodavatel-contactperson" autocomplete="off">
     </div>
 </div>
 
 <div class="form-group row">
     <label class="col-3 col-form-label">Ulica:</label>
     <div class="col-9">
-        <input type="text" name="Dodavatel[ulica]" class="form-control" id="dodavatel-address" autocomplete="off" value="<?= $default_office->address ?>">
+        <input type="text" name="Dodavatel[ulica]" class="form-control" id="dodavatel-address" autocomplete="off">
     </div>
 </div>
 
@@ -41,12 +41,11 @@
                 class="form-control dropdown"
                 name="Dodavatel[mesto]"
         >
-            <option value=""></option>
+                <option value=""></option>
             <?php
             foreach($mesto as $it) {
                 $jsonIt = json_encode($it);
-                $selected = $default_office->town == $it['nazov_obce'] ? " selected" : '';
-                echo "<option value='{$jsonIt}'{$selected}>{$it['nazov_obce']}".($selected != "" ? "" : "({$it['nazov_okresu']})" )."</option>";
+                echo "<option value='{$jsonIt}'>{$it['nazov_obce']} ({$it['nazov_okresu']})</option>";
             }
             ?>
         </select>
@@ -56,7 +55,7 @@
 <div class="form-group row">
     <label class="col-3 col-form-label">PSČ:</label>
     <div class="col-9">
-        <input type="text" name="Dodavatel[psc]" class="form-control" id="dodavatel-zip" autocomplete="off" value="<?= $default_office->zip ?>">
+        <input type="text" name="Dodavatel[psc]" class="form-control" id="dodavatel-zip" autocomplete="off">
     </div>
 </div>
 
@@ -69,7 +68,6 @@
                 name="Dodavatel[stat]"
                 id="dodavatel-country"
                 autocomplete="off"
-                value = "<?= $default_office->country ?>"
         >
     </div>
 </div>
@@ -83,7 +81,6 @@
                 class="form-control"
                 id="dodavatel-ico"
                 autocomplete="off"
-                value="<?= $default_office->ico ?>"
         >
     </div>
 </div>
@@ -97,12 +94,11 @@
                 class="form-control"
                 id="dodavatel-dic"
                 autocomplete="off"
-                value="<?= $default_office->dic ?>"
         >
     </div>
 </div>
 
-<div class="form-group row">
+<div class="form-group row zalFaSkryt">
     <label class="col-3 col-form-label">IČ DPH:</label>
     <div class="col-9">
         <input
@@ -111,7 +107,6 @@
                 id="dodavatel-icdph"
                 class="form-control"
                 autocomplete="off"
-                value="<?= $default_office->icdph ?>"
         >
     </div>
 </div>
@@ -120,8 +115,8 @@
     <label class="col-3 col-form-label">Platca DPH:</label>
     <div class="col-3">
         <select name="Dodavatel[platca_dph]" class="form-control dropdown" id="dodavatel-vatpayer">
-            <option value="0"<?= $default_office->vat_payer == 0 ? ' selected': '' ?>>Nie</option>
-            <option value="1"<?= $default_office->vat_payer == 1 ? ' selected': '' ?>>Áno</option>
+            <option value="0" selected>Nie</option>
+            <option value="1">Áno</option>
         </select>
     </div>
 </div>
@@ -142,7 +137,6 @@
                 id="dodavatel-phone"
                 class="form-control"
                 autocomplete="off"
-                value="<?= $default_office->phone ?>"
         >
     </div>
 </div>
@@ -156,7 +150,6 @@
                 class="form-control"
                 id="dodavatel-email"
                 autocomplete="off"
-                value="<?= $default_office->email ?>"
         >
     </div>
 </div>
@@ -170,7 +163,6 @@
                 class="form-control"
                 id="dodavatel-web"
                 autocomplete="off"
-                value="<?= $default_office->web ?>"
         >
     </div>
 </div>
@@ -178,24 +170,8 @@
 <div class="form-group row" id="db">
     <label class="col-3 col-form-label">Banka:</label>
     <div class="col-9">
-        <?php
-        if (count($default_office->accounts) > 1) {
-            foreach ($default_office->accounts as $idx => $item) {
-        ?>
-            <input type="hidden" id="def-iban-<?= $idx ?>" value="<?= $item->iban ?>" />
-            <input type="hidden" id="def-swift-<?= $idx ?>" value="<?= $item->swift ?>" />
-            <input type="hidden" id="def-curr-"<?= $idx ?>" value="<?= $item->currency ?>" />
-        <?php
-            }
-        }
-        ?>
         <select name="Dodavatel[banka]" class="form-control dropdown" id="dodavatel-bank">
-            <option value=""><?= Yii::t('app','Zvoľte si banku')     ?></option>
-            <?php
-            foreach($default_office->accounts as $idx => $item) {
-                echo "<option value='{$item->details->name}' data-idx='{$idx}'>{$item->details->name} ({$item->currency})</option>";
-            }
-            ?>
+            <option value=""><?= Yii::t('app','Zvoľte si banku') ?></option>
         </select>
     </div>
 </div>
@@ -216,7 +192,105 @@
 $csrf = "'" . Yii::$app->request->csrfParam ."':'". Yii::$app->request->getCsrfToken() ."'";
 $urlGetCompanyDetails = \yii\helpers\Url::to(['/accounting/ajax-company-details']);
 $js = <<<JS
+
+    cleanDodavatel = function() {
+        $('#dodavatel-name').val('');
+        $('#dodavatel-contactperson').val('');
+        $('#dodavatel-address').val('');
+        $('#dodavatel-zip').val('');
+        $('#dodavatel-country').val('');
+        $('#dodavatel-ico').val('');
+        $('#dodavatel-dic').val('');
+        $('#dodavatel-icdph').val('');
+        $('#dodavatel-phone').val('');
+        $('#dodavatel-email').val('');
+        $('#dodavatel-web').val('');
+        $('#dodavatel-info').text('');
+        $('#dodavatel-vatpayer option').each(function(){
+            $(this).removeAttr('selected');
+        });
+        
+        $('#dodavatel-bank').empty();
+        $('#dodavatel-iban').val('');
+        $('#dodavatel-swift').val('');
+        $('#d1').val('');
+        $('#vs0').val('');
+        $('#dodavatel-id').val('');
+    }
+    
+    fillDodavatel = function(d) {
+        $('#dodavatel-name').val(d.details.name);
+        $('#dodavatel-contactperson').val(d.details.contact_person);
+        $('#dodavatel-address').val(d.details.address);
+        $('#dodavatel-zip').val(d.details.zip);
+        $('#dodavatel-country').val(d.details.country);
+        $('#dodavatel-ico').val(d.details.ico);
+        $('#dodavatel-dic').val(d.details.dic);
+        $('#dodavatel-icdph').val(d.details.icdph);
+        $('#dodavatel-phone').val(d.details.phone);
+        $('#dodavatel-email').val(d.details.email);
+        $('#dodavatel-web').val(d.details.web);
+        $('#dodavatel-info').text(d.details.registered);
+        $('#dodavatel-vatpayer option').each(function(){
+            $(this).removeAttr('selected');
+        });
+        $('#dodavatel-vatpayer option[value=' + d.details.vat_payer + ']').attr('selected','selected');
+        $('#dodavatel-town').find('option').each(function(){
+            var op = $(this).val();
+            if (op !== '') {
+                var mesto = JSON.parse(op);
+                if (mesto.nazov_obce === d.details.town) {
+                    $('#dodavatel-town').val(op).trigger('change');
+                }
+            }
+        });
+        let banks = d.details.banks;
+
+        $('#dodavatel-bank').empty().append($('<option>',{value:"",text:"Zvoľte si banku"}));
+        $('#dodavatel-iban').val('');
+        $('#dodavatel-swift').val('');
+        $.each(banks,function(k,v){
+            $('#dodavatel-bank').append($('<option>',{value: v.name,text: v.name  + ' (' + v.currency +')'}).attr('data-idx',k));
+            if ($('#def-iban-'+k).length) {
+                $('#def-iban-'+k).val(v.iban);
+            } else {
+                $('#db').append($('<input>',{
+                    type: 'hidden',
+                    id: 'def-iban-'+k,
+                    value: v.iban
+                }));
+            }
+            if ($('#def-swift-'+k).length) {
+                $('#def-swift-'+k).val(v.swift);
+            } else {
+                $('#db').append($('<input>',{
+                    type: 'hidden',
+                    id: 'def-swift-'+k,
+                    value: v.swift
+                }));
+            }
+            if ($('#def-curr-'+k).length) {
+                $('#def-curr-'+k).val(v.swift);
+            } else {
+                $('#db').append($('<input>',{
+                    type: 'hidden',
+                    id: 'def-curr-'+k,
+                    value: v.currency
+                }));
+            }
+        });
+        $('#d1').val(d.details.lastInvoiceNumber);
+        $('#vs0').val(d.details.vs);
+        $('#dodavatel-id').val(d.details.id);
+            
+    }
+
     $('#get-dodav').on('change',function(){
+        
+        if ($(this).val() == '') {
+            cleanDodavatel();   
+        }
+        
         $.ajax({
            url: "{$urlGetCompanyDetails}",
            dataType: "json",
@@ -225,71 +299,9 @@ $js = <<<JS
        })
        .done(function(res){
           if (res.status == 'error') {
-             
+            console.log(res.message); 
           } else {
-            $('#dodavatel-name').val(res.details.name);
-            $('#dodavatel-contactperson').val(res.details.contact_person);
-            $('#dodavatel-address').val(res.details.address);
-            $('#dodavatel-zip').val(res.details.zip);
-            $('#dodavatel-country').val(res.details.country);
-            $('#dodavatel-ico').val(res.details.ico);
-            $('#dodavatel-dic').val(res.details.dic);
-            $('#dodavatel-icdph').val(res.details.icdph);
-            $('#dodavatel-phone').val(res.details.phone);
-            $('#dodavatel-email').val(res.details.email);
-            $('#dodavatel-web').val(res.details.web);
-            $('#dodavatel-info').text(res.details.registered);
-            $('#dodavatel-vatpayer option').each(function(){
-                $(this).removeAttr('selected');
-            });
-            $('#dodavatel-vatpayer option[value=' + res.details.vat_payer + ']').attr('selected','selected');
-            $('#dodavatel-town').find('option').each(function(){
-                var op = $(this).val();
-                if (op !== '') {
-                    var mesto = JSON.parse(op);
-                    if (mesto.nazov_obce === res.details.town) {
-                        $('#dodavatel-town').val(op).trigger('change');
-                    }
-                }
-            });
-            let banks = res.details.banks;
- 
-            $('#dodavatel-bank').empty().append($('<option>',{value:"",text:"Zvoľte si banku"}));
-            $('#dodavatel-iban').val('');
-            $('#dodavatel-swift').val('');
-            $.each(banks,function(k,v){
-                $('#dodavatel-bank').append($('<option>',{value: v.name,text: v.name  + ' (' + v.currency +')'}).attr('data-idx',k));
-                if ($('#def-iban-'+k).length) {
-                    $('#def-iban-'+k).val(v.iban);
-                } else {
-                    $('#db').append($('<input>',{
-                        type: 'hidden',
-                        id: 'def-iban-'+k,
-                        value: v.iban
-                    }));
-                }
-                if ($('#def-swift-'+k).length) {
-                    $('#def-swift-'+k).val(v.swift);
-                } else {
-                    $('#db').append($('<input>',{
-                        type: 'hidden',
-                        id: 'def-swift-'+k,
-                        value: v.swift
-                    }));
-                }
-                if ($('#def-curr-'+k).length) {
-                    $('#def-curr-'+k).val(v.swift);
-                } else {
-                    $('#db').append($('<input>',{
-                        type: 'hidden',
-                        id: 'def-curr-'+k,
-                        value: v.currency
-                    }));
-                }
-            });
-            $('#d1').val(res.details.lastInvoiceNumber);
-            $('#vs0').val(res.details.vs);
-            $('#dodavatel-id').val(res.details.id);
+              fillDodavatel(res);
             $('#dodavatel-vatpayer').trigger('change');
             spocitaj();
           }

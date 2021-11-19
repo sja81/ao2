@@ -161,4 +161,34 @@ class AccountingController extends Controller
             'inv_num'   =>  "{$oldNumber}{$year}0{$num}",
         ];
     }
+
+    public function actionAjaxUpdateStatus()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $invoiceId = Yii::$app->request->post('invoice');
+        $status = Yii::$app->request->post('istatus');
+
+        $tr = Yii::$app->db->beginTransaction();
+        try {
+            $invoice = Invoice::findOne(['id'=>$invoiceId]);
+            $invoice->status = $status + 1;
+            $invoice->save();
+            $tr->commit();
+        } catch (\Exception $e) {
+            $tr->rollBack();
+            return [
+                'status'    => 'error',
+                'message'   =>  $e->getMessage(),
+                'code'      =>  -1
+            ];
+        } finally {
+            unset($invoice);
+        }
+
+        return [
+            'status'    =>  'ok',
+            'invoice'   =>  $invoiceId
+        ];
+    }
 }

@@ -2,14 +2,21 @@
 use backend\assets\RealAsset;
 use yii\helpers\Url;
 use backend\helpers\HelpersNum;
-use common\models\search\BackendSearch;
+use yii\helpers\Html;
+
+
 $this->title="Účtovníctvo - Faktúry";
 
-$this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js',['depends'=>RealAsset::className()]);
-$this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css',['depends'=>RealAsset::className()]);
-$this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css',['depends'=>RealAsset::className()]);
-$this->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.full.min.js',['depends'=>RealAsset::className()]);
-$this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css',['depends'=>RealAsset::className()]);
+$this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js',['depends'=>RealAsset::class]);
+$this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css',['depends'=>RealAsset::class]);
+$this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css',['depends'=>RealAsset::class]);
+$this->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.full.min.js',['depends'=>RealAsset::class]);
+$this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css',['depends'=>RealAsset::class]);
+$this->registerJSFile('@web/assets/node_modules/switchery/dist/switchery.min.js', ['depends'=>RealAsset::class]);
+$this->registerCSSFile('@web/assets/node_modules/switchery/dist/switchery.min.css',['depends'=>RealAsset::class]);
+$this->registerJSFile('@web/assets/node_modules/toast-master/js/jquery.toast.js',['depends'=>RealAsset::class]);
+$this->registerCSSFile('@web/assets/node_modules/toast-master/css/jquery.toast.css',['depends'=>RealAsset::class]);
+$this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
 ?>
 <div class="container-fluid">
     <div class="row page-titles">
@@ -34,6 +41,8 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
             <h4 class="card-title">
                 <?= $office['name'] ?>
             </h4>
+
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-sm dattable">
                     <thead>
@@ -43,6 +52,7 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
                         <th>Typ</th>
                         <th>Odberateľ</th>
                         <th>K úhrade</th>
+                        <th>Záloha</th>
                         <th>Vystavené</th>
                         <th>Splatnosť</th>
                         <th>Status</th>
@@ -80,20 +90,23 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
                             <?= HelpersNum::moneyFormat($invoice['k_uhrade']) ?>
                         </td>
                         <td style="text-align: right">
+                            <?= HelpersNum::moneyFormat($invoice['zaloha']) ?>
+                        </td>
+                        <td style="text-align: right">
                             <?= $invoice['datum_vystavenia'] ?>
                         </td>
                         <td style="text-align: right">
                             <?= $invoice['splatnost'] ?>
                         </td>
                         <td>
-                            <?php
-                            $status=[
-                                1   =>  'Čaká na splatenie',
-                                2   =>  'Splatené',
-                                3   =>  'Zrušené',
-                            ];
-                            echo $status[$invoice['status']];
-                            ?>
+                            <input
+                                    type="checkbox"
+                                    class="js-switch"
+                                    data-color="#26c6da"
+                                    data-secondary-color="#f62d51"
+                                    data-invoice="<?= $invoice['id'] ?>"
+                                    <?= $invoice['status'] == 2 ? ' checked' : '' ?>
+                            >
                         </td>
                         <td>
                             <?php
@@ -139,7 +152,7 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
 
 </div>
 <?php
-
+$csrf = "'" . Yii::$app->request->csrfParam ."':'". Yii::$app->request->getCsrfToken() ."'";
 $js = <<<JS
     $('#rok').select2({
         theme: "bootstrap",
@@ -166,6 +179,27 @@ $js = <<<JS
         $('.dattable').DataTable({
             order: []
         });
+    });
+    
+    $('.js-switch').each(function () {
+        new Switchery($(this)[0], $(this).data());
+    });
+    $('.js-switch').change(function(){
+        let c = $(this).is(':checked') ? 1 : 0;
+        let i = $(this).data('invoice');
+        $.ajax({
+           url: "/backoffice/accounting/ajax-update-status",
+           dataType: "json",
+           data: { invoice: i, istatus: c , {$csrf} },
+           type: "post"
+       })
+       .done(function(res){
+          if (res.status == 'error') {
+             console.log(res.message);
+          } else {
+             showMyToast(res, 'Stav faktúry bol úspešne zmenený!'); 
+          }
+       });
     });
 JS;
 
