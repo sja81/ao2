@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use Yii;
@@ -6,6 +7,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\users\UsersStats;
 
 /**
  * Site controller
@@ -35,7 +37,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['get','post'],
+                    'logout' => ['get', 'post'],
                 ],
             ],
         ];
@@ -80,6 +82,9 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+
+            $this->userStats(UsersStats::ACTION_LOGIN);
+
             return $this->goBack();
         } else {
             $model->password = '';
@@ -89,6 +94,15 @@ class SiteController extends Controller
             ]);
         }
     }
+    private function userStats(string $action): void
+    {
+
+        $stats = new UsersStats();
+        $stats->userAction = $action;
+        $stats->userId = Yii::$app->user->getId();
+        $stats->userIp = Yii::$app->getRequest()->getUserIP();
+        $stats->save();
+    }
 
     /**
      * Logout action.
@@ -97,6 +111,8 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
+
+        $this->userStats(UsersStats::ACTION_LOGOUT);
         Yii::$app->user->logout();
 
         return $this->goHome();
