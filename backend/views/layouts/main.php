@@ -65,14 +65,17 @@ RealAsset::register($this);
                 <ul class="navbar-nav my-lg-0">
                     <li class="nav-item dropdown u-pro">
                         <a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="<?= Yii::getAlias('@web')?>/assets/images/users/1.jpg" alt="user" class="">
+                            <?php
+                            $pic = Yii::$app->user->identity->getProfilePicture();
+                            ?>
+                            <img src="<?= $pic ?>" alt="user" class="">
                             <span class="hidden-md-down">
                                 <?= !isset(\Yii::$app->user->identity->username) ? "Guest" : \Yii::$app->user->identity->username ?> &nbsp;
                                 <i class="fa fa-angle-down"></i>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right animated flipInY">
-                            <a href="javascript:void(0)" class="dropdown-item"><i class="ti-user"></i> <?php echo Yii::t('app','Môj profil');?></a>
+                            <a href="<?= Url::to(['/profile']) ?>" class="dropdown-item"><i class="ti-user"></i> <?php echo Yii::t('app','Môj profil');?></a>
                             <a href="/backoffice/site/logout" class="dropdown-item" data-method="post"><i class="fa fa-power-off"></i> Logout</a>
                         </div>
                     </li>
@@ -89,13 +92,16 @@ RealAsset::register($this);
                     ?>
                     <li class="user-pro">
                         <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                            <img src="<?= Yii::getAlias('@web')?>/assets/images/users/1.jpg" alt="user" class="img-circle">
+                            <?php
+                            $pic = Yii::$app->user->identity->getProfilePicture();
+                            ?>
+                            <img src="<?= $pic ?>" alt="<?= Yii::$app->user->identity->username ?>" class="img-circle">
                             <span class="hide-menu">
                                 <?php echo !isset(\Yii::$app->user->identity->username) ? "Guest" : \Yii::$app->user->identity->username ?>
                             </span>
                         </a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="javascript:void(0)"><i class="ti-user"></i> <?php echo Yii::t('app','Môj profil'); ?></a></li>
+                            <li><a href="<?= Url::to(['/profile']) ?>"><i class="ti-user"></i> <?php echo Yii::t('app','Môj profil'); ?></a></li>
                             <!--<li><a href="javascript:void(0)"><i class="ti-wallet"></i> My Balance</a></li>
                             <li><a href="javascript:void(0)"><i class="ti-email"></i> Inbox</a></li>
                             <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>-->
