@@ -60,7 +60,8 @@ RealAsset::register($this);
                             <i class="icon-menu"></i>
                         </a>
                     </li>
-
+                </ul>
+                <ul class="navbar-nav me-auto">
                 </ul>
                 <ul class="navbar-nav my-lg-0">
                     <li class="nav-item dropdown u-pro">
@@ -112,7 +113,7 @@ RealAsset::register($this);
                     <?php
                         if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
                     ?>
-                    <li><a class="waves-effect waves-dark" href="#"><i class="icon-speedometer"></i><span class="hide-menu">Dashboard</span></a>
+                    <!--<li><a class="waves-effect waves-dark" href="#"><i class="icon-speedometer"></i><span class="hide-menu">Dashboard</span></a>-->
                     <?php
                     }
                     ?>
@@ -120,11 +121,17 @@ RealAsset::register($this);
                     <?php
                         $active = (strpos($_SERVER['REQUEST_URI'],'tasks')) ? ' active': '';
                     ?>
-                    <li><a href="/backoffice/tasks" class="waves-effect waves-dark<?php echo $active ?>"><i class="fas fa-tasks"></i><span class="hide-menu"><?= Yii::t('app','Úlohy'); ?></span></a></li>
-                    <li> <a class="waves-effect waves-dark" href="/backoffice/contracts"><i class="icon-home"></i><span class="hide-menu">Nehnuteľnosti</span></a></li>
+                    <li><a href="<?= Url::to(['/tasks']) ?>" class="waves-effect waves-dark<?php echo $active ?>"><i class="fas fa-tasks"></i><span class="hide-menu"><?= Yii::t('app','Úlohy'); ?></span></a></li>
+                    <li>
+                        <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                            <i class="icon-home"></i><span class="hide-menu"><?= Yii::t('app','Reality'); ?></span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="<?= Url::to(['/contracts']) ?>"><?= Yii::t('app','Nehnuteľnosti'); ?></a></li>
+                            <li><a href="<?= Url::to(['/offers']) ?>"><?= Yii::t('app','Garáže'); ?></a></li>
+                        </ul>
+                    </li>
                     <li> <a class="waves-effect waves-dark" href="/backoffice/customers"><i class="ti-user"></i><span class="hide-menu">Zákaznící</span></a></li>
-                    <!--<li> <a class="waves-effect waves-dark" href="/backoffice/clients"><i class="ti-user"></i><span class="hide-menu">Klienti</span></a></li>-->
-                    <!--<li> <a class="waves-effect waves-dark" href="/backoffice/tasks"><i class="fas fa-tasks"></i><span class="hide-menu">Úlohy</span></a></li>-->
                     <li> <a class="waves-effect waves-dark" href="/backoffice/documents"><i class="far fa-folder"></i><span class="hide-menu">Dokumenty</span></a></li>
                     <?php
                     if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
@@ -143,9 +150,7 @@ RealAsset::register($this);
                     <?php
                     }
                     ?>
-                    <?php
-                            if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
-                    ?>
+
                     <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calls"><i class="ti-announcement"></i><span class="hide-menu">Marketing</span></a></li>-->
                     <!--<li>
                         <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
@@ -162,10 +167,11 @@ RealAsset::register($this);
                             <i class="fas fa-balance-scale"></i><span class="hide-menu">Účtovníctvo</span>
                         </a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="/backoffice/orders"><?= Yii::t('app','Objednávky') ?></a></li>
-                            <li><a href="/backoffice/invoices"><?= Yii::t('app','Faktúry2') ?></a></li>
-                            <li><a href="/backoffice/accounting/invoice"><?= Yii::t('app','Faktúry') ?></a></li>
-                            <li><a href="/backoffice/accounting/cash-receipt">Pokladničné dokl.</a></li>
+                            <!--<li><a href="/backoffice/orders"><?= Yii::t('app','Objednávky') ?></a></li>-->
+                            <!--<li><a href="/backoffice/invoices"><?= Yii::t('app','Faktúry2') ?></a></li>-->
+                            <li><a href="<?= Url::to(['/accounting/report']) ?>"><?= Yii::t('app','Reporty'); ?></a></li>
+                            <li><a href="<?= Url::to(['/accounting/invoice']) ?>"><?= Yii::t('app','Faktúry') ?></a></li>
+                            <li><a href="<?= Url::to(['/accounting/cash-receipt']) ?>"><?= Yii::t('app','Pokladničné dokl.'); ?></a></li>
                             <!-- <li><a href="/backoffice/business-trip">Cestovný príkaz</a></li> -->
                           </ul>
                     </li>
@@ -178,6 +184,9 @@ RealAsset::register($this);
                             <li><a href="<?php echo Url::to(['/ddd-services/orders'])?>">Objednávky</a></li>
                         </ul>
                     </li>-->
+                    <?php
+                    if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
+                        ?>
                     <li>
                         <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                             <i class="ti-settings"></i></i><span class="hide-menu"><?= Yii::t('app','Nastavenia') ?></span>

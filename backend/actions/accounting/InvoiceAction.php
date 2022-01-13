@@ -28,7 +28,8 @@ class InvoiceAction extends Action
                     f.zaloha,
                     f.status, 
                     f.splatnost, 
-                    f.datum_vystavenia 
+                    f.datum_vystavenia,
+                    f.bookedIn   
                 FROM 
                     faktura f
                 JOIN
