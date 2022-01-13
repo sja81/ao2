@@ -50,6 +50,9 @@ class AccountingController extends Controller
             ],
             'make-invoice'  => [
                 'class' => 'backend\actions\accounting\MakeInvoiceAction'
+            ],
+            'report'    =>  [
+                'class' =>  'backend\actions\accounting\ReportAction'
             ]
         ];
     }
