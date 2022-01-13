@@ -14,7 +14,7 @@ $this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/cs
 $this->registerCSSFile('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css',['depends'=>RealAsset::class]);
 $this->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js',['depends'=>RealAsset::class]);
 
-$this->registerJSFile('@web/js/cleanTemplateTexts.js?v=0.95',['depends'=>RealAsset::class]);
+$this->registerJSFile('@web/js/cleanTemplateTexts.js?v=0.97',['depends'=>RealAsset::class]);
 
 $this->title="Editovať šablónu";
 ?>
@@ -30,7 +30,7 @@ $this->title="Editovať šablónu";
                 <form method="post">
                     <input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>" value="<?=Yii::$app->request->csrfToken?>"/>
                     <input type="hidden" name="Dook[id]" value="<?= $template->id ?>" id="doc-id">
-                    <div class="form-row" id="new-template-form">
+                    <div class="row" id="new-template-form">
                         <div class="col-md-12 form-group">
                             <label class="control-label"><?= Yii::t('app','Kategórie')?></label>
                             <?= TemplateCategoryTreeWidget::widget([
@@ -40,13 +40,13 @@ $this->title="Editovať šablónu";
                             ]); ?>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="row">
                         <div class="col-md-12 form-group">
                             <label class="control-label"><?= Yii::t('app','Názov') ?></label>
                             <input type="text" name="Dook[name]" class="form-control" value="<?= $template->name ?>">
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="row">
                         <div class="col-md-6 form-group">
                             <label class="control-label"><?= Yii::t('app','Verzia') ?></label>
                             <input type="text" name="Dook[version]" class="form-control" value="<?= $template->version ?>">
@@ -60,7 +60,7 @@ $this->title="Editovať šablónu";
                         </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="row">
                         <div class="col-md-8 form-group">
                             <textarea name="Dook[content]" class="form-control summernote" style="height: 400px;" id="dook-content"><?= $template->content?></textarea>
                         </div>
@@ -125,10 +125,10 @@ $this->title="Editovať šablónu";
                             </section>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="row">
                         <div class="col-md-12 form-group">
-                            <input type="submit" value="<?= Yii::t('app','Uložiť') ?>" class="btn btn-info">
-                            <a href="<?php echo \yii\helpers\Url::to(['/'.$this->context->id]) ?>" class="btn btn-danger"><?php echo Yii::t('app','Zrušiť') ?></a>
+                            <input type="submit" value="<?= Yii::t('app','Uložiť') ?>" class="btn btn-info text-white">
+                            <a href="<?php echo \yii\helpers\Url::to(['/'.$this->context->id]) ?>" class="btn btn-danger text-white"><?php echo Yii::t('app','Zrušiť') ?></a>
                         </div>
                     </div>
                 </form>
@@ -171,8 +171,8 @@ $this->title="Editovať šablónu";
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= Yii::t('app','Zatvoriť') ?></button>
-                    <button type="button" class="btn btn-primary" id="btnTemplateVariableUpdateSave"><?= Yii::t('app','Uložiť') ?></button>
+                    <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><?= Yii::t('app','Zatvoriť') ?></button>
+                    <button type="button" class="btn btn-primary text-white" id="btnTemplateVariableUpdateSave"><?= Yii::t('app','Uložiť') ?></button>
                 </div>
             </div>
         </div>
@@ -232,8 +232,8 @@ $this->title="Editovať šablónu";
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= Yii::t('app','Zatvoriť') ?></button>
-                    <button type="button" class="btn btn-primary" id="btnTemplateVariableAddSave"><?= Yii::t('app','Uložiť') ?></button>
+                    <button type="button" class="btn btn-secondary text-white" data-dismiss="modal"><?= Yii::t('app','Zatvoriť') ?></button>
+                    <button type="button" class="btn btn-primary text-white" id="btnTemplateVariableAddSave"><?= Yii::t('app','Uložiť') ?></button>
                 </div>
             </div>
         </div>

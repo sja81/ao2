@@ -5,6 +5,7 @@ use common\models\tasks\Tasks;
 use common\models\tasks\TasksStages;
 use common\models\tasks\TasksStatuses;
 use common\models\users\UserGroups;
+use common\models\mailer\TaskerMail;
 use yii\base\Action;
 use Yii;
 use yii\db\Expression;
@@ -46,8 +47,8 @@ class AddAction extends Action
     {
         $task = new Tasks();
         $task->boardId=0;
-        $task->createdAt = new Expression('now()');
-        $task->updatedAt = new Expression('now()');
+        $task->createdAt = (new \DateTimeImmutable('now'))->format("Y-m-d H:i:s");
+        $task->updatedAt = (new \DateTimeImmutable('now'))->format("Y-m-d H:i:s");
         $task->updatedBy = User::findOne(['id'=> Yii::$app->user->getId()])->getUserName();
         $task->reporter = User::findOne(['id'=> Yii::$app->user->getId()])->getUserName();
         $task->stage = TasksStages::BACKLOG;
@@ -60,7 +61,8 @@ class AddAction extends Action
             }
             $task->$key = $value;
         }
-
         $task->save();
+
+        (new TaskerMail())->newTaskMail($task);
     }
 }

@@ -1,5 +1,6 @@
 var toRemove = {
     '<o:p>&nbsp;</o:p>':'',
+    'class="MsoTableGrid"': '',
     '<p\\s{0,}class="MsoNormal"><\\/p>': '',
     'class\\s{0,}=\\s{0,}"MsoNormal"':'',
     '<o:p>\\s{0,}<\/o:p>':'',
@@ -41,7 +42,8 @@ var toRemove = {
     'mso-ascii-theme-font:\\s{0,}major-latin[;]{0,}':'',
     'text-autospace:\\s{0,}none[;]{0,}':'',
     '[;]{2,}':';',
-    'mso-element-.*:\\s{0,}.*[;]{0,1}':''
+    'mso-element-.*:\\s{0,}.*[;]{0,1}':'',
+    '<tbody></tbody>':''
 };
 
 /**

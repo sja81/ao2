@@ -7,37 +7,19 @@ $this->title="Šablóny dokumentov";
 
 <div class="container-fluid">
     <div class="row page-titles">
-        <div class="col-md-12 align-self-center">
+        <div class="col-md-8 align-self-center">
             <h4 class="text-themecolor"><?= $this->title ?></h4>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-
-                    <div class="col-md-12">
-                        <a class="btn btn-success" href="<?= Url::to(['documents/add-document']) ?>">
-                            <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať dokument') ?>
-                        </a>
-                        <button class="btn btn-info" id="btnAddTemplateCategory">
-                            <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať kategóriu') ?>
-                        </button>
-                    </div>
-                    <!--<div class="col-lg-9 input-group rounded"> -->
-<!--                        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"-->
-<!--                               aria-describedby="search-addon" />-->
-<!--                        <span class="input-group-text border-0" id="search-addon">-->
-<!--                        <i class="fas fa-search"></i>-->
-<!--                        </span>-->
-                    <!-- </div>-->
-
-                </div>
+        <div class="col-md-4 align-self-center text-right">
+            <div class="d-flex justify-content-end align-items-center">
+                <a class="btn btn-success text-white" href="<?= Url::to(['documents/add-document']) ?>">
+                    <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať dokument') ?>
+                </a>
+                <button class="btn btn-info text-white m-l-5" id="btnAddTemplateCategory">
+                    <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať kategóriu') ?>
+                </button>
             </div>
         </div>
-
-
     </div>
 
     <div class="row m-t-10">

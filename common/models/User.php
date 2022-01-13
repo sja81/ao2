@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use common\models\users\UserDetails;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -203,6 +204,29 @@ class User extends ActiveRecord implements IdentityInterface
             ':role'   => $role
         ])->queryScalar();
         return $result;
+    }
+
+    public function updateProfileData(array $data): void
+    {
+        if ($this->email != trim($data['email'])) {
+            $this->email = $data['email'];
+        }
+    }
+
+    public function getDetails()
+    {
+        return $this->hasOne(UserDetails::class,['userId'=>'id']);
+    }
+
+    public function getProfilePicture(): string
+    {
+        $pic = Yii::getAlias('@web') . "/assets/images/users/nouser.png";
+
+        if (!is_null($this->details->profilePic)) {
+            $pic = Yii::getAlias('@web')."/../media/profiles/{$this->id}/{$this->details->profilePic}";
+        }
+
+        return $pic;
     }
 
 }
