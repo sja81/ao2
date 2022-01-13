@@ -1,4 +1,5 @@
 <?php
+
 use backend\assets\RealAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -28,14 +29,9 @@ RealAsset::register($this);
 </head>
 
 <body class="skin-blue fixed-layout">
-<?php $this->beginBody() ?>
-<!-- ============================================================== -->
-<!-- Main wrapper - style you can find in pages.scss -->
-<!-- ============================================================== -->
-<div id="main-wrapper">
-
+    <?php $this->beginBody() ?>
     <!-- ============================================================== -->
-    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <header class="topbar">
         <nav class="navbar top-navbar navbar-expand-md navbar-dark">
@@ -180,8 +176,8 @@ RealAsset::register($this);
                             <i class="fas fa-bug"></i><span class="hide-menu">DDD & Ozon</span>
                         </a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="<?php echo Url::to(['/ddd-services/settings'])?>">Nastavenia</a></li>
-                            <li><a href="<?php echo Url::to(['/ddd-services/orders'])?>">Objednávky</a></li>
+                            <li><a href="<?php echo Url::to(['/ddd-services/settings']) ?>">Nastavenia</a></li>
+                            <li><a href="<?php echo Url::to(['/ddd-services/orders']) ?>">Objednávky</a></li>
                         </ul>
                     </li>-->
                     <?php
@@ -197,22 +193,24 @@ RealAsset::register($this);
                         </ul>
                     </li>
 
-                    <?php } ?>
-                </ul>
-            </nav>
+                            <?php } ?>
+                            <li><a class="" href="/backoffice/user-attendance"><i class="icon-clock"></i><span class="hide-menu">Dochádzka</span></a> </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div class="page-wrapper">
+            <?= $content ?>
         </div>
-    </aside>
-    <div class="page-wrapper">
-        <?= $content ?>
+        <footer class="footer">
+            © 2019 ALPHA-OMEGA Real & Consulting s.r.o.
+        </footer>
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
     </div>
-    <footer class="footer">
-        © 2019 ALPHA-OMEGA Real & Consulting s.r.o.
-    </footer>
-    <!-- ============================================================== -->
-    <!-- End footer -->
-    <!-- ============================================================== -->
-</div>
-<?php $this->endBody() ?>
+    <?php $this->endBody() ?>
 </body>
+
 </html>
 <?php $this->endPage() ?>
