@@ -10,7 +10,7 @@ class Settings
     const CRM_CALC_LIMITS = 'CRM_CALC_LIMITS';
 
 
-    public static function getValue(string $key, int $langId)
+    public static function getValue(string $key, int $langId=1)
     {
         $sql = "SELECT * FROM settings WHERE category='{$key}' and status=1 and lang_id={$langId}";
         return Yii::$app->db->createCommand($sql)->queryAll();
@@ -25,5 +25,15 @@ class Settings
     {
         $limits = static::getValue(static::CRM_CALC_LIMITS, $langId);
         return ArrayHelper::map($limits,'field_name','field_value');
+    }
+
+    public static function get(string $fieldName,bool $toArray=false)
+    {
+        $sql = "select field_value from settings where field_name='{$fieldName}'";
+        $result = Yii::$app->db->createCommand($sql)->queryScalar();
+        if ($toArray) {
+            return json_decode($result,true);
+        }
+        return $result;
     }
 }

@@ -2,12 +2,19 @@
 namespace backend\controllers;
 
 use common\models\documents\templatedocuments\PdfTemplateDocument;
+use common\models\Office;
+use common\models\posta\slovensko\eph\xmlgenerator\EphRecipient;
+use common\models\posta\slovensko\eph\xmlgenerator\EphSender;
+use common\models\posta\slovensko\eph\xmlgenerator\XmlGenerator;
+use common\models\Stat;
 use common\models\Template;
-use yii\helpers\StringHelper;
+use common\models\posta\slovensko\eph\xmlgenerator\EphInfo;
+use common\models\posta\slovensko\eph\xmlgenerator\EphShipment;
 use yii\helpers\Url;
 use yii\web\Controller;
 use common\models\property\Offer;
 use Yii;
+use yii\web\Response;
 
 class OffersController extends Controller
 {
@@ -30,6 +37,102 @@ class OffersController extends Controller
         ];
     }
 
+    public function actionGetBankAccounts()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $company = Yii::$app->request->post('company');
+        $sql = "select 
+                    oa.bban, concat(fi.name, ' (', oa.currency,') ') as bankName
+                from 
+                    office_accounts oa
+                join
+                    financial_institution fi on fi.id=oa.bank_id
+                where
+                    office_id = {$company} and oa.bban is not null";
+
+        $result = Yii::$app->db->createCommand($sql)->queryAll();
+
+        return [
+            'status'    => 'ok',
+            'result'    => $result
+        ];
+    }
+
+    public function actionGenEph()
+    {
+        if (Yii::$app->request->isPost) {
+            $data = Yii::$app->request->post('Data');
+            $sender = Office::findOne(['id'=>$data['sender_id']]);
+            $bankAccount = $data['bank_account'];
+
+            $tr = Yii::$app->db->beginTransaction();
+            try{
+                $ephSender = new EphSender();
+                $ephSender->setName($sender->contact_person);
+                $ephSender->setOrganization(str_replace("&","&amp;",$sender->name));
+                $ephSender->setTown($sender->town);
+                $ephSender->setPhone($sender->phone);
+                $ephSender->setEmail($sender->email);
+                $ephSender->setStreet($sender->address);
+                $ephSender->setZip($sender->zip);
+                $isoCountry = Stat::find()->where(['=','name',$sender->country])->one();
+                $ephSender->setCountry($isoCountry->iso_kod);
+                $ephSender->setAccountNumber($bankAccount);
+
+                $info = new EphInfo();
+                $info->setSender($ephSender);
+                $info->setShipmentType($data['shipment_method']);
+                $info->setPaymentType($data['payment_method']);
+
+                $shipments = $this->processOfferList($data);
+
+                $xml = new XmlGenerator($info, $shipments);
+                $xml->create();
+                $xml->downloadFile($data['file_name'].".xml");
+
+                $tr->commit();
+            } catch(\Exception $ex) {
+                Yii::$app->session->setFlash('error',$ex->getMessage());
+                $tr->rollBack();
+            }
+        }
+
+        return $this->render('geneph',[
+            'paymentMethods'    =>  EphInfo::getPaymentMethods(),
+            'shipmentMethods'   =>  EphInfo::getShipmentMethods(),
+            'services'          =>  EphShipment::getAvailableServices(),
+            'senders'           =>  Office::find()->select(['id','name'])->where(['=','status',1])->asArray()->all()
+        ]);
+    }
+
+    private function processOfferList(array $list): array
+    {
+        $result = [];
+        $offers = explode(',',trim($this->sanitizeString($list['offers']),"\n\r\t"));
+
+        foreach($offers as $id) {
+            $offer = Offer::find()->andWhere(['=','orderNumber',$id])->andWhere(['=','informed',1])->one();
+
+            $recipient = new EphRecipient();
+            $recipient->setName($offer->name." ".$offer->lastName);
+            $recipient->setStreet($offer->ownerAddress);
+            $recipient->setTown($offer->ownerTown);
+            $recipient->setZip($offer->ownerZip);
+            $isoCountry = Stat::find()->where(['=','name',$offer->ownerCountry])->one();
+            $recipient->setCountry($isoCountry->iso_kod);
+
+            $shipment = new EphShipment();
+            $shipment->setRecipient($recipient);
+            $shipment->setLetterClass($list['letter_class']);
+            $shipment->setServices($list['services']);
+
+            $result[] = $shipment;
+        }
+
+        return $result;
+    }
+
     public function actionIndex()
     {
         return $this->render('index',[
@@ -47,8 +150,9 @@ class OffersController extends Controller
             $doc->setTemplateContent($template->content);
             unset($template);
             $offerIds = $this->getOfferIds($data['recips']);
+            $offers = Offer::find()->where(['in','id', $offerIds])->all();
             $doc->setTemplateData([
-                'offer' => Offer::find()->where(['in','id', $offerIds])->all(),
+                'offer' => $offers,
                 'input.miesto_podpisu_hu'  => $data['miesto_podpisu']['HU'],
                 'input.miesto_podpisu_sk'  => $data['miesto_podpisu']['SK'],
                 'input.datum_podpisu_hu'   => (new \DateTimeImmutable($data['datum_podpisu']['HU']))->format('Y.m.d'),
@@ -64,8 +168,32 @@ class OffersController extends Controller
             $doc->downloadFile();
             $sql = "UPDATE offer SET informed=1 WHERE id in (". implode(",",$offerIds) .")";
             Yii::$app->db->createCommand($sql)->execute();
+
+            /*if (!empty($data['eph'])) {
+                $this->createEphXml($data, $offers);
+            }*/
         }
         $this->redirect('/offers/index',200);
+    }
+
+    private function createEphXml(array $data, array $offers)
+    {
+        // create EPH XML file
+        $sender = new EphSender();
+        $sender->setEmail($data['buyer_email']['SK']);
+        $sender->setPhone($data['buyer_phone']['SK']);
+        $sender->setName();
+        $sender->setOrganization();
+        $sender->setAccountNumber();
+        $sender->setCountry();
+        $sender->setTown();
+        $sender->setZip();
+        $sender->setStreet();
+
+        $info = new EphInfo();
+        $info->setSender($sender);
+        $info->setPaymentType();
+        $info->setShipmentType();
     }
 
     public function actionImport()
@@ -148,7 +276,7 @@ class OffersController extends Controller
 
     private function getOfferIdFromOrderNumber(int $orderNumber): int
     {
-        $result = Offer::find()->where(['=','orderNumber',$orderNumber])->all();
+        $result = Offer::find()->andWhere(['=','orderNumber',$orderNumber])->andWhere(['=','informed',0])->all();
         return ($result[0])->id;
     }
 
@@ -172,44 +300,55 @@ class OffersController extends Controller
     {
 
         $sql = "select 
-                    GROUP_CONCAT(id SEPARATOR '<br>') AS `id`, 
-                    orderNumber, GROUP_CONCAT(gender SEPARATOR '<br>') AS gender,
-                    GROUP_CONCAT(CONCAT(`name`,' ',lastName) SEPARATOR '<br>') AS `name`,
-                    GROUP_CONCAT(ownerAddress SEPARATOR '<br>') AS ownerAddress,
-                    GROUP_CONCAT(ownerTown SEPARATOR '<br>') AS ownerTown,
-                    GROUP_CONCAT(ownerZip SEPARATOR '<br>') AS ownerZip,
-                    GROUP_CONCAT(coOwnership SEPARATOR '<br>') AS coOwnership,
-                    GROUP_CONCAT(birthDate SEPARATOR '<br>') AS birthDate,
-                    acquisitionTitle,
-                    encumbrance,
-                    registerNumber,
-                    parcelNumber,
-                    ownershipDocumentNumber,
-                    propertyAddress,
-                    `status`,
-                    informed
-                from
-                    offer
-                where 
-                    orderNumber is not NULL
-                group by
-                    orderNumber
-                union
-                select 
-                    id, orderNumber, gender, CONCAT(`name`,' ',lastName) AS `name`, ownerAddress, ownerTown,ownerZip,coOwnership,
-                    birthDate,
-                    acquisitionTitle,
-                    encumbrance,
-                    registerNumber,
-                    parcelNumber,
-                    ownershipDocumentNumber,
-                    propertyAddress,
-                    `status`,
-                    informed
-                from
-                    offer 
-                where
-                    orderNumber is NULL";
+                     GROUP_CONCAT(id SEPARATOR '<br>') AS `id`, 
+                     orderNumber, GROUP_CONCAT(gender SEPARATOR '<br>') AS gender,
+                     GROUP_CONCAT(
+                            CONCAT(
+                                IF(
+                                  informed=0,
+                                  '<p class=\"w-100 p-1 m-0\">',
+                                  '<p class=\"w-100 p-1 m-0\" style=\"background-color: #8fd19e\">'
+                                  ),
+                                  `name`,
+                                  ' ',
+                                  lastName,
+                                  '</p>'
+                            ) SEPARATOR '') AS `name`,
+                     GROUP_CONCAT(ownerAddress SEPARATOR '<br>') AS ownerAddress,
+                     GROUP_CONCAT(ownerTown SEPARATOR '<br>') AS ownerTown,
+                     GROUP_CONCAT(ownerZip SEPARATOR '<br>') AS ownerZip,
+                     GROUP_CONCAT(coOwnership SEPARATOR '<br>') AS coOwnership,
+                     GROUP_CONCAT(birthDate SEPARATOR '<br>') AS birthDate,
+                     acquisitionTitle,
+                     encumbrance,
+                     registerNumber,
+                     parcelNumber,
+                     ownershipDocumentNumber,
+                     propertyAddress,
+                     `status`,
+                     GROUP_CONCAT(informed SEPARATOR '|') AS informed
+                 from
+                     offer
+                 where 
+                     orderNumber is not NULL
+                 group by
+                     orderNumber
+                 union
+                 select 
+                     id, orderNumber, gender, CONCAT(`name`,' ',lastName) AS `name`, ownerAddress, ownerTown,ownerZip,coOwnership,
+                     birthDate,
+                     acquisitionTitle,
+                     encumbrance,
+                     registerNumber,
+                     parcelNumber,
+                     ownershipDocumentNumber,
+                     propertyAddress,
+                     `status`,
+                     informed
+                 from
+                     offer 
+                 where
+                     orderNumber is NULL";
 
         return Yii::$app->db->createCommand($sql)->queryAll();
     }
