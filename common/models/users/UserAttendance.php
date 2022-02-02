@@ -1,9 +1,7 @@
 <?php
-
 namespace common\models\users;
 
 use Yii;
-
 use yii\db\ActiveRecord;
 
 class UserAttendance extends ActiveRecord

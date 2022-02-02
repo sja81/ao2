@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use yii\helpers\Url;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use common\models\users\UserAttendance;
 use Yii;
@@ -22,11 +24,43 @@ class UserAttendanceController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function beforeAction($action)
     {
+        if (is_null(Yii::$app->user->identity)) {
+            $this->redirect(Url::to(['/site/login']));
+            return false;
+        }
+        return parent::beforeAction($action);
+    }
+
+    public function actionIndex(?int $uid = null)
+    {
+        if(!empty($uid)) {
+            $sql = "
+                select
+                    ua.id, ua.cTime, ua.status, concat(a.name_first,' ',a.name_last) as meno
+                from
+                    userAttendance ua
+                join
+                    agent a on a.user_id=ua.userId
+                where
+                    ua.userId=:uid
+            ";
+            $attendance = Yii::$app->db->createCommand($sql)->bindParam(':uid',$uid)->queryAll();
+        } else {
+            $sql = "
+                select
+                    ua.id, ua.cTime, ua.status, concat(a.name_first,' ',a.name_last) as meno
+                from
+                    userAttendance ua
+                join
+                    agent a on a.user_id=ua.userId";
+            $attendance = Yii::$app->db->createCommand($sql)->queryAll();
+        }
         return $this->render('index', [
-            "attendance" => UserAttendance::find()->all(),
-            "userId" => Yii::$app->user->identity->getId()
+            "attendance" => $attendance ?? [],
+            "userId" => $uid ?? Yii::$app->user->identity->getId(),
+            "pageTitle" =>  empty($uid) ? Yii::t('app','Dochádzka') : Yii::t('app','Moja dochádzka')
         ]);
     }
 
