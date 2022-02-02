@@ -2,6 +2,8 @@
 
 use yii\helpers\Url;
 use backend\assets\RealAsset;
+//use common\models\posta\slovensko\eph\xmlgenerator\EphInfo;
+//use common\models\posta\slovensko\eph\xmlgenerator\EphShipment;
 
 $this->title = Yii::t('app', 'Garáže');
 $this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js', ['depends' => RealAsset::class]);
@@ -32,14 +34,15 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                     <?php
                     //TODO: meg ellenorzeseket ide rakni
                     ?>
-                    <form method="post" action="<?= Url::to(['generate-list']) ?>">
+                    <form method="post" action="<?= Url::to(['generate-list'])?>">
+                        <input type="hidden" name="Data[eph]" id="hidden-eph">
                         <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->getCsrfToken() ?>">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label"><?= Yii::t('app', 'Odosielateľ'); ?></label>
-                                    <select class="form-control form-select" id="SelectSender">
-                                        <option value=""><?= Yii::t('app', 'Zvoľte si odosielateľa'); ?></option>
+                                    <label class="form-label"><?= Yii::t('app','Odosielateľ'); ?></label>
+                                    <select class="form-control form-select" id="SelectSender" name="Data[raw_data]">
+                                        <option value=""><?= Yii::t('app','Zvoľte si odosielateľa'); ?></option>
                                         <?php
                                         foreach ($senders as $sender) {
                                         ?>
@@ -78,45 +81,46 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                         <h5 class="card-title"><?= Yii::t('app', 'Príjemcovia'); ?></h5>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="text" class="form-control" name="Data[recips]">
-                                <span class="text-muted font-12"><?= Yii::t('app', 'Pr. 1-10,15,16,23-27'); ?></span>
+                                <input type="text" class="form-control" name="Data[recips]" id="data_recips">
+                                <span class="text-muted font-12"><?= Yii::t('app','Pr. 1-10,15,16,23-27'); ?></span>
                             </div>
                         </div>
-                        <button class="btn btn-info text-white mt-3" type="submit"><?= Yii::t('app', 'Generovať'); ?></button>
+                        <button class="btn btn-info text-white mt-3" type="submit"><?= Yii::t('app','Generovať'); ?></button>
+                        <button class="btn btn-danger text-white mt-3" id="reset-form" type="button"><?= Yii::t('app','Reset'); ?></button>
+                        <a class="btn btn-secondary mt-3" href="<?= Url::to(['gen-eph']) ?>"><?= Yii::t('app','Vygenerovať EPH'); ?></a>
                     </form>
                     <div class="table-responsive m-t-20">
                         <table class="table table-bordered table-striped table-sm dattable">
                             <thead>
-                                <tr>
-                                    <th><?= Yii::t('app', 'Por. č.'); ?></th>
-                                    <th><?= Yii::t('app', 'Majiteľ'); ?></th>
-                                    <th><?= Yii::t('app', 'Informovanný'); ?></th>
-                                    <th><?= Yii::t('app', 'Dát. narod.'); ?></th>
-                                    <th><?= Yii::t('app', 'Ulica'); ?></th>
-                                    <th><?= Yii::t('app', 'Mesto'); ?></th>
-                                    <th><?= Yii::t('app', 'Spoluvl. pod.'); ?></th>
-                                    <th><?= Yii::t('app', 'Titul nadobud.'); ?></th>
-                                    <th><?= Yii::t('app', 'Ťarchy'); ?></th>
-                                    <th><?= Yii::t('app', 'Súp.č.'); ?></th>
-                                    <th><?= Yii::t('app', 'Č.parcely') ?></th>
-                                    <th><?= Yii::t('app', 'LV') ?></th>
-                                    <th><?= Yii::t('app', 'Miesto') ?></th>
-                                    <th><?= Yii::t('app', 'Akcie'); ?></th>
-                                </tr>
+                            <tr>
+                                <th><?= Yii::t('app','Por. č.'); ?></th>
+                                <th></th>
+                                <th><?= Yii::t('app','Majiteľ'); ?></th>
+                                <th><?= Yii::t('app','Dát. narod.'); ?></th>
+                                <th><?= Yii::t('app','Ulica'); ?></th>
+                                <th><?= Yii::t('app','Mesto'); ?></th>
+                                <th><?= Yii::t('app','Spoluvl. pod.'); ?></th>
+                                <th><?= Yii::t('app','Titul nadobud.'); ?></th>
+                                <th><?= Yii::t('app','Ťarchy'); ?></th>
+                                <th><?= Yii::t('app','Súp.č.'); ?></th>
+                                <th><?= Yii::t('app','Č.parcely') ?></th>
+                                <th><?= Yii::t('app','LV') ?></th>
+                                <th><?= Yii::t('app','Miesto') ?></th>
+                                <th><?= Yii::t('app','Akcie'); ?></th>
+                            </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                foreach ($offers as $offer) {
+                            <tbody class="font-12">
+                            <?php
+                            foreach($offers as $offer) {
                                 ?>
-                                    <tr>
-                                        <td>
-                                            <?= $offer['orderNumber'] ?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            echo $offer['name']
-                                            ?>
-                                        </td>
+                                <tr>
+                                    <td>
+                                        <?= $offer['orderNumber'] ?>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" class="onum" data-onumber="<?= $offer['orderNumber'] ?>">
+                                    </td>
+                                    <td>
                                         <?php
 
                                         if ($offer['informed'] == 1) {
@@ -165,13 +169,25 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
             </div>
         </div>
     </div>
-
-
 </div>
 
 <?php
 
 $js = <<<JS
+    var lis = new Array();
+
+    $('.onum').click(function(){
+        let d = $(this).data('onumber');
+        if ($(this).is(':checked')) {
+            lis.push(d);
+        } else {
+            if (lis.includes(d)) {
+                lis.splice(lis.indexOf(d),1);
+            }
+        }
+        
+        $('#data_recips').empty().val(lis.join(','));
+    });
     
     $('#SelectSender').change(function(){
         let s = $(this).val();
@@ -200,38 +216,7 @@ $js = <<<JS
         });
     });
     
-    /*$('#clear-list').click(function(){
-        $("#recipients").empty();
-    });*/
-    
-    /*$("#add-item").click(function(){
-        let x = $('#id-range').val();
-        let y = $('td.list-item').find("[data-ordernum='" + x + "']");
-        console.log(y);
-        console.log($(y).data('recip'));
-       $.each($('.list-item'),function(){
-           let x = $(this);
-           if (x.is(':checked') && x.data('mark') === 0) {
-              let y = "<span class='tag label label-info'>" + x.data("ordernum") + " - " + x.data("recip") + "<span data-role='remove'></span></span>";
-              x.data('mark',1);
-              $("#recipients").append(y);
-           }
-       }); 
-    });*/
-
-    /*$('[data-role="remove"]', $('#recipients')).click(function(){
-       console.log($(this).parent()); 
-    });*/
     
 JS;
 $this->registerJS($js);
 
-$css = <<<CSS
-.bootstrap-tagsinput {
-    border: 1px solid #e9ecef   ;
-    min-height: 30px;
-    box-shadow: none;
-    width: 100%
-}
-CSS;
-$this->registerCss($css);

@@ -33,6 +33,7 @@ RealAsset::register($this);
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
+    <div id="main-wrapper">
     <header class="topbar">
         <nav class="navbar top-navbar navbar-expand-md navbar-dark">
             <!-- ============================================================== -->
@@ -99,6 +100,11 @@ RealAsset::register($this);
                         </a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="<?= Url::to(['/profile']) ?>"><i class="ti-user"></i> <?php echo Yii::t('app','Môj profil'); ?></a></li>
+                            <li>
+                                <a href="<?php echo Url::to(['/user-attendance','uid'=>Yii::$app->user->getId()]) ?>">
+                                    <i class="ti-alarm-clock"></i> <?php echo Yii::t('app','Moja dochádzka'); ?>
+                                </a>
+                            </li>
                             <!--<li><a href="javascript:void(0)"><i class="ti-wallet"></i> My Balance</a></li>
                             <li><a href="javascript:void(0)"><i class="ti-email"></i> Inbox</a></li>
                             <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>-->
@@ -140,6 +146,11 @@ RealAsset::register($this);
                             <!-- <li><a href="/backoffice/applicant">Uchádzači</a></li> -->
                             <!-- <li><a href="/backoffice/users">Spolupracovníci</a></li> -->
                             <li><a href="/backoffice/students">Študenti</a></li>
+                            <li>
+                                <a href="<?php echo Url::to(['/user-attendance']) ?>">
+                                    <span class="hide-menu"><?php echo Yii::t('app','Dochádzka'); ?></span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calculator"><i class="fas fa-calculator"></i><span class="hide-menu">Kalkulačky</span></a></li>-->
@@ -194,7 +205,7 @@ RealAsset::register($this);
                     </li>
 
                             <?php } ?>
-                            <li><a class="" href="/backoffice/user-attendance"><i class="icon-clock"></i><span class="hide-menu">Dochádzka</span></a> </li>
+
                     </ul>
                 </nav>
             </div>

@@ -38,12 +38,12 @@ class TaskerMail extends AoMailer
      * @param string $newStage
      * @param string $format
      */
-    public function updateStageMail(Tasks $task, string $oldStage, string $newStage, string $format = self::FORMAT_TEXT): void
+    public function updateStageMail(Tasks $task, string $oldStage, string $newStage, string $user, string $format = self::FORMAT_TEXT): void
     {
         $project = $this->getTaskProject($task->ticketNumber);
         $this->setData([
             'ticketNumber'      => $task->ticketNumber,
-            'user'              => $task->reporter,
+            'user'              => $user,
             'projekt'           => $project->name,
             'ticketTitle'       => $task->title,
             'oldStage'          => $oldStage,
@@ -64,12 +64,12 @@ class TaskerMail extends AoMailer
      * @param string $format
      * @param string $format
      */
-    public function updatePriorityMail(Tasks $task, string $oldPriority, string $newPriority, string $format=self::FORMAT_TEXT): void
+    public function updatePriorityMail(Tasks $task, string $oldPriority, string $newPriority, string $user, string $format=self::FORMAT_TEXT): void
     {
         $project = $this->getTaskProject($task->ticketNumber);
         $this->setData([
             'ticketNumber'      => $task->ticketNumber,
-            'user'              => $task->reporter,
+            'user'              => $user,
             'projekt'           => $project->name,
             'ticketTitle'       => $task->title,
             'oldPriority'          => $oldPriority,

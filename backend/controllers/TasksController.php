@@ -106,7 +106,7 @@ class TasksController extends Controller
         TasksHistory::addToHistory($ticketId, $userName,'stage',  $oldStage, $stage);
         $ticket->updateStatus();
 
-        (new TaskerMail())->updateStageMail($ticket, $oldStage, $stage);
+        (new TaskerMail())->updateStageMail($ticket, $oldStage, $stage, $userName);
 
         return ['status'=>'ok','newStatus' => $ticket->taskStatus];
     }
@@ -128,7 +128,7 @@ class TasksController extends Controller
         $ticket->save();
         TasksHistory::addToHistory($ticketId, $userName,'priority',  $oldPriority, $priority);
 
-        (new TaskerMail())->updatePriorityMail($ticket, $oldPriority, $priority);
+        (new TaskerMail())->updatePriorityMail($ticket, $oldPriority, $priority, $userName);
 
         return ['status'=>'ok','newPriority' => $ticket->priority];
     }
