@@ -1,14 +1,15 @@
 <?php
+
 use yii\helpers\Url;
 use backend\assets\RealAsset;
 //use common\models\posta\slovensko\eph\xmlgenerator\EphInfo;
 //use common\models\posta\slovensko\eph\xmlgenerator\EphShipment;
 
-$this->title = Yii::t('app','Garáže');
-$this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js',['depends'=>RealAsset::class]);
-$this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css',['depends'=>RealAsset::class]);
-$this->registerJSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js', ['depends'=>RealAsset::class]);
-$this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css',['depends'=>RealAsset::class]);
+$this->title = Yii::t('app', 'Garáže');
+$this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js', ['depends' => RealAsset::class]);
+$this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css', ['depends' => RealAsset::class]);
+$this->registerJSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js', ['depends' => RealAsset::class]);
+$this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css', ['depends' => RealAsset::class]);
 
 ?>
 
@@ -19,7 +20,7 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
         </div>
         <div class="col-md-2 align-self-center text-right">
             <a class="btn btn-info d-none d-lg-block m-l-15 text-white" href="<?= Url::to(['/offers/import']) ?>">
-                <i class="mdi mdi-cloud-upload m-r-5"></i>&nbsp;<?= Yii::t('app','Import dát'); ?>
+                <i class="mdi mdi-cloud-upload m-r-5"></i>&nbsp;<?= Yii::t('app', 'Import dát'); ?>
             </a>
         </div>
     </div>
@@ -43,11 +44,11 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                                     <select class="form-control form-select" id="SelectSender" name="Data[raw_data]">
                                         <option value=""><?= Yii::t('app','Zvoľte si odosielateľa'); ?></option>
                                         <?php
-                                            foreach($senders as $sender) {
+                                        foreach ($senders as $sender) {
                                         ?>
-                                                <option value='<?= json_encode($sender)?>'><?= $sender['name'] ?></option>
-                                        <?php        
-                                            }
+                                            <option value='<?= json_encode($sender) ?>'><?= $sender['name'] ?></option>
+                                        <?php
+                                        }
                                         ?>
                                     </select>
                                 </div>
@@ -55,29 +56,29 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                         </div>
                         <div class="row">
                             <?php
-                            $langs = ['HU','SK'];
-                            foreach($langs as $lang) {
+                            $langs = ['HU', 'SK'];
+                            foreach ($langs as $lang) {
                             ?>
                                 <div class="col-md-4">
-                                    <h4 class="card-title mb-2"><?= Yii::t('app',"Dáta pre {$lang} email"); ?></h4>
+                                    <h4 class="card-title mb-2"><?= Yii::t('app', "Dáta pre {$lang} email"); ?></h4>
                                     <div class="form-group">
-                                        <label class="form-label mt-2"><?= Yii::t('app','Telefón odosielateľa'); ?></label>
-                                        <input type="text" name="Data[buyer_phone][<?=$lang?>]" class="form-control buyer_phone">
-                                        <label class="form-label mt-2"><?= Yii::t('app','Email odosielateľa'); ?></label>
-                                        <input type="text" name="Data[buyer_email][<?=$lang?>]" class="form-control buyer_email">
-                                        <label class="form-label mt-2"><?= Yii::t('app','Meno odosielateľa'); ?></label>
-                                        <input type="text" name="Data[buyer_name][<?=$lang?>]" class="form-control buyer_name">
-                                        <label class="form-label mt-2"><?= Yii::t('app','Miesto podpisu'); ?></label>
-                                        <input type="text" name="Data[miesto_podpisu][<?=$lang?>]" class="form-control miesto_podpisu">
-                                        <label class="form-label mt-2"><?= Yii::t('app','Dátum podpisu'); ?></label>
-                                        <input type="date" name="Data[datum_podpisu][<?=$lang?>]" class="form-control"  value="<?php echo date('Y-m-d'); ?>">
+                                        <label class="form-label mt-2"><?= Yii::t('app', 'Telefón odosielateľa'); ?></label>
+                                        <input type="text" name="Data[buyer_phone][<?= $lang ?>]" class="form-control buyer_phone">
+                                        <label class="form-label mt-2"><?= Yii::t('app', 'Email odosielateľa'); ?></label>
+                                        <input type="text" name="Data[buyer_email][<?= $lang ?>]" class="form-control buyer_email">
+                                        <label class="form-label mt-2"><?= Yii::t('app', 'Meno odosielateľa'); ?></label>
+                                        <input type="text" name="Data[buyer_name][<?= $lang ?>]" class="form-control buyer_name">
+                                        <label class="form-label mt-2"><?= Yii::t('app', 'Miesto podpisu'); ?></label>
+                                        <input type="text" name="Data[miesto_podpisu][<?= $lang ?>]" class="form-control miesto_podpisu">
+                                        <label class="form-label mt-2"><?= Yii::t('app', 'Dátum podpisu'); ?></label>
+                                        <input type="date" name="Data[datum_podpisu][<?= $lang ?>]" class="form-control" value="<?php echo date('Y-m-d'); ?>">
                                     </div>
                                 </div>
                             <?php
-                                }
+                            }
                             ?>
                         </div>
-                        <h5 class="card-title"><?= Yii::t('app','Príjemcovia'); ?></h5>
+                        <h5 class="card-title"><?= Yii::t('app', 'Príjemcovia'); ?></h5>
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="text" class="form-control" name="Data[recips]" id="data_recips">
@@ -121,26 +122,46 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                                     </td>
                                     <td>
                                         <?php
-                                        echo $offer['name']
+
+                                        if ($offer['informed'] == 1) {
                                         ?>
-                                    </td>
-                                    <td><?= $offer['birthDate'] ?></td>
-                                    <td><?= $offer['ownerAddress'] ?></td>
-                                    <td><?= $offer['ownerTown'] ?></td>
-                                    <td><?= $offer['coOwnership'] ?></td>
-                                    <td><?= $offer['acquisitionTitle'] ?></td>
-                                    <td><?= $offer['encumbrance'] ?></td>
-                                    <td><?= $offer['registerNumber'] ?></td>
-                                    <td><?= $offer['parcelNumber'] ?></td>
-                                    <td><?= $offer['ownershipDocumentNumber'] ?></td>
-                                    <td><?= $offer['propertyAddress'] ?></td>
-                                    <td>
-                                        <a href="<?= Url::to(['edit','on'=>$offer['orderNumber']]) ?>" title="<?= Yii::t('app','Upraviť'); ?>" style="color: black"><i class="fas fa-pencil-alt"></i></a>
-                                    </td>
-                                </tr>
+                                            <td>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                                                </svg>
+                                            </td>
+                                        <?php
+                                        }
+
+                                        ?>
+                                        <?php
+                                        if ($offer['informed'] == 0) {
+                                        ?>
+                                            <td>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                </svg>
+                                            </td>
+                                        <?php
+                                        }
+                                        ?>
+                                        <td><?= $offer['birthDate'] ?></td>
+                                        <td><?= $offer['ownerAddress'] ?></td>
+                                        <td><?= $offer['ownerTown'] ?></td>
+                                        <td><?= $offer['coOwnership'] ?></td>
+                                        <td><?= $offer['acquisitionTitle'] ?></td>
+                                        <td><?= $offer['encumbrance'] ?></td>
+                                        <td><?= $offer['registerNumber'] ?></td>
+                                        <td><?= $offer['parcelNumber'] ?></td>
+                                        <td><?= $offer['ownershipDocumentNumber'] ?></td>
+                                        <td><?= $offer['propertyAddress'] ?></td>
+                                        <td>
+                                            <a href="<?= Url::to(['edit', 'on' => $offer['orderNumber']]) ?>" title="<?= Yii::t('app', 'Upraviť'); ?>" style="color: black"><i class="fas fa-pencil-alt"></i></a>
+                                        </td>
+                                    </tr>
                                 <?php
-                            }
-                            ?>
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>

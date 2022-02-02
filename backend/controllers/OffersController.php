@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use common\models\documents\templatedocuments\PdfTemplateDocument;
@@ -135,7 +136,7 @@ class OffersController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index',[
+        return $this->render('index', [
             'offers' => $this->getOfferList(),
             'senders' => $this->getSenders()
         ]);
@@ -145,7 +146,7 @@ class OffersController extends Controller
     {
         if (Yii::$app->request->isPost) {
             $data = Yii::$app->request->post('Data');
-            $template = Template::findOne(['id'=>474]);
+            $template = Template::findOne(['id' => 474]);
             $doc = new PdfTemplateDocument();
             $doc->setTemplateContent($template->content);
             unset($template);
@@ -166,14 +167,14 @@ class OffersController extends Controller
             ]);
             $doc->create();
             $doc->downloadFile();
-            $sql = "UPDATE offer SET informed=1 WHERE id in (". implode(",",$offerIds) .")";
+            $sql = "UPDATE offer SET informed=1 WHERE id in (" . implode(",", $offerIds) . ")";
             Yii::$app->db->createCommand($sql)->execute();
 
             /*if (!empty($data['eph'])) {
                 $this->createEphXml($data, $offers);
             }*/
         }
-        $this->redirect('/offers/index',200);
+        $this->redirect('/offers/index', 200);
     }
 
     private function createEphXml(array $data, array $offers)
@@ -201,61 +202,78 @@ class OffersController extends Controller
         if (Yii::$app->request->isPost) {
             $data = Yii::$app->request->post('Import');
             if (empty($_FILES) || $_FILES['DataFile']['type'] != 'application/vnd.ms-excel') {
-                Yii::$app->session->setFlash('error',Yii::t('app','Nahratý súbor má zlý formát! Nahrajte CSV súbor (UTF8)!'));
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Nahratý súbor má zlý formát! Nahrajte CSV súbor (UTF8)!'));
             } else {
                 $result = $this->processCsvInput($_FILES['DataFile']['tmp_name'], $data['delimiter']);
-                $sql = "insert into offer (`propertyType`,`orderNumber`,`gender`,`name`,`lastName`,`maidenName`,".
-                    "`birthDate`,`ownerAddress`,`ownerTown`,`coOwnership`,`acquisitionTitle`,`encumbrance`,".
+                $sql = "insert into offer (`propertyType`,`orderNumber`,`gender`,`name`,`lastName`,`maidenName`," .
+                    "`birthDate`,`ownerAddress`,`ownerTown`,`coOwnership`,`acquisitionTitle`,`encumbrance`," .
                     "`registerNumber`,`parcelNumber`,`ownershipDocumentNumber`,`propertyAddress`)  values %s";
                 $rows = [];
-                foreach($result as $item) {
-                    $rows[] = "(".implode(',',[
-                            $data['type'],
-                            $item['orderNumber'] != '' ? $item['orderNumber'] : 'null' ,
-                            $item['gender'],
-                            "'{$item['name']}'",
-                            "'{$item['lastName']}'",
-                            "'{$item['maidenName']}'",
-                            "'{$item['birthDate']}'",
-                            "'{$item['ownerAddress']}'",
-                            "'{$item['ownerTown']}'",
-                            "'{$item['coOwnership']}'",
-                            "'{$item['acquisitionTitle']}'",
-                            "'{$item['encumbrance']}'",
-                            "'{$item['registerNumber']}'",
-                            "'{$item['parcelNumber']}'",
-                            "'{$item['ownershipDocumentNumber']}'",
-                            "'{$item['propertyAddress']}'"
-                        ]).")";
+                foreach ($result as $item) {
+                    $rows[] = "(" . implode(',', [
+                        $data['type'],
+                        $item['orderNumber'] != '' ? $item['orderNumber'] : 'null',
+                        $item['gender'],
+                        "'{$item['name']}'",
+                        "'{$item['lastName']}'",
+                        "'{$item['maidenName']}'",
+                        "'{$item['birthDate']}'",
+                        "'{$item['ownerAddress']}'",
+                        "'{$item['ownerTown']}'",
+                        "'{$item['coOwnership']}'",
+                        "'{$item['acquisitionTitle']}'",
+                        "'{$item['encumbrance']}'",
+                        "'{$item['registerNumber']}'",
+                        "'{$item['parcelNumber']}'",
+                        "'{$item['ownershipDocumentNumber']}'",
+                        "'{$item['propertyAddress']}'"
+                    ]) . ")";
                 }
-                $sql = sprintf($sql, implode(',',$rows));
+                $sql = sprintf($sql, implode(',', $rows));
                 $tr = Yii::$app->db->beginTransaction();
-                try{
+                try {
                     Yii::$app->db->createCommand($sql)->execute();
                     $tr->commit();
-                    Yii::$app->session->setFlash('success', Yii::t('app','Údaje boli úspešne nahraté'));
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Údaje boli úspešne nahraté'));
                     return $this->redirect(Url::to(['/offers']));
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $tr->rollBack();
-                    Yii::$app->session->setFlash('error',$e->getMessage());
+                    Yii::$app->session->setFlash('error', $e->getMessage());
                 }
             }
         }
 
-        return $this->render('import',[
-        ]);
+        return $this->render('import', []);
     }
+
+
 
     public function actionEdit(int $on)
     {
-        return $this->render('edit');
+        $offers = Offer::find()->where(['=', 'orderNumber', $on])->all();
+
+        if (Yii::$app->request->isPost) {
+            $data = Yii::$app->request->post('data');
+            foreach ($data as $id => $item) {
+                $offer = Offer::findOne(['id' => $id]);
+                foreach ($item as $col => $val) {
+                    $offer->$col = $val;
+                }
+                $offer->save();
+            }
+            return $this->redirect('index');
+        }
+
+        return $this->render('edit', [
+            'offers' => $offers
+        ]);
     }
 
     private function getOfferIds(string $ids): array
     {
-        $ids = explode(',',trim($ids));
+        $ids = explode(',', trim($ids));
         $returns = [];
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
             $this->processOfferId($id, $returns);
         }
         return $returns;
@@ -266,9 +284,9 @@ class OffersController extends Controller
         $orderNumber = trim($orderNumber);
         if (is_numeric($orderNumber)) {
             $returns = array_merge($returns, [$this->getOfferIdFromOrderNumber($orderNumber)]);
-        } elseif(strpos($orderNumber,'-') !== false) {
-            list($start,$end) = explode('-',$orderNumber);
-            for($i=$start;$i<=$end;$i++) {
+        } elseif (strpos($orderNumber, '-') !== false) {
+            list($start, $end) = explode('-', $orderNumber);
+            for ($i = $start; $i <= $end; $i++) {
                 $returns = array_merge($returns, [$this->getOfferIdFromOrderNumber($i)]);
             }
         }
@@ -358,7 +376,7 @@ class OffersController extends Controller
         // remove BOM string
         //
         $content = file_get_contents($csvFile);
-        file_put_contents($csvFile, str_replace("\xEF\xBB\xBF",'', $content));
+        file_put_contents($csvFile, str_replace("\xEF\xBB\xBF", '', $content));
 
         $result = [];
         if (($hFile = fopen($csvFile, "r")) !== FALSE) {
@@ -397,11 +415,11 @@ class OffersController extends Controller
         return trim($str);
     }
 
-    private function convertDate(string $date, string $dateFormat='Y-m-d'): string
+    private function convertDate(string $date, string $dateFormat = 'Y-m-d'): string
     {
         $date = $this->sanitizeString($date);
-        $date = str_replace('/','',$date);
-        $date = str_replace('?','',$date);
+        $date = str_replace('/', '', $date);
+        $date = str_replace('?', '', $date);
         if (strlen($date) == 0) {
             return '';
         }
@@ -410,7 +428,6 @@ class OffersController extends Controller
 
     private function convertCoOwnerShip(string $ownerShip): string
     {
-        return str_replace('.','/',$this->sanitizeString($ownerShip));
+        return str_replace('.', '/', $this->sanitizeString($ownerShip));
     }
-
 }
