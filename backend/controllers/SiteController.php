@@ -8,7 +8,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 use common\models\users\UsersStats;
-
+use common\models\CalendarEventType;
 /**
  * Site controller
  */
@@ -65,6 +65,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $calEvent = new CalendarEventType();
+        if(Yii::$app->request->isPost){
+            var_dump(Yii::$app->request->post());
+            exit;
+            $calEvent->load(Yii::$app->request->post());
+            $calEvent->save();
+        }   
         return $this->render('index');
     }
 
