@@ -14,7 +14,7 @@ $this->title = Yii::t('app','Import dát');
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="card">
+            <div class="card rounded-5 card-shadow">
                 <div class="card-body">
                     <form class="form" method="post" action="<?= Url::to(['/offers/import']) ?>" enctype="multipart/form-data">
                         <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->getCsrfToken() ?>">
@@ -54,3 +54,14 @@ $this->title = Yii::t('app','Import dát');
     </div>
 
 </div>
+
+<?php
+$css = <<<CSS
+.rounded-5 {
+    border-radius: .5em!important;
+}
+.card-shadow {
+    box-shadow: lightgrey 3px 3px;
+}
+CSS;
+$this->registerCSS($css);

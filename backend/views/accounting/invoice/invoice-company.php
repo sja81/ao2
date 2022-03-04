@@ -3,7 +3,7 @@ use yii\helpers\Url;
 use backend\helpers\HelpersNum;
 ?>
 
-<div class="card rounded-5">
+<div class="card rounded-5 card-shadow">
     <div class="card-body">
         <h4 class="card-title"><?php echo $office['name'] ?></h4>
         <div class="table-responsive">

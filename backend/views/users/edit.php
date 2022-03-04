@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var array $privileges
+ * @var array $myprivileges
+ */
+
 use backend\assets\RealAsset;
 use yii\helpers\Url;
 $this->title= Yii::t('app','Zmeniť užívateľa');
@@ -26,10 +31,10 @@ $errorEmail = Yii::t('app','Neplatný email! ');
                 <h4 class="text-themecolor"><?= $this->title ?></h4>
             </div>
         </div>
-
+        <form method="post" role="form" id="user-reg">
         <div class="card">
             <div class="card-body">
-                <form method="post" role="form" id="user-reg">
+
                     <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->csrfToken ?>">
                     <div class="vtabs customvtab">
                         <ul class="nav nav-tabs tabs-vertical" role="tablist">
@@ -44,6 +49,12 @@ $errorEmail = Yii::t('app','Neplatný email! ');
                                 <a class="nav-link" data-toggle="tab" href="#accesses" role="tab">
                                     <span class="hidden-sm-up"><i class="ti-package"></i></span>
                                     <span class="hidden-xs-down"><?= Yii::t('app','Prístupy') ?></span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#job" class="nav-link" data-toggle="tab" role="tab">
+                                    <span class="hidden-sm-up"><i class="ti-alarm-clock"></i></span>
+                                    <span class="hidden-xs-down"><?= Yii::t('app','Pracovný fond'); ?></span>
                                 </a>
                             </li>
                         </ul>
@@ -166,7 +177,6 @@ $errorEmail = Yii::t('app','Neplatný email! ');
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="tab-pane" id="accesses" role="tabpanel">
                                 <form method="post" role="form" id="priv-form">
@@ -182,7 +192,7 @@ $errorEmail = Yii::t('app','Neplatný email! ');
                                         <?php
                                         foreach($privileges as $item){
                                             $checked = "";
-                                            if (in_array($item['id'],$myprivileges[$mygroup])) {
+                                            if (!empty($myprivileges) && in_array($item['id'],$myprivileges[$mygroup])) {
                                                 $checked = " checked";
                                             }
                                         ?>
@@ -206,20 +216,51 @@ $errorEmail = Yii::t('app','Neplatný email! ');
                                     </table>
                                 </form>
                             </div>
+                            <div class="tab-pane" id="job" role="tabpanel">
+                                <diw class="row">
+                                    <div class="col-xs-12 form-group">
+                                        <label class="control-label">
+                                            <?= Yii::t('app','Forma zamestnania'); ?>
+                                        </label>
+                                        <select name="User[workType]" class="form-select form-control">
+                                            <option value=""><?= Yii::t('app','Zvoľte formu zamestnania'); ?></option>
+                                        </select>
+                                    </div>
+                                </diw>
+                                <div class="row">
+                                    <div class="col-xs-12 form-group">
+                                        <label class="control-label">
+                                            <?= Yii::t('app','Pracovné hodiny [hod]'); ?>
+                                        </label>
+                                        <input
+                                                type="text"
+                                                name="User[basicWorktime]"
+                                                class="form-control"
+                                                placeholder="0,00"
+                                                value="<?php
+                                                    echo !empty($user->workDetails->basicWorktime) ?
+                                                            str_replace(".",",",$user->workDetails->basicWorktime) : "0,00"
+                                                ?>"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row m-t-20 m-l-10">
-                        <button type="submit" class="btn btn-success mr-1">
+                <div class="row m-t-30">
+                    <div class="col-xs-12 col-md-9 offset-2">
+                        <button type="submit" class="btn btn-success mr-1 text-white">
                             <i class="mdi mdi-content-save m-r-5"></i><?= Yii::t('app','Uložiť') ?>
                         </button>
-                        <a class="btn btn-danger" href="<?= Url::to(['/users']) ?>">
+                        <a class="btn btn-danger text-white" href="<?= Url::to(['/users']) ?>">
                             <i class="mdi mdi-step-backward m-r-5"></i><?= Yii::t('app','Späť') ?>
                         </a>
                     </div>
+                </div>
 
-                </form>
             </div>
         </div>
+        </form>
 
     </div>
 

@@ -2,6 +2,7 @@
 use backend\assets\RealAsset;
 use yii\helpers\Url;
 
+/** @var array $offices **/
 
 $this->title=Yii::t('app','Faktúry');
 
@@ -74,8 +75,11 @@ JS;
 $this->registerJS($js);
 
 $css = <<<CSS
-.rounded-5{
-    border-radius: .5em!important;
-}
+    .rounded-5 {
+        border-radius: .5em!important;
+    }
+    .card-shadow {
+        box-shadow: lightgrey 3px 3px;
+    }
 CSS;
 $this->registerCSS($css);

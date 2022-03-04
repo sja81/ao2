@@ -27,7 +27,7 @@ $errorEmail = Yii::t('app','Neplatný email! ');
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card rounded-5 card-shadow">
                 <div class="card-body">
                     <form method="post" role="form" id="user-reg">
                         <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->csrfToken ?>">
@@ -159,13 +159,16 @@ $errorEmail = Yii::t('app','Neplatný email! ');
                                 </div>
                             </div>
                         </div>
-                        <div class="row m-t-20 m-l-10">
-                            <button type="submit" class="btn btn-success mr-1">
-                                <i class="mdi mdi-content-save m-r-5"></i><?= Yii::t('app','Uložiť') ?>
-                            </button>
-                            <a class="btn btn-danger" href="<?= Url::to(['/users']) ?>">
-                                <i class="mdi mdi-step-backward m-r-5"></i><?= Yii::t('app','Späť') ?>
-                            </a>
+                        <div class="row m-t-30">
+                            <div class="col-xs-12 col-md-10 offset-2">
+                                <button type="submit" class="btn btn-success mr-1 text-white">
+                                    <i class="mdi mdi-content-save m-r-5"></i><?= Yii::t('app','Uložiť') ?>
+                                </button>
+                                <a class="btn btn-danger text-white" href="<?= Url::to(['/users']) ?>">
+                                    <i class="mdi mdi-step-backward m-r-5"></i><?= Yii::t('app','Späť') ?>
+                                </a>
+                            </div>
+
                         </div>
 
                     </form>
@@ -254,6 +257,11 @@ $css = <<<CSS
     #inp-commission {
         display: none;
     }
-    
+    .rounded-5 {
+        border-radius: .5em!important;
+    }
+    .card-shadow {
+        box-shadow: lightgrey 3px 3px;
+    }
 CSS;
 $this->registerCSS($css);
