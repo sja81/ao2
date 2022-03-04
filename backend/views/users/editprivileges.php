@@ -12,7 +12,7 @@ $this->title= Yii::t('app','Zmeniť funkciu');
 
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card rounded-5 card-shadow">
                 <div class="card-body">
                     <form method="post" role="form">
                         <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->csrfToken ?>">
@@ -25,10 +25,10 @@ $this->title= Yii::t('app','Zmeniť funkciu');
                             <textarea class="form-control" rows="10" name="Privilege[description]"><?= $privilege['description']?></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-success mr-1">
+                        <button type="submit" class="btn btn-success mr-1 text-white">
                             <i class="mdi mdi-content-save m-r-5"></i><?= Yii::t('app','Uložiť') ?>
                         </button>
-                        <a class="btn btn-danger" href="<?= Url::to(['/users']) ?>">
+                        <a class="btn btn-danger text-white" href="<?= Url::to(['/users']) ?>">
                             <i class="mdi mdi-step-backward m-r-5"></i><?= Yii::t('app','Späť') ?>
                         </a>
 
@@ -37,5 +37,14 @@ $this->title= Yii::t('app','Zmeniť funkciu');
             </div>
         </div>
     </div>
-
 </div>
+<?php
+$css = <<<CSS
+    .rounded-5 {
+        border-radius: .5em!important;
+    }
+    .card-shadow {
+        box-shadow: lightgrey 3px 3px;
+    }
+CSS;
+$this->registerCSS($css);

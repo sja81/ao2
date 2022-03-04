@@ -2,8 +2,10 @@
 
 use yii\helpers\Url;
 use backend\assets\RealAsset;
-//use common\models\posta\slovensko\eph\xmlgenerator\EphInfo;
-//use common\models\posta\slovensko\eph\xmlgenerator\EphShipment;
+
+/** @var array $offers  */
+/** @var array $templates */
+/** @var array $senders */
 
 $this->title = Yii::t('app', 'Garáže');
 $this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js', ['depends' => RealAsset::class]);
@@ -29,7 +31,7 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card rounded-5 card-shadow">
                 <div class="card-body">
                     <?php
                     //TODO: meg ellenorzeseket ide rakni
@@ -37,6 +39,23 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                     <form method="post" action="<?= Url::to(['generate-list'])?>">
                         <input type="hidden" name="Data[eph]" id="hidden-eph">
                         <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->getCsrfToken() ?>">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label"><?= Yii::t('app','Šablóna'); ?></label>
+                                    <select name="Data[template]" class="form-control form-select">
+                                        <option value=""><?= Yii::t('app','Zvoľte šablónu'); ?></option>
+                                        <?php
+                                        foreach($templates as $template) {
+                                        ?>
+                                            <option value="<?= $template->id?>"><?= $template->name ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -120,45 +139,26 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                                     <td>
                                         <input type="checkbox" class="onum" data-onumber="<?= $offer['orderNumber'] ?>">
                                     </td>
+                                    <td> <?= $offer['name'] ?></td>
+                                    <td><?= $offer['birthDate'] ?></td>
+                                    <td><?= $offer['ownerAddress'] ?></td>
+                                    <td><?= $offer['ownerTown'] ?></td>
+                                    <td><?= $offer['coOwnership'] ?></td>
+                                    <td><?= $offer['acquisitionTitle'] ?></td>
+                                    <td><?= $offer['encumbrance'] ?></td>
+                                    <td><?= $offer['registerNumber'] ?></td>
+                                    <td><?= $offer['parcelNumber'] ?></td>
+                                    <td><?= $offer['ownershipDocumentNumber'] ?></td>
+                                    <td><?= $offer['propertyAddress'] ?></td>
                                     <td>
-                                        <?php
-
-                                        if ($offer['informed'] == 1) {
-                                        ?>
-                                            <td>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-                                                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
-                                                </svg>
-                                            </td>
-                                        <?php
-                                        }
-
-                                        ?>
-                                        <?php
-                                        if ($offer['informed'] == 0) {
-                                        ?>
-                                            <td>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                </svg>
-                                            </td>
-                                        <?php
-                                        }
-                                        ?>
-                                        <td><?= $offer['birthDate'] ?></td>
-                                        <td><?= $offer['ownerAddress'] ?></td>
-                                        <td><?= $offer['ownerTown'] ?></td>
-                                        <td><?= $offer['coOwnership'] ?></td>
-                                        <td><?= $offer['acquisitionTitle'] ?></td>
-                                        <td><?= $offer['encumbrance'] ?></td>
-                                        <td><?= $offer['registerNumber'] ?></td>
-                                        <td><?= $offer['parcelNumber'] ?></td>
-                                        <td><?= $offer['ownershipDocumentNumber'] ?></td>
-                                        <td><?= $offer['propertyAddress'] ?></td>
-                                        <td>
-                                            <a href="<?= Url::to(['edit', 'on' => $offer['orderNumber']]) ?>" title="<?= Yii::t('app', 'Upraviť'); ?>" style="color: black"><i class="fas fa-pencil-alt"></i></a>
-                                        </td>
-                                    </tr>
+                                        <a href="<?= Url::to(['edit', 'on' => $offer['orderNumber']]) ?>" title="<?= Yii::t('app', 'Upraviť'); ?>" style="color: black">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <a href="<?= Url::to(['comments','on' => $offer['orderNumber']]) ?>" title="<?= Yii::t('app','Komentáre'); ?>" style="color: black">
+                                            <i class="fas fa-comments"></i>
+                                        </a>
+                                    </td>
+                                </tr>
                                 <?php
                                 }
                                 ?>
@@ -219,4 +219,14 @@ $js = <<<JS
     
 JS;
 $this->registerJS($js);
+
+$css = <<<CSS
+.rounded-5 {
+    border-radius: .5em!important;
+}
+.card-shadow {
+    box-shadow: lightgrey 3px 3px;
+}
+CSS;
+$this->registerCSS($css);
 

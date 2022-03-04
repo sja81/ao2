@@ -7,11 +7,13 @@ use common\models\Office;
 use common\models\posta\slovensko\eph\xmlgenerator\EphRecipient;
 use common\models\posta\slovensko\eph\xmlgenerator\EphSender;
 use common\models\posta\slovensko\eph\xmlgenerator\XmlGenerator;
+use common\models\property\OfferComment;
 use common\models\Stat;
 use common\models\Template;
 use common\models\posta\slovensko\eph\xmlgenerator\EphInfo;
 use common\models\posta\slovensko\eph\xmlgenerator\EphShipment;
 use yii\helpers\Url;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use common\models\property\Offer;
 use Yii;
@@ -134,11 +136,16 @@ class OffersController extends Controller
         return $result;
     }
 
-    public function actionIndex()
+    /**
+     * @return string
+     */
+    public function actionIndex(): string
     {
+        $f = $this->getOfferList();
         return $this->render('index', [
             'offers' => $this->getOfferList(),
-            'senders' => $this->getSenders()
+            'senders' => $this->getSenders(),
+            'templates' => Template::find()->select('id,name')->andWhere(['in','id',[474,475]])->all()
         ]);
     }
 
@@ -146,7 +153,7 @@ class OffersController extends Controller
     {
         if (Yii::$app->request->isPost) {
             $data = Yii::$app->request->post('Data');
-            $template = Template::findOne(['id' => 474]);
+            $template = Template::findOne(['id' => $data['template']]);
             $doc = new PdfTemplateDocument();
             $doc->setTemplateContent($template->content);
             unset($template);
@@ -169,12 +176,8 @@ class OffersController extends Controller
             $doc->downloadFile();
             $sql = "UPDATE offer SET informed=1 WHERE id in (" . implode(",", $offerIds) . ")";
             Yii::$app->db->createCommand($sql)->execute();
-
-            /*if (!empty($data['eph'])) {
-                $this->createEphXml($data, $offers);
-            }*/
         }
-        $this->redirect('/offers/index', 200);
+        return $this->redirect('/offers/index', 200);
     }
 
     private function createEphXml(array $data, array $offers)
@@ -242,18 +245,19 @@ class OffersController extends Controller
                 }
             }
         }
-
         return $this->render('import', []);
     }
 
-
-
+    /**
+     * @param int $on
+     * @return string|Response
+     */
     public function actionEdit(int $on)
     {
         $offers = Offer::find()->where(['=', 'orderNumber', $on])->all();
 
         if (Yii::$app->request->isPost) {
-            $data = Yii::$app->request->post('data');
+            $data = Yii::$app->request->post('Data');
             foreach ($data as $id => $item) {
                 $offer = Offer::findOne(['id' => $id]);
                 foreach ($item as $col => $val) {
@@ -261,11 +265,12 @@ class OffersController extends Controller
                 }
                 $offer->save();
             }
-            return $this->redirect('index');
+            return $this->redirect(Url::to(['index']));
         }
 
         return $this->render('edit', [
-            'offers' => $offers
+            'offers' => $offers,
+            'countries' => Stat::find()->select('name,international_name')->all()
         ]);
     }
 
@@ -429,5 +434,13 @@ class OffersController extends Controller
     private function convertCoOwnerShip(string $ownerShip): string
     {
         return str_replace('.', '/', $this->sanitizeString($ownerShip));
+    }
+
+    public function actionComments(int $on)
+    {
+
+        return $this->render('comments',[
+            'comments'  => OfferComment::find()->where(['=','status',1])->all()
+        ]);
     }
 }

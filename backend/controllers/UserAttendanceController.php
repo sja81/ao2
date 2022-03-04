@@ -2,8 +2,9 @@
 
 namespace backend\controllers;
 
+use common\models\User;
 use yii\helpers\Url;
-use yii\helpers\VarDumper;
+use yii\helpers\Html;
 use yii\web\Controller;
 use common\models\users\UserAttendance;
 use Yii;
@@ -33,51 +34,60 @@ class UserAttendanceController extends Controller
         return parent::beforeAction($action);
     }
 
-    public function actionIndex(?int $uid = null)
+    /**
+     * @param int $rid
+     * @return string
+     */
+    public function actionEdit(int $rid)
     {
-        if(!empty($uid)) {
-            $sql = "
-                select
-                    ua.id, ua.cTime, ua.status, concat(a.name_first,' ',a.name_last) as meno
-                from
-                    userAttendance ua
-                join
-                    agent a on a.user_id=ua.userId
-                where
-                    ua.userId=:uid
-            ";
-            $attendance = Yii::$app->db->createCommand($sql)->bindParam(':uid',$uid)->queryAll();
-        } else {
-            $sql = "
-                select
-                    ua.id, ua.cTime, ua.status, concat(a.name_first,' ',a.name_last) as meno
-                from
-                    userAttendance ua
-                join
-                    agent a on a.user_id=ua.userId";
-            $attendance = Yii::$app->db->createCommand($sql)->queryAll();
-        }
+        return $this->render('edit',[]);
+    }
+
+    /**
+     * @param int $uid
+     * @return string
+     * @throws \yii\db\Exception
+     */
+    public function actionIndex(int $uid)
+    {
+        $attendance = new UserAttendance();
+
         return $this->render('index', [
-            "attendance" => $attendance ?? [],
+            "attendance" => $attendance->getListByUserId($uid) ?? [] ,
             "userId" => $uid ?? Yii::$app->user->identity->getId(),
-            "pageTitle" =>  empty($uid) ? Yii::t('app','Dochádzka') : Yii::t('app','Moja dochádzka')
+            "pageTitle" =>  empty($uid) ? Yii::t('app','Dochádzka') : Yii::t('app','Moja dochádzka'),
+            "yearlySummary" => $attendance->getYearlyWorkedHoursByUserId($uid,true),
+            "monthlySummary" => $attendance->getMonthlyWorkedHoursByUserId($uid, true),
+            "dailySummary" => $attendance->getDailyWorkedHoursByUserId($uid, true)
         ]);
     }
 
-    public function actionArrival()
+
+    /**
+     * @return array
+     */
+    public function actionArrival(): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $userId = Yii::$app->request->post('userId');
-        $arrivalTime = new UserAttendance();
-        $arrivalTime->userId = $userId;
-        $arrivalTime->cTime = (new \DateTime('now'))->format('Y-m-d H:i:s');
-        $arrivalTime->status = UserAttendance::PRICHOD;
-        $arrivalTime->save();
-        unset($arrivalTime);
+        $date = (new \DateTime('now'));
 
-        $rows = UserAttendance::find()->all();
+        $userId = Yii::$app->request->post('userId');
+        $note = $this->sanitizeString(Yii::$app->request->post('note'));
+
+        $arrivalTime = UserAttendance::find()->andWhere(['=','userId',$userId])->andWhere(['=','uaDate',$date->format('Y-m-d')])->one();
+        if (!$arrivalTime) {
+            $arrivalTime = new UserAttendance();
+            $arrivalTime->userId = $userId;
+            $arrivalTime->uaDate = $date->format('Y-m-d');
+            $arrivalTime->inTime = $date->format('H:i:s');
+            $arrivalTime->inIP = Yii::$app->request->getUserIP();
+            $arrivalTime->uaType = UserAttendance::REGULAR_WORKTIME;
+            $arrivalTime->note = $note ?? '';
+            $arrivalTime->uaAction = 1;
+            $arrivalTime->save();
+        }
         $tableRows = $this->renderPartial('tablebody', [
-            "rows" => $rows
+            "rows" => $arrivalTime->getListByUserId($userId)
         ]);
 
         return [
@@ -86,25 +96,56 @@ class UserAttendanceController extends Controller
         ];
     }
 
-    public function actionDeparture()
+    /**
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function actionDeparture(): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $userId = Yii::$app->request->post('userId');
-        $departureTime = new UserAttendance();
-        $departureTime->userId = $userId;
-        $departureTime->cTime = (new \DateTime('now'))->format('Y-m-d H:i:s');
-        $departureTime->status = UserAttendance::ODCHOD;
-        $departureTime->save();
-        unset($departureTime);
+        $note = $this->sanitizeString(Yii::$app->request->post('note'));
+        $date = (new \DateTime('now'));
 
-        $rows = UserAttendance::find()->all();
+        $departure = UserAttendance::find()
+            ->andWhere(['=','uaDate',$date->format('Y-m-d')])
+            ->andWhere(['=','userId',$userId])
+            ->one();
+        if (!$departure) {
+            $departure = new UserAttendance();
+            $departure->userId = $userId;
+            $departure->uaType = UserAttendance::REGULAR_WORKTIME;
+        }
+        $departure->outTime = $date->format('H:i:s');
+        $departure->note .= $note;
+        $departure->outIP = Yii::$app->request->getUserIP();
+
+        $departure->save();
+
+        if (!is_null($departure->inTime)) {
+            $sql = "update userAttendance set diffTime=TIME_TO_SEC(TIMEDIFF(outTime,inTime)) where id={$departure->id}";
+            Yii::$app->db->createCommand($sql)->execute();
+        }
+
         $tableRows = $this->renderPartial('tablebody', [
-            "rows" => $rows
+            "rows" => $departure->getListByUserId($userId)
         ]);
 
         return [
             'status' => 'ok',
-            'rows' => $tableRows
+            'rows' => $tableRows,
+            'day_total_time' => $departure->getDailyWorkedHoursByUserId($userId, true),
+            'month_total_time' => $departure->getMonthlyWorkedHoursByUserId($userId, true),
+            'year_total_time'   => $departure->getYearlyWorkedHoursByUserId($userId, true)
         ];
+    }
+
+    private function sanitizeString(?string $str = null): string
+    {
+        $result = '';
+        if (!is_null($str)) {
+            $result = Html::encode(trim($str));
+        }
+        return $result;
     }
 }

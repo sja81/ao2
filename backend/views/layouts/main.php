@@ -85,9 +85,6 @@ RealAsset::register($this);
         <div class="scroll-sidebar">
             <nav class="sidebar-nav">
                 <ul id="sidebarnav">
-                <?php
-                if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
-                    ?>
                     <li class="user-pro">
                         <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                             <?php
@@ -111,7 +108,6 @@ RealAsset::register($this);
                             <li><a href="/backoffice/site/logout" class="dropdown-item" data-method="post"><i class="fa fa-power-off"></i> Logout</a></li>
                         </ul>
                     </li>
-                    <?php } ?>
                     <?php
                         if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
                     ?>
@@ -135,11 +131,8 @@ RealAsset::register($this);
                     </li>
                     <li> <a class="waves-effect waves-dark" href="/backoffice/customers"><i class="ti-user"></i><span class="hide-menu">Zákaznící</span></a></li>
                     <li> <a class="waves-effect waves-dark" href="/backoffice/documents"><i class="far fa-folder"></i><span class="hide-menu">Dokumenty</span></a></li>
-                    <?php
-                    if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
-                        ?>
                     <li>
-                        <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                             <i class="fas fa-users"></i><span class="hide-menu">Užívatelia</span>
                         </a>
                         <ul aria-expanded="false" class="collapse">
@@ -147,16 +140,13 @@ RealAsset::register($this);
                             <!-- <li><a href="/backoffice/users">Spolupracovníci</a></li> -->
                             <li><a href="/backoffice/students">Študenti</a></li>
                             <li>
-                                <a href="<?php echo Url::to(['/user-attendance']) ?>">
+                                <a href="<?php echo Url::to(['/user-attendance-admin']) ?>">
                                     <span class="hide-menu"><?php echo Yii::t('app','Dochádzka'); ?></span>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calculator"><i class="fas fa-calculator"></i><span class="hide-menu">Kalkulačky</span></a></li>-->
-                    <?php
-                    }
-                    ?>
 
                     <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calls"><i class="ti-announcement"></i><span class="hide-menu">Marketing</span></a></li>-->
                     <!--<li>
