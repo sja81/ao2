@@ -489,7 +489,7 @@ class Aoreal extends Model
             LEFT JOIN `nehnutelnost` n ON (zn.`nehnut_id` = n.`id`)
             LEFT JOIN `nehnut_druh` nd ON (n.`druh_nehnut` = nd.`id`)
             WHERE 1 
-                AND zu.`ucel_id` > 0 
+                AND zu.`ucel_id` > 0 AND z.zobr_na_web IS NOT NULL
                 AND zc.`cena` > 0'
                 .($exclusive ? ' AND n.`exclusive` = 1' : '')
                 .($newest ? ' AND n.`created_at` > "'.date('Y-m-d', strtotime('-'.$interval_newest.' DAY')).'"' : '').'

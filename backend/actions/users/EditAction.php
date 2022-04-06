@@ -7,6 +7,7 @@ use common\models\settings\Privileges;
 use common\models\User;
 use common\models\users\PrivilegesUsers;
 use common\models\users\UserGroups;
+use common\models\users\UserWork;
 use Yii;
 use yii\base\Action;
 use yii\helpers\Url;
@@ -31,6 +32,7 @@ class EditAction extends Action
                 foreach($userData['office_id'] as $item) {
                     $this->saveAgent($userData, $item, $user->id);
                 }
+                $this->saveUserWorkData($userData, $userId);
                 $tr->commit();
             } catch (\Exception $e) {
                 echo $e->getMessage();
@@ -49,6 +51,27 @@ class EditAction extends Action
             'privileges' => Privileges::find()->asArray()->all(),
             'myprivileges'  => $this->getUsersPrivileges($userId),
         ]);
+    }
+
+    /**
+     * @param array $data
+     * @param int $userId
+     * @return void
+     */
+    private function saveUserWorkData(array $data, int $userId): void
+    {
+        $work = UserWork::findOne(['userId'=>$userId]);
+        if (!$work) {
+            $work = new UserWork();
+            $work->userId = $userId;
+        }
+        if ($data['workType'] != $work->workType) {
+            $work->workType = $data['workType'];
+        }
+        if ($data['basicWorktime'] != $work->basicWorktime) {
+            $work->basicWorktime = str_replace(',','.',$data['basicWorktime']);
+        }
+        $work->save();
     }
 
     private function getUsersPrivileges($userId): array
@@ -116,7 +139,7 @@ class EditAction extends Action
         }
     }
 
-    private function saveAgent($userData, $officeId, $userId)
+    private function saveAgent(array $userData, $officeId, $userId): void
     {
         // save to agent table
         $agent = Agent::find()->andWhere(['=','user_id',$userId])->andWhere(['=','office_id',$officeId])->one();

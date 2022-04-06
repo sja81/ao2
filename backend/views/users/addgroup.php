@@ -11,7 +11,7 @@ $this->title= Yii::t('app','Pridať grupu');
 
     <div class="row">
         <div class="col-md-12 col-xs-12">
-            <div class="card">
+            <div class="card rounded-5 card-shadow">
                 <div class="card-body">
                     <h4 class="card-title mb-5"><?= Yii::t('app','Nová grupa') ?></h4>
                     <form method="post" role="form">
@@ -32,10 +32,10 @@ $this->title= Yii::t('app','Pridať grupu');
                                 <textarea name="UserGroup[description]" cols="30" rows="10" class="form-control"></textarea>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success mr-1">
+                        <button type="submit" class="btn btn-success mr-1 text-white">
                             <i class="mdi mdi-content-save m-r-5"></i><?= Yii::t('app','Uložiť') ?>
                         </button>
-                        <a class="btn btn-danger" href="<?= Url::to(['/users']) ?>">
+                        <a class="btn btn-danger text-white" href="<?= Url::to(['/users']) ?>">
                             <i class="mdi mdi-step-backward m-r-5"></i><?= Yii::t('app','Späť') ?>
                         </a>
                     </form>
@@ -45,3 +45,13 @@ $this->title= Yii::t('app','Pridať grupu');
     </div>
 
 </div>
+<?php
+$css = <<<CSS
+    .rounded-5 {
+        border-radius: .5em!important;
+    }
+    .card-shadow {
+        box-shadow: lightgrey 3px 3px;
+    }
+CSS;
+$this->registerCSS($css);
