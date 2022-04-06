@@ -1,5 +1,4 @@
 <?php
-
 namespace backend\controllers;
 
 use common\models\documents\templatedocuments\PdfTemplateDocument;
@@ -372,7 +371,6 @@ class OffersController extends Controller
                      offer 
                  where
                      orderNumber is NULL";
-
         return Yii::$app->db->createCommand($sql)->queryAll();
     }
 

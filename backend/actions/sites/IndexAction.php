@@ -3,6 +3,8 @@ namespace backend\actions\sites;
 
 use common\models\Ucel;
 use yii\base\Action;
+use common\models\CalendarEventType;
+use Yii;
 
 class IndexAction extends Action
 {
@@ -14,6 +16,11 @@ class IndexAction extends Action
 
     public function run()
     {
-        return $this->controller->render('index');
+
+        $calendarEvents = CalendarEventType::find()->all();
+
+        return $this->controller->render('index',[
+            'events' => $calendarEvents
+        ]);
     }
 }

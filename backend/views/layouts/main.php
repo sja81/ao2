@@ -191,9 +191,9 @@ RealAsset::register($this);
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/backoffice/users"><?= Yii::t('app','Užívatelia') ?></a></li>
                             <li><a href="/backoffice/task-manager"><?php echo Yii::t('app','Manažér úloh') ?></a></li>
+                            <li><a href="/backoffice/calendar/settings"><?php echo Yii::t('app', 'Kalendár') ?></a></li>
                         </ul>
                     </li>
-
                             <?php } ?>
 
                     </ul>

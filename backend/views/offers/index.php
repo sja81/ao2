@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Url;
 use backend\assets\RealAsset;
 
@@ -12,7 +11,6 @@ $this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js', [
 $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css', ['depends' => RealAsset::class]);
 $this->registerJSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js', ['depends' => RealAsset::class]);
 $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css', ['depends' => RealAsset::class]);
-
 ?>
 
 <div class="container-fluid">
@@ -169,7 +167,7 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
             </div>
         </div>
     </div>
-</div>
+  </div>
 
 <?php
 
@@ -215,8 +213,7 @@ $js = <<<JS
             responsive: true
         });
     });
-    
-    
+      
 JS;
 $this->registerJS($js);
 
@@ -229,4 +226,3 @@ $css = <<<CSS
 }
 CSS;
 $this->registerCSS($css);
-
