@@ -28,7 +28,7 @@ $this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
                 <a class="btn btn-info d-none d-lg-block" href="/backoffice/accounting/add-invoice">
                     <i class="fas fa-plus-circle"></i>&nbsp;Pridať
                 </a>
-            <a href="/backoffice/accounting/invoice-export" class="btn btn-success mx-2">Export</a>
+            <a href="/backoffice/accounting/invoice-export" class="btn btn-success px-2">Export</a>
             </div>
         </div>
     </div>
@@ -42,8 +42,7 @@ $this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
             <h4 class="card-title">
                 <?= $office['name'] ?>
             </h4>
-
-
+            
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-sm dattable">
                     <thead>

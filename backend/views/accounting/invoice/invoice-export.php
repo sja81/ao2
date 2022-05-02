@@ -3,6 +3,7 @@
 use backend\assets\RealAsset;
 use yii\helpers\Url;
 use backend\helpers\HelpersNum;
+use PHPUnit\Util\Log\JSON;
 use yii\helpers\Html;
 
 
@@ -18,6 +19,7 @@ $this->title = " Faktúry - Export ";
         <div class="card-body">
             <h4 class="card-title">Export</h4>
             <form method="post" class="form" id="">
+            <input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>" value="<?=Yii::$app->request->csrfToken?>"/>
                 <label class="col-1 col-form-label">Názov Firmy</label>
                 <div class="col-5">
                     <input type="text" name="Invoice[znak]" class="form-control">

@@ -117,7 +117,17 @@ RealAsset::register($this);
                             ?>
                             <li><a href="/backoffice/tasks" class="waves-effect waves-dark<?php echo $active ?>"><i class="fas fa-tasks"></i><span class="hide-menu"><?= Yii::t('app', 'Úlohy'); ?></span></a></li>
                             <li> <a class="waves-effect waves-dark" href="/backoffice/contracts"><i class="icon-home"></i><span class="hide-menu">Nehnuteľnosti</span></a></li>
-                            <li> <a class="waves-effect waves-dark" href="/backoffice/customers"><i class="ti-user"></i><span class="hide-menu">Zákaznící</span></a></li>
+
+                            <li>
+                                <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                    <i class="ti-user"></i><span class="hide-menu">Zákazníci</span>
+                                </a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="/backoffice/customers">Zákaznící</a></li>
+                                        <li><a href="/backoffice/clients">Zákazníci2</a></li>
+                                    </ul>
+                            </li>
+                            
                             <!--<li> <a class="waves-effect waves-dark" href="/backoffice/clients"><i class="ti-user"></i><span class="hide-menu">Klienti</span></a></li>-->
                             <!--<li> <a class="waves-effect waves-dark" href="/backoffice/tasks"><i class="fas fa-tasks"></i><span class="hide-menu">Úlohy</span></a></li>-->
                             <li> <a class="waves-effect waves-dark" href="/backoffice/documents"><i class="far fa-folder"></i><span class="hide-menu">Dokumenty</span></a></li>
