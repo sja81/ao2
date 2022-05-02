@@ -24,7 +24,6 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
                             <th>Meno a priezvisko</th>
                             <th>RČ/IČO</th>
                             <th>Adresa</th>
-                            <th>PSČ</th>
                             <th>Email</th>
                             <th>Telefón</th>
                             <th>Vytvorené</th>
@@ -52,8 +51,7 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
                                     <?= $customer['adresa']  ?> 
                                     <br>
                                     <?= $customer['town']  ?>
-                                </td>
-                                <td>
+                                    <br>
                                     <?= $customer['zip'] ?>
                                 </td>
                                 <td>
