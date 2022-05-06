@@ -2,6 +2,7 @@
 namespace common\models\client;
 
 use yii\db\ActiveRecord;
+use common\models\client\ClientBusiness;
 
 class Client extends ActiveRecord
 {
@@ -43,5 +44,25 @@ class Client extends ActiveRecord
     public static function getClientDocumentFolder(int $clientId)
     {
         return static::getClientMainFolder($clientId) . "/document";
+    }
+   
+    public function getClientContact() 
+    {
+        return $this->hasOne(ClientContact::class, ['client_id' => 'id']);
+    }
+
+    public function getClientBusinesses() 
+    {
+        return $this->hasMany(ClientBusiness::class, ['client_id' => 'id']);
+    }
+
+    public function getClientDetail() 
+    {
+        return $this->hasOne(ClientDetail::class, ['client_id' => 'id']);
+    }
+
+    public function getDocuments() 
+    {
+        return $this->hasMany(ClientDocuments::class, ['client_id' => 'id']);
     }
 }

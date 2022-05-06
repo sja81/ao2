@@ -14,44 +14,25 @@ class IndexAction extends Action
         if (is_null(Yii::$app->user->identity)) {
             return $this->controller->redirect(Url::to(['/site/login']));
         }
-
-        $params = Yii::$app->request->get();
-        $page = isset($params['p']) ? (int)$params['p'] : 1;
-        $customers = [];
-
-        if(Yii::$app->user->identity->hasRole('admin')) {
-            $customers = Customer::find()
-                            ->select([
-                                'id',
-                                'customer_type',
-                                'name_first',
-                                'name_last',
-                                'lv_name_first',
-                                'lv_name_last',
-                                'ssn',
-                                'email',
-                                'phone',
-                                'address',
-                                'created_at',
-                                'town',
-                                'lv_town'
-                            ]);
-            $customerCountQuery = clone $customers;
-
-            if (!is_null($page) && is_int($page) && $page > 0) {
-                $customers->offset(($page-1) * 20)->limit(20);
-            }
-        } else {
-            //get customers only for
-        }
+        //id, 
 
 
+        $sql = "SELECT 
+        c.id,
+        if(c.customer_type = 'firma', cc.obchodne_meno, CONCAT(c.name_last, ' ', c.name_first)) AS meno,
+        if(c.customer_type = 'firma', cc.ico, c.ssn) AS ssnico,
+         c.email, c.phone, c.created_at, c.town, c.zip,
+        if(c.customer_type = 'firma', cc.adresa, c.address) AS adresa
+    
+    FROM 
+        customer c
+    LEFT JOIN
+        customer_company cc ON cc.customer_id = c.id";
 
+        $customers = Yii::$app->db->createCommand($sql)->queryAll();
 
         return $this->controller->render('index',[
-            'customers'     =>  $customers->all(),
-            'customersCount' => $customerCountQuery->count(),
-            'agents'        => (new Agent())->getActiveAgents()
+            'customers'     => $customers
         ]);
     }
 }
