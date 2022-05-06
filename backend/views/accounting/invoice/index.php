@@ -18,19 +18,8 @@ $this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
 ?>
 <div class="container-fluid">
     <div class="row page-titles">
-        <div class="col-md-8 align-self-center">
+        <div class="col-md-12 align-self-center">
             <h4 class="text-themecolor"><?= $this->title ?></h4>
-        </div>
-        <div class="col-md-4 align-self-center text-right">
-            <div class="d-flex justify-content-end align-items-center">
-                <a href="#" class="btn btn-success d-none d-lg-block m-l-15 text-white">
-                    <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať PFA') ?>
-                </a>
-                <a class="btn btn-info d-none d-lg-block m-l-15 text-white" href="<?= Url::to(['/accounting/add-invoice']) ?>">
-                    <i class="fas fa-plus-circle"></i>&nbsp;<?= Yii::t('app','Pridať VFA'); ?>
-                </a>
-            <a href="/backoffice/accounting/invoice-export" class="btn btn-success px-2">Export</a>
-            </div>
         </div>
     </div>
 
@@ -42,6 +31,7 @@ $this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
             <a class="btn btn-info text-white" href="<?= Url::to(['/accounting/add-invoice']) ?>">
                 <i class="fas fa-plus-circle"></i>&nbsp;<?= Yii::t('app','Pridať VFA'); ?>
             </a>
+            <a href="/backoffice/accounting/invoice-export" class="btn btn-success text-white">Export</a>
         </div>
     </div>
 
