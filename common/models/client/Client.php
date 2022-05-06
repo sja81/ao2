@@ -7,6 +7,9 @@ class Client extends ActiveRecord
 {
     const CLASS_SALT = 'xAOy0(N$/2:Ji3`Ab(93+|p6~s26|4Vf|0DD_[Vz^0#QL }J#*zx5}*73052|~|/';
 
+    /**
+     * @return string
+     */
     public static function tableName()
     {
         return 'client';

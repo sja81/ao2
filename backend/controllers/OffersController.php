@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use common\models\documents\templatedocuments\PdfTemplateDocument;
+use common\models\NehnutelnostDruhy;
 use common\models\Office;
 use common\models\posta\slovensko\eph\xmlgenerator\EphRecipient;
 use common\models\posta\slovensko\eph\xmlgenerator\EphSender;
@@ -140,7 +141,6 @@ class OffersController extends Controller
      */
     public function actionIndex(): string
     {
-        $f = $this->getOfferList();
         return $this->render('index', [
             'offers' => $this->getOfferList(),
             'senders' => $this->getSenders(),
@@ -244,7 +244,9 @@ class OffersController extends Controller
                 }
             }
         }
-        return $this->render('import', []);
+        return $this->render('import', [
+            'propertyTypes'     =>  NehnutelnostDruhy::find()->select(['id','nazov'])->all()
+        ]);
     }
 
     /**
@@ -322,8 +324,8 @@ class OffersController extends Controller
     {
 
         $sql = "select 
-                     GROUP_CONCAT(id SEPARATOR '<br>') AS `id`, 
-                     orderNumber, GROUP_CONCAT(gender SEPARATOR '<br>') AS gender,
+                     GROUP_CONCAT(id SEPARATOR '|') AS `id`, 
+                     orderNumber, 
                      GROUP_CONCAT(
                             CONCAT(
                                 IF(
@@ -357,7 +359,7 @@ class OffersController extends Controller
                      orderNumber
                  union
                  select 
-                     id, orderNumber, gender, CONCAT(`name`,' ',lastName) AS `name`, ownerAddress, ownerTown,ownerZip,coOwnership,
+                     id, orderNumber, CONCAT(`name`,' ',lastName) AS `name`, ownerAddress, ownerTown,ownerZip,coOwnership,
                      birthDate,
                      acquisitionTitle,
                      encumbrance,
@@ -385,21 +387,21 @@ class OffersController extends Controller
         if (($hFile = fopen($csvFile, "r")) !== FALSE) {
             while (($data = fgetcsv($hFile, 1000, $separator)) !== FALSE) {
                 $result[] = [
-                    'orderNumber'               =>  $this->sanitizeString($data[0]),
-                    'gender'                    =>  $this->transformGender($data[1]),
-                    'name'                      =>  $this->sanitizeString($data[2]),
-                    'lastName'                  =>  $this->sanitizeString($data[3]),
-                    'maidenName'                =>  $this->sanitizeString($data[4]),
-                    'birthDate'                 =>  $this->convertDate($data[5]),
-                    'ownerAddress'              =>  $this->sanitizeString($data[6]),
-                    'ownerTown'                 =>  $this->sanitizeString($data[7]),
-                    'coOwnership'               =>  $this->convertCoOwnerShip($data[8]),
-                    'acquisitionTitle'           =>  $this->sanitizeString($data[9]),
-                    'encumbrance'               =>  $this->sanitizeString($data[10]),
-                    'registerNumber'            =>  $this->sanitizeString($data[11]),
-                    'parcelNumber'              =>  $this->sanitizeString($data[12]),
-                    'ownershipDocumentNumber'   =>  $this->sanitizeString($data[13]),
-                    'propertyAddress'           =>  $this->sanitizeString($data[14])
+                    'orderNumber'               =>  !empty($data[0]) ? $this->sanitizeString($data[0]) : '',
+                    'gender'                    =>  !empty($data[1]) ? $this->transformGender($data[1]) : '',
+                    'name'                      =>  !empty($data[2]) ? $this->sanitizeString($data[2]) : '',
+                    'lastName'                  =>  !empty($data[3]) ? $this->sanitizeString($data[3]) : '',
+                    'maidenName'                =>  !empty($data[4]) ? $this->sanitizeString($data[4]) : '',
+                    'birthDate'                 =>  !empty($data[5]) ? $this->convertDate($data[5]) : '',
+                    'ownerAddress'              =>  !empty($data[6]) ? $this->sanitizeString($data[6]) : '',
+                    'ownerTown'                 =>  !empty($data[7]) ? $this->sanitizeString($data[7]) : '',
+                    'coOwnership'               =>  !empty($data[8]) ? $this->convertCoOwnerShip($data[8]) : '',
+                    'acquisitionTitle'           =>  !empty($data[9]) ? $this->sanitizeString($data[9]) : '',
+                    'encumbrance'               =>  !empty($data[10]) ? $this->sanitizeString($data[10]) : '',
+                    'registerNumber'            =>  !empty($data[11]) ? $this->sanitizeString($data[11]) : '',
+                    'parcelNumber'              =>  !empty($data[12]) ? $this->sanitizeString($data[12]) : '',
+                    'ownershipDocumentNumber'   =>  !empty($data[13]) ? $this->sanitizeString($data[13]) : '',
+                    'propertyAddress'           =>  !empty($data[14]) ? $this->sanitizeString($data[14]) : ''
                 ];
             }
             fclose($hFile);

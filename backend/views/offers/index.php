@@ -6,7 +6,7 @@ use backend\assets\RealAsset;
 /** @var array $templates */
 /** @var array $senders */
 
-$this->title = Yii::t('app', 'Garáže');
+$this->title = Yii::t('app', 'Ponuky');
 $this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js', ['depends' => RealAsset::class]);
 $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css', ['depends' => RealAsset::class]);
 $this->registerJSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js', ['depends' => RealAsset::class]);
@@ -135,6 +135,9 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-tagsinput/dist/bootst
                                         <?= $offer['orderNumber'] ?>
                                     </td>
                                     <td>
+                                        <?php
+                                            $offerIds = explode('|',$offer['id']);
+                                        ?>
                                         <input type="checkbox" class="onum" data-onumber="<?= $offer['orderNumber'] ?>">
                                     </td>
                                     <td> <?= $offer['name'] ?></td>
