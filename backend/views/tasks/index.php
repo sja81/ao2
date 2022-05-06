@@ -8,11 +8,14 @@ $this->registerJSFile('@web/assets/node_modules/jqueryui/jquery-ui.js',['depends
 ?>
 <div class="container-fluid">
     <div class="row page-titles">
-        <div class="col-md-10 align-self-center">
+        <div class="col-md-12 align-self-center">
             <h4 class="text-themecolor"><?= $this->title ?></h4>
         </div>
-        <div class="col-md-2 align-self-center text-right">
-            <a class="btn btn-info d-none d-lg-block m-l-15 text-white" href="<?= Url::to(['/tasks/add']) ?>">
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-xs-12">
+            <a class="btn btn-info text-white" href="<?= Url::to(['/tasks/add']) ?>">
                 <i class="fas fa-plus-circle"></i>&nbsp;<?= Yii::t('app','Pridať úlohu'); ?>
             </a>
         </div>

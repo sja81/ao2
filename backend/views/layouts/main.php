@@ -207,7 +207,7 @@ RealAsset::register($this);
                         </a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="<?= Url::to(['/contracts']) ?>"><?= Yii::t('app','Nehnuteľnosti'); ?></a></li>
-                            <li><a href="<?= Url::to(['/offers']) ?>"><?= Yii::t('app','Garáže'); ?></a></li>
+                            <li><a href="<?= Url::to(['/offers']) ?>"><?= Yii::t('app','Ponuky'); ?></a></li>
                         </ul>
                     </li>
                     <li> <a class="waves-effect waves-dark" href="/backoffice/customers"><i class="ti-user"></i><span class="hide-menu">Zákaznící</span></a></li>

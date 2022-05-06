@@ -56,6 +56,9 @@ class AccountingController extends Controller
             ],
             'report'    =>  [
                 'class' =>  'backend\actions\accounting\ReportAction'
+            ],
+            'add-received-invoice' => [
+                'class' =>  'backend\actions\accounting\AddReceivedInvoiceAction'
             ]
         ];
     }

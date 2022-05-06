@@ -34,6 +34,16 @@ $this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
         </div>
     </div>
 
+    <div class="row mb-3">
+        <div class="col-xs-12">
+            <a href="<?= Url::to(['/accounting/add-received-invoice']) ?>" class="btn btn-success text-white">
+                <i class="fas fa-plus-circle"></i>&nbsp;<?php echo Yii::t('app','Pridať PFA') ?>
+            </a>
+            <a class="btn btn-info text-white" href="<?= Url::to(['/accounting/add-invoice']) ?>">
+                <i class="fas fa-plus-circle"></i>&nbsp;<?= Yii::t('app','Pridať VFA'); ?>
+            </a>
+        </div>
+    </div>
 
     <?php
     foreach($offices as $office){

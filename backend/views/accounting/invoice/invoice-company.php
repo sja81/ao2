@@ -107,7 +107,7 @@ use backend\helpers\HelpersNum;
                             }
                             ?>
                             <?php
-                            if ($invoice['bookedIn'] == 'odfa') {
+                            //if ($invoice['bookedIn'] == 'odfa') {
                             ?>
                             <a
                                     href="<?= Url::to(['accounting/print','t'=>$invoiceCode[$invoice['typ_faktury']],'id'=>$invoice['id']]) ?>"
@@ -117,7 +117,7 @@ use backend\helpers\HelpersNum;
                                 <i class="fas fa-print"></i>
                             </a>
                             <?php
-                            }
+                            //}
                             ?>
                             <a href="<?= Url::to(['accounting/edit-invoice','id'=>$invoice['id']]) ?>" title="Edit" style="color: black"><i class="fas fa-pencil-alt"></i></a>
                         </td>
