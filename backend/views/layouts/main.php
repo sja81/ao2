@@ -130,9 +130,6 @@ RealAsset::register($this);
                             <!--<li> <a class="waves-effect waves-dark" href="/backoffice/clients"><i class="ti-user"></i><span class="hide-menu">Klienti</span></a></li>-->
                             <!--<li> <a class="waves-effect waves-dark" href="/backoffice/tasks"><i class="fas fa-tasks"></i><span class="hide-menu">Úlohy</span></a></li>-->
                             <li> <a class="waves-effect waves-dark" href="/backoffice/documents"><i class="far fa-folder"></i><span class="hide-menu">Dokumenty</span></a></li>
-                            <?php
-                            if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')) {
-                            ?>
                                 <li>
                                     <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                                         <i class="fas fa-users"></i><span class="hide-menu">Užívatelia</span>
@@ -160,7 +157,7 @@ RealAsset::register($this);
                     </li>
                 </ul>
             </div>
-        </nav>
+        </aside>
     </header>
     <aside class="left-sidebar">
         <div class="scroll-sidebar">
@@ -282,6 +279,11 @@ RealAsset::register($this);
             </div>
         </aside>
         <div class="page-wrapper">
+            <?php
+                /**
+                * @var $content
+                */
+             ?>
             <?= $content ?>
         </div>
         <footer class="footer">
