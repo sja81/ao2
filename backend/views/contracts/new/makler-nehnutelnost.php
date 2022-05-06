@@ -41,7 +41,7 @@ $this->registerCSSFile('@web/assets/fine-uploader/fine-uploader-new.min.css',['d
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label>Maklér</label>
-                                        <select class="form-control select-drop" name="Data[agent][id]" id="main-agent" onchange="getComission()">
+                                        <select class="form-control form-select" name="Data[agent][id]" id="main-agent" onchange="getComission()">
                                             <option value="">-- Zvoľte makléra --</option>
                                             <?php
                                             $selected='';
@@ -86,7 +86,7 @@ $this->registerCSSFile('@web/assets/fine-uploader/fine-uploader-new.min.css',['d
 
                             <div class="col-md-6 form-group">
                                 <label class="control-label">Kategória nehnuteľnosti</label>
-                                <select class="form-control select-drop" name="Data[kategoria]" id="kategoria">
+                                <select class="form-control form-select" name="Data[kategoria]" id="kategoria">
                                     <option value="">Zvolte kategoriu</option>
                                     <?php
                                     foreach ($kategorie as $item) {
@@ -98,7 +98,7 @@ $this->registerCSSFile('@web/assets/fine-uploader/fine-uploader-new.min.css',['d
 
                             <div class="col-md-6 form-group">
                                 <label class="control-label">Druh nehnuteľnosti</label>
-                                <select class="form-control select-drop" name="Data[druh_nehnut]" id="nehnut-druh">
+                                <select class="form-control form-select" name="Data[druh_nehnut]" id="nehnut-druh">
                                 </select>
                             </div>
                         </div>

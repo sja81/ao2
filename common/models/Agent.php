@@ -96,4 +96,22 @@ class Agent extends ActiveRecord
     {
         return $this->owner == 1 ? true : false;
     }
+
+    public function getFullAddress(): string
+    {
+        $address = [];
+        if (!is_null($this->address1)) {
+            $address[] = $this->address1;
+        }
+        if (!is_null($this->address2)) {
+            $address[] = $this->address2;
+        }
+        return implode(',',$address);
+    }
+
+    public function getFullName(): string
+    {
+        return $this->name_first . ' ' . $this->name_last;
+    }
+
 }

@@ -22,7 +22,7 @@ class RealAsset extends AssetBundle
         'assets/dist/js/waves.js',
         'assets/dist/js/sidebarmenu.js',
         'assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js',
-        'assets/node_modules/sparkline/jquery.sparkline.min.js',
+        //'assets/node_modules/sparkline/jquery.sparkline.min.js',
         'assets/dist/js/custom.min.js?v=1'
     ];
     public $depends = [

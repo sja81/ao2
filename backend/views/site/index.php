@@ -39,7 +39,7 @@ $this->registerCSSFile('@web/assets/node_modules/calendar/dist/fullcalendar.css'
                                                         <input type="checkbox" class="custom-control-input" id="drop-remove">
                                                         <label class="custom-control-label" for="drop-remove">Remove after drop</label>
                                                     </div>
-                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#add-new-event" class="btn m-t-10 btn-info btn-block waves-effect waves-light">
+                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#add-new-event" class="btn m-t-10 btn-info btn-block waves-effect waves-light text-white">
                                                         <i class="ti-plus"></i> Add New Event
                                                     </a>
                                                 </div>
@@ -56,17 +56,6 @@ $this->registerCSSFile('@web/assets/node_modules/calendar/dist/fullcalendar.css'
                         </div>
                     </div>
                 </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    Tasks
-                </div>
-            </div>
-
-        </div>
-    </div>
 
     <!-- BEGIN MODAL -->
     <div class="modal none-border" id="my-event">

@@ -34,7 +34,6 @@ RealAsset::register($this);
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <div id="main-wrapper">
-
         <!-- ============================================================== -->
         <!-- Topbar header - style you can find in pages.scss -->
         <!-- ============================================================== -->
@@ -146,13 +145,92 @@ RealAsset::register($this);
                                 </li>
                                 <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calculator"><i class="fas fa-calculator"></i><span class="hide-menu">Kalkulačky</span></a></li>-->
                             <?php
-                            }
+                            $pic = Yii::$app->user->identity->getProfilePicture();
                             ?>
+                            <img src="<?= $pic ?>" alt="user" class="">
+                            <span class="hidden-md-down">
+                                <?= !isset(\Yii::$app->user->identity->username) ? "Guest" : \Yii::$app->user->identity->username ?> &nbsp;
+                                <i class="fa fa-angle-down"></i>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right animated flipInY">
+                            <a href="<?= Url::to(['/profile']) ?>" class="dropdown-item"><i class="ti-user"></i> <?php echo Yii::t('app','Môj profil');?></a>
+                            <a href="/backoffice/site/logout" class="dropdown-item" data-method="post"><i class="fa fa-power-off"></i> Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <aside class="left-sidebar">
+        <div class="scroll-sidebar">
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav">
+                    <li class="user-pro">
+                        <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                             <?php
-                            if (isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')) {
+                            $pic = Yii::$app->user->identity->getProfilePicture();
                             ?>
-                                <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calls"><i class="ti-announcement"></i><span class="hide-menu">Marketing</span></a></li>-->
-                                <!--<li>
+                            <img src="<?= $pic ?>" alt="<?= Yii::$app->user->identity->username ?>" class="img-circle">
+                            <span class="hide-menu">
+                                <?php echo !isset(\Yii::$app->user->identity->username) ? "Guest" : \Yii::$app->user->identity->username ?>
+                            </span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="<?= Url::to(['/profile']) ?>"><i class="ti-user"></i> <?php echo Yii::t('app','Môj profil'); ?></a></li>
+                            <li>
+                                <a href="<?php echo Url::to(['/user-attendance','uid'=>Yii::$app->user->getId()]) ?>">
+                                    <i class="ti-alarm-clock"></i> <?php echo Yii::t('app','Moja dochádzka'); ?>
+                                </a>
+                            </li>
+                            <!--<li><a href="javascript:void(0)"><i class="ti-wallet"></i> My Balance</a></li>
+                            <li><a href="javascript:void(0)"><i class="ti-email"></i> Inbox</a></li>
+                            <li><a href="javascript:void(0)"><i class="ti-settings"></i> Account Setting</a></li>-->
+                            <li><a href="/backoffice/site/logout" class="dropdown-item" data-method="post"><i class="fa fa-power-off"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                    <?php
+                        if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
+                    ?>
+                    <!--<li><a class="waves-effect waves-dark" href="#"><i class="icon-speedometer"></i><span class="hide-menu">Dashboard</span></a>-->
+                    <?php
+                    }
+                    ?>
+                    <li> <a class="waves-effect waves-dark" href="/backoffice"><i class="icon-calender"></i><span class="hide-menu">Kalendár</span></a></li>
+                    <?php
+                        $active = (strpos($_SERVER['REQUEST_URI'],'tasks')) ? ' active': '';
+                    ?>
+                    <li><a href="<?= Url::to(['/tasks']) ?>" class="waves-effect waves-dark<?php echo $active ?>"><i class="fas fa-tasks"></i><span class="hide-menu"><?= Yii::t('app','Úlohy'); ?></span></a></li>
+                    <li>
+                        <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                            <i class="icon-home"></i><span class="hide-menu"><?= Yii::t('app','Reality'); ?></span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="<?= Url::to(['/contracts']) ?>"><?= Yii::t('app','Nehnuteľnosti'); ?></a></li>
+                            <li><a href="<?= Url::to(['/offers']) ?>"><?= Yii::t('app','Garáže'); ?></a></li>
+                        </ul>
+                    </li>
+                    <li> <a class="waves-effect waves-dark" href="/backoffice/customers"><i class="ti-user"></i><span class="hide-menu">Zákaznící</span></a></li>
+                    <li> <a class="waves-effect waves-dark" href="/backoffice/documents"><i class="far fa-folder"></i><span class="hide-menu">Dokumenty</span></a></li>
+                    <li>
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                            <i class="fas fa-users"></i><span class="hide-menu">Užívatelia</span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse">
+                            <!-- <li><a href="/backoffice/applicant">Uchádzači</a></li> -->
+                            <!-- <li><a href="/backoffice/users">Spolupracovníci</a></li> -->
+                            <li><a href="/backoffice/students">Študenti</a></li>
+                            <li>
+                                <a href="<?php echo Url::to(['/user-attendance-admin']) ?>">
+                                    <span class="hide-menu"><?php echo Yii::t('app','Dochádzka'); ?></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calculator"><i class="fas fa-calculator"></i><span class="hide-menu">Kalkulačky</span></a></li>-->
+
+                    <!--<li> <a class="waves-effect waves-dark" href="/backoffice/calls"><i class="ti-announcement"></i><span class="hide-menu">Marketing</span></a></li>-->
+                    <!--<li>
                         <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                             <i class="ti-layout"></i><span class="hide-menu">CMS</span>
                         </a>
@@ -162,19 +240,20 @@ RealAsset::register($this);
                             <li><a href="/backoffice/cms/counter">Počítadlo</a></li>
                         </ul>
                     </li>-->
-                                <li>
-                                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                                        <i class="fas fa-balance-scale"></i><span class="hide-menu">Účtovníctvo</span>
-                                    </a>
-                                    <ul aria-expanded="false" class="collapse">
-                                        <li><a href="/backoffice/orders"><?= Yii::t('app', 'Objednávky') ?></a></li>
-                                        <li><a href="/backoffice/invoices"><?= Yii::t('app', 'Faktúry2') ?></a></li>
-                                        <li><a href="/backoffice/accounting/invoice"><?= Yii::t('app', 'Faktúry') ?></a></li>
-                                        <li><a href="/backoffice/accounting/cash-receipt">Pokladničné dokl.</a></li>
-                                        <!-- <li><a href="/backoffice/business-trip">Cestovný príkaz</a></li> -->
-                                    </ul>
-                                </li>
-                                <!--<li>
+                    <li>
+                        <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                            <i class="fas fa-balance-scale"></i><span class="hide-menu">Účtovníctvo</span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse">
+                            <!--<li><a href="/backoffice/orders"><?= Yii::t('app','Objednávky') ?></a></li>-->
+                            <!--<li><a href="/backoffice/invoices"><?= Yii::t('app','Faktúry2') ?></a></li>-->
+                            <li><a href="<?= Url::to(['/accounting/report']) ?>"><?= Yii::t('app','Reporty'); ?></a></li>
+                            <li><a href="<?= Url::to(['/accounting/invoice']) ?>"><?= Yii::t('app','Faktúry') ?></a></li>
+                            <li><a href="<?= Url::to(['/accounting/cash-receipt']) ?>"><?= Yii::t('app','Pokladničné dokl.'); ?></a></li>
+                            <!-- <li><a href="/backoffice/business-trip">Cestovný príkaz</a></li> -->
+                          </ul>
+                    </li>
+                    <!--<li>
                         <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                             <i class="fas fa-bug"></i><span class="hide-menu">DDD & Ozon</span>
                         </a>
@@ -183,19 +262,21 @@ RealAsset::register($this);
                             <li><a href="<?php echo Url::to(['/ddd-services/orders']) ?>">Objednávky</a></li>
                         </ul>
                     </li>-->
-                                <li>
-                                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                                        <i class="ti-settings"></i></i><span class="hide-menu"><?= Yii::t('app', 'Nastavenia') ?></span>
-                                    </a>
-                                    <ul aria-expanded="false" class="collapse">
-                                        <li><a href="/backoffice/users"><?= Yii::t('app', 'Užívatelia') ?></a></li>
-                                        <li><a href="/backoffice/task-manager"><?php echo Yii::t('app', 'Manažér úloh') ?></a></li>
-                                        <li><a href="/backoffice/calendar/settings"><?php echo Yii::t('app', 'Nastevenie kalendára') ?></a></li>
-                                    </ul>
-                                </li>
-
+                    <?php
+                    if(isset(Yii::$app->user->identity) && Yii::$app->user->identity->hasRole('admin')){
+                        ?>
+                    <li>
+                        <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                            <i class="ti-settings"></i></i><span class="hide-menu"><?= Yii::t('app','Nastavenia') ?></span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/backoffice/users"><?= Yii::t('app','Užívatelia') ?></a></li>
+                            <li><a href="/backoffice/task-manager"><?php echo Yii::t('app','Manažér úloh') ?></a></li>
+                            <li><a href="/backoffice/calendar/settings"><?php echo Yii::t('app', 'Kalendár') ?></a></li>
+                        </ul>
+                    </li>
                             <?php } ?>
-                            <li><a class="" href="/backoffice/user-attendance"><i class="icon-clock"></i><span class="hide-menu">Dochádzka</span></a> </li>
+
                     </ul>
                 </nav>
             </div>

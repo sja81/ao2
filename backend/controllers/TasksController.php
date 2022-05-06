@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\mailer\TaskerMail;
 use common\models\tasks\Tasks;
 use common\models\tasks\TasksComments;
 use common\models\tasks\TasksHistory;
@@ -100,14 +101,12 @@ class TasksController extends Controller
         }
         $oldStage = $ticket->stage;
         $ticket->stage = $stage;
-        $ticket->updatedAt = new Expression('now()');
+        $ticket->updatedAt = (new \DateTimeImmutable())->format("Y-m-d H:i:s");
         $ticket->save();
-
         TasksHistory::addToHistory($ticketId, $userName,'stage',  $oldStage, $stage);
-
         $ticket->updateStatus();
 
-        Tasks::sendNotification($ticketId,$userName,TaskAction::UPDATE_STAGE, ['oldStage'=>$oldStage,'newStage'=>$stage]);
+        (new TaskerMail())->updateStageMail($ticket, $oldStage, $stage, $userName);
 
         return ['status'=>'ok','newStatus' => $ticket->taskStatus];
     }
@@ -125,9 +124,11 @@ class TasksController extends Controller
         }
         $oldPriority = $ticket->priority;
         $ticket->priority = $priority;
-        $ticket->updatedAt = new Expression('now()');
+        $ticket->updatedAt = (new \DateTimeImmutable())->format("Y-m-d H:i:s");
         $ticket->save();
         TasksHistory::addToHistory($ticketId, $userName,'priority',  $oldPriority, $priority);
+
+        (new TaskerMail())->updatePriorityMail($ticket, $oldPriority, $priority, $userName);
 
         return ['status'=>'ok','newPriority' => $ticket->priority];
     }
@@ -149,6 +150,8 @@ class TasksController extends Controller
         $ticket->updatedAt = new Expression('now()');
         $ticket->save();
         TasksHistory::addToHistory($ticketId, $userName,'assignee',  $oldAssignee, $assignee);
+
+        (new TaskerMail())->updateAssigneeMail($ticket, $oldAssignee, $assignee);
 
         return ['status'=>'ok','newAssignee' => $ticket->assignee];
     }

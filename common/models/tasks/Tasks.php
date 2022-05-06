@@ -7,6 +7,8 @@ use yii\db\ActiveRecord;
 
 class Tasks extends ActiveRecord
 {
+    const UNASSIGNED_TASK = 'unassigned';
+
     private $stageScenarios = [
         'backlog'   => TasksStatuses::OPEN,
         'inprogress' => TasksStatuses::WIP,
