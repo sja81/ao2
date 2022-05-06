@@ -29,6 +29,7 @@ $this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
                 <a class="btn btn-info d-none d-lg-block m-l-15 text-white" href="<?= Url::to(['/accounting/add-invoice']) ?>">
                     <i class="fas fa-plus-circle"></i>&nbsp;<?= Yii::t('app','Pridať VFA'); ?>
                 </a>
+            <a href="/backoffice/accounting/invoice-export" class="btn btn-success px-2">Export</a>
             </div>
         </div>
     </div>
@@ -41,7 +42,6 @@ $this->registerJSFile('@web/js/issue.js?v=0.1',['depends'=>RealAsset::class]);
         ]);
     }
     ?>
-
 </div>
 <?php
 $csrf = "'" . Yii::$app->request->csrfParam ."':'". Yii::$app->request->getCsrfToken() ."'";
