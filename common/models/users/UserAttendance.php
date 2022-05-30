@@ -30,6 +30,11 @@ class UserAttendance extends ActiveRecord
         return $type[$id];
     }
 
+    /**
+     * @param int $userId
+     * @return array|\yii\db\DataReader
+     * @throws \yii\db\Exception
+     */
     public function getListByUserId(int $userId)
     {
         $sql = "
@@ -44,11 +49,20 @@ class UserAttendance extends ActiveRecord
             where
                 ua.userId=:uid
             GROUP BY
-	            ua.uaDate, ua.userId
+	            ua.uaDate, ua.userId, ua.id, a.name_first, a.name_last 
+	        ORDER BY
+	            ua.uaDate desc
         ";
         return Yii::$app->db->createCommand($sql)->bindParam(':uid',$userId)->queryAll();
     }
 
+    /**
+     * @param int $userId
+     * @param bool $useLetters
+     * @param int|null $year
+     * @return false|string|\yii\db\DataReader|null
+     * @throws \yii\db\Exception
+     */
     public function getYearlyWorkedHoursByUserId(int $userId, bool $useLetters = false, ?int $year=null)
     {
         if (is_null($year)) {
@@ -77,6 +91,14 @@ class UserAttendance extends ActiveRecord
         return $result;
     }
 
+    /**
+     * @param int $userId
+     * @param bool $useLetters
+     * @param int|null $month
+     * @param int|null $year
+     * @return false|string|\yii\db\DataReader|null
+     * @throws \yii\db\Exception
+     */
     public function getMonthlyWorkedHoursByUserId(int $userId, bool $useLetters = false, ?int $month=null, ?int $year=null)
     {
         if (is_null($year)) {
@@ -107,6 +129,13 @@ class UserAttendance extends ActiveRecord
         return $result;
     }
 
+    /**
+     * @param int $userId
+     * @param bool $useLetters
+     * @param string|null $date
+     * @return false|string|\yii\db\DataReader|null
+     * @throws \yii\db\Exception
+     */
     public function getDailyWorkedHoursByUserId(int $userId, bool $useLetters = false, ?string $date=null)
     {
         if (is_null($date)) {
@@ -132,6 +161,11 @@ class UserAttendance extends ActiveRecord
         return $result;
     }
 
+    /**
+     * @param string|null $time
+     * @param bool $useSeconds
+     * @return string
+     */
     private function convertTimeToTimeWithLetters(?string $time, bool $useSeconds = false): string
     {
         if (is_null($time)) {

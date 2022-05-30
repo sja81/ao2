@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use common\models\users\UserAttendance;
 use common\models\users\UserDetails;
 use Yii;
 use yii\base\NotSupportedException;
@@ -194,8 +195,11 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
-    /*
+    /**
      * Checks if the user has the proper role
+     * @param string $role
+     * @return false|string|\yii\db\DataReader|null
+     * @throws \yii\db\Exception
      */
     public function hasRole(string $role)
     {
@@ -207,6 +211,10 @@ class User extends ActiveRecord implements IdentityInterface
         return $result;
     }
 
+    /**
+     * @param array $data
+     * @return void
+     */
     public function updateProfileData(array $data): void
     {
         if ($this->email != trim($data['email'])) {
@@ -214,11 +222,17 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getDetails()
     {
         return $this->hasOne(UserDetails::class,['userId'=>'id']);
     }
 
+    /**
+     * @return string
+     */
     public function getProfilePicture(): string
     {
         $pic = Yii::getAlias('@web') . "/assets/images/users/nouser.png";
@@ -230,9 +244,28 @@ class User extends ActiveRecord implements IdentityInterface
         return $pic;
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getWorkDetails()
     {
         return $this->hasOne(UserWork::class,['userId'=>'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAttendance()
+    {
+        return $this->hasMany(UserAttendance::class,['userId'=>'id']);
+    }
+
+    /**
+     * @param string $date
+     * @return bool
+     */
+    public function isPresent(string $date): bool
+    {
+        return (int)$this->getAttendance()->andWhere(['=','uaDate', $date])->count() > 0;
+    }
 }
