@@ -1,5 +1,6 @@
 <?php
 use backend\assets\RealAsset;
+use yii\grid\GridView;
 
 
 /** @var string $pageTitle */
@@ -38,10 +39,22 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
                             <textarea class="form-control" id="txt01" rows="2"></textarea>
                         </div>
                         <div class="form-group">
-                                <button type="button" class="btn btn-success text-white" id="prichod"><?php echo Yii::t('app','Začiatok práce') ?></button>
-                                <button type="button" class="btn btn-danger text-white" id="odchod"><?php echo Yii::t('app','Koniec práce') ?></button>
+                            <button type="button" class="btn btn-dark text-white" id="komentar">
+                                <?= Yii::t('app','Uložiť komentár'); ?>
+                            </button>
+                            <?php
+                            /**
+                             * @var $isPresent
+                             */
+                            ?>
+                            <button type="button" class="btn btn-success text-white" id="prichod" style="<?= !$isPresent ? 'display:inline-block': 'display:none' ?>">
+                                <?php echo Yii::t('app','Začiatok práce') ?>
+                            </button>
+                            <button type="button" class="btn btn-danger text-white" id="odchod" style="<?= $isPresent ? 'display:inline-block': 'display:none' ?>">
+                                <?php echo Yii::t('app','Koniec práce') ?>
+                            </button>
                         </div>
-                       </form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -155,44 +168,68 @@ $csrf = "'" . Yii::$app->request->csrfParam . "':'" . Yii::$app->request->getCsr
 $js = <<<JS
 $(function() { $('.dattable').DataTable({ order: [] }); });
 
+$('#komentar').click(function(){
+    $.ajax({
+            url: "/backoffice/user-attendance/save-comment",
+            dataType: "json",
+            data: { 
+                userId:$('#userId').val(),
+                note: document.getElementById('txt01').value,
+                {$csrf} 
+            },
+            type: "POST"
+    }).done(function(res){
+        if (res.status == 'error') {
+                console.log(res.message);
+            } else {    
+                $('#att-01 tbody').empty().append(res.table_response);
+                $('#txt01').val('');    
+            }
+    });
+});
+
 $('#prichod').click(function(){
     $.ajax({
-                url: "/backoffice/user-attendance/arrival",
-                dataType: "json",
-                data: { 
-                    userId:$('#userId').val(),
-                    note: document.getElementById('txt01').value,
-                    {$csrf} 
-                },
-                type: "POST"
-        }).done(function(res){
-            if (res.status == 'error') {
-                    console.log(res.message);
-                } else {    
-                    $('#att-01 tbody').empty().append(res.rows);
-                }
-        });
+            url: "/backoffice/user-attendance/arrival",
+            dataType: "json",
+            data: { 
+                userId:$('#userId').val(),
+                note: document.getElementById('txt01').value,
+                {$csrf} 
+            },
+            type: "POST"
+    }).done(function(res){
+        if (res.status == 'error') {
+                console.log(res.message);
+            } else {    
+                $('#att-01 tbody').empty().append(res.rows);
+                $('#prichod').hide();
+                $('#odchod').show();
+            }
+    });
 });
 
 $('#odchod').click(function(){
     $.ajax({
-                url: "/backoffice/user-attendance/departure",
-                dataType: "json",
-                data: { 
-                    userId:$('#userId').val(),
-                    {$csrf} 
-                },
-                type: "POST"
-        }).done(function(res){
-            if (res.status == 'error') {
-                    console.log(res.message);
-                } else {    
-                    $('#att-01 tbody').empty().append(res.rows);
-                    $('#day-total-time').html(res.day_total_time);
-                    $('#month-total-time').html(res.month_total_time);
-                    $('#year-total-time').html(res.year_total_time);
-                }
-        });
+            url: "/backoffice/user-attendance/departure",
+            dataType: "json",
+            data: { 
+                userId:$('#userId').val(),
+                {$csrf} 
+            },
+            type: "POST"
+    }).done(function(res){
+        if (res.status == 'error') {
+                console.log(res.message);
+            } else {    
+                $('#att-01 tbody').empty().append(res.rows);
+                $('#day-total-time').html(res.day_total_time);
+                $('#month-total-time').html(res.month_total_time);
+                $('#year-total-time').html(res.year_total_time);
+                $('#odchod').hide();
+                $('#prichod').show();
+            }
+    });
 });
 
 JS;

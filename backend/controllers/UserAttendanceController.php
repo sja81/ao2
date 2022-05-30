@@ -25,6 +25,11 @@ class UserAttendanceController extends Controller
         ];
     }
 
+    /**
+     * @param $action
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function beforeAction($action)
     {
         if (is_null(Yii::$app->user->identity)) {
@@ -51,17 +56,40 @@ class UserAttendanceController extends Controller
     public function actionIndex(int $uid)
     {
         $attendance = new UserAttendance();
-
         return $this->render('index', [
             "attendance" => $attendance->getListByUserId($uid) ?? [] ,
             "userId" => $uid ?? Yii::$app->user->identity->getId(),
             "pageTitle" =>  empty($uid) ? Yii::t('app','Dochádzka') : Yii::t('app','Moja dochádzka'),
             "yearlySummary" => $attendance->getYearlyWorkedHoursByUserId($uid,true),
             "monthlySummary" => $attendance->getMonthlyWorkedHoursByUserId($uid, true),
-            "dailySummary" => $attendance->getDailyWorkedHoursByUserId($uid, true)
+            "dailySummary" => $attendance->getDailyWorkedHoursByUserId($uid, true),
+            'isPresent' => Yii::$app->user->identity->isPresent((new \DateTime('now'))->format('Y-m-d')),
         ]);
     }
 
+    /**
+     * @return string[]
+     */
+    public function actionSaveComment(): array
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $userId = (int)Yii::$app->request->post('userId');
+        $note = Yii::$app->request->post('note');
+        $date = (new \DateTime('now'));
+        $user = UserAttendance::findOne([
+            'userId' => $userId,
+            'uaDate' => $date->format('Y-m-d'),
+        ]);
+        if ($user instanceof UserAttendance) {
+            $user->note .= nl2br($note);
+            $user->save();
+        }
+        $rows = (new UserAttendance())->getListByUserId($userId);
+        return [
+            'status' => 'ok',
+            'table_response'=> $this->renderPartial('tablebody',['rows'=>$rows]),
+        ];
+    }
 
     /**
      * @return array
@@ -140,6 +168,10 @@ class UserAttendanceController extends Controller
         ];
     }
 
+    /**
+     * @param string|null $str
+     * @return string
+     */
     private function sanitizeString(?string $str = null): string
     {
         $result = '';
