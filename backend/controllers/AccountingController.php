@@ -1,6 +1,8 @@
 <?php
+
 namespace backend\controllers;
 
+use Smalot\PdfParser\Parser;
 use common\models\Accounting;
 use common\models\documents\FakturaDocument;
 use common\models\documents\PPDDocument;
@@ -15,6 +17,8 @@ use Yii;
 use common\models\mrp\xmlgenerator\MrpInvoice;
 use common\models\mrp\xmlgenerator\Settings;
 use common\models\mrp\xmlgenerator\XmlGenerator;
+use common\models\reader\InvoiceReader;
+use common\models\reader\SlovakInvoiceReader;
 
 class AccountingController extends Controller
 {
@@ -206,12 +210,11 @@ class AccountingController extends Controller
 
     public function actionInvoiceExport()
     {
-        if(Yii::$app->request->isPost)
-        {
+        if (Yii::$app->request->isPost){
             $data = Yii::$app->request->post();
-            $nazovFirmy = $data ['Invoice'] ['znak'];
-            $datumOd = $data ['Invoice'] ['datum_vystavenia'];
-            $datumDo = $data ['Invoice'] ['datum_dodania'];
+            $nazovFirmy = $data['Invoice']['znak'];
+            $datumOd = $data['Invoice']['datum_vystavenia'];
+            $datumDo = $data['Invoice']['datum_dodania'];
 
             $invoices = Invoice::find()->where([
                 'znak' => $nazovFirmy,
@@ -226,8 +229,40 @@ class AccountingController extends Controller
             $generator = new XmlGenerator($results, $settings);
             $generator->create();
             $generator->downloadFile('faktura.xml');
-
         }
         return $this->render('invoice/invoice-export');
+    }
+
+    public function actionInvoiceImport()
+    {
+        $parser = new Parser();
+        $texts = [];
+
+        if (Yii::$app->request->isPost) {
+            $pdf = Yii::$app->request->post('faktura');
+            $pdf = $parser->parseFile("C:\Users\Mirko\Desktop/" . $pdf);
+
+            foreach ($pdf->getPages() as $page) {
+                $texts = array_merge($texts, $page->getTextArray());
+            }
+
+            $invoiceReader = new SlovakInvoiceReader($texts);
+            $iban = $invoiceReader->getIban();
+            $dodavatel = $invoiceReader->getDodavatel();
+            $bic = $invoiceReader->getBic();
+            $cisloUctu = $invoiceReader->getAccountNumber();
+            $dic = $invoiceReader->getTaxNumber();
+            // $ulcia = $invoiceReader->getUlica();
+            $ico = $invoiceReader->getBusinessId();
+            $payment = $invoiceReader->getPayment();
+            $vat = $invoiceReader->getVat();
+            $dates = $invoiceReader->getDates();
+            $variableSymbol = $invoiceReader->getVariableSymbol();
+            echo "<pre>";
+            var_dump($vat);
+            exit;
+        }
+
+        return $this->render('invoice/invoice-import');
     }
 }
