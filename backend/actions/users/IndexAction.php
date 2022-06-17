@@ -20,6 +20,7 @@ class IndexAction extends Action
             'userlist'  => $this->getUserList(),
             'usergroups' => UserGroups::find()->asArray()->all(),
             'privileges' => Privileges::find()->asArray()->all(),
+            'documents' => $this->getDocuments(),
             'groupmatrix'   => $this->getGroupAccessMatrix()
         ]);
     }
@@ -64,8 +65,22 @@ class IndexAction extends Action
             LEFT JOIN 
                 `agent` a ON u.id=a.user_id
             GROUP BY
-                a.user_id
+                a.user_id,
+                u.id,
+                a.name_first,
+                a.name_last,
+                a.phone
             order by u.id desc
         ")->queryAll();
+    }
+
+    public function getDocuments()
+    {
+        $sql = "SELECT
+                     id, name
+                FROM
+                    template";
+       return Yii::$app->db->createCommand($sql)->bindParam(':group',$group)->queryAll();
+        
     }
 }
