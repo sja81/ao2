@@ -26,7 +26,7 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-sm-6">
             <div class="card rounded-5 card-shadow">
                 <div class="card-body">
                     <h4 class="card-title mb-3">
@@ -39,7 +39,7 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
                             <textarea class="form-control" id="txt01" rows="2"></textarea>
                         </div>
                         <div class="form-group">
-                            <button type="button" class="btn btn-dark text-white" id="komentar">
+                            <button type="button" class="btn btn-secondary" id="komentar">
                                 <?= Yii::t('app','Uložiť komentár'); ?>
                             </button>
                             <?php
@@ -47,12 +47,31 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
                              * @var $isPresent
                              */
                             ?>
-                            <button type="button" class="btn btn-success text-white" id="prichod" style="<?= !$isPresent ? 'display:inline-block': 'display:none' ?>">
+                            <button type="button" class="btn btn-secondary" id="prichod" style="<?= !$isPresent ? 'display:inline-block': 'display:none' ?>">
                                 <?php echo Yii::t('app','Začiatok práce') ?>
                             </button>
-                            <button type="button" class="btn btn-danger text-white" id="odchod" style="<?= $isPresent ? 'display:inline-block': 'display:none' ?>">
+                            <button type="button" class="btn btn-secondary" id="odchod" style="<?= $isPresent ? 'display:inline-block': 'display:none' ?>">
                                 <?php echo Yii::t('app','Koniec práce') ?>
                             </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card rounded-5 card-shadow">
+                <div class="card-body">
+                    <h4 class="card-title mb-3"><?= Yii::t('app','Fotky'); ?></h4>
+                    <form method="post" role="form" enctype="multipart/form-data" id="frm-photo" >
+                        <input type="hidden" id="photo_userId" value="<?=  $userId ?>">
+                        <div class="form-group mt-4">
+                            <input type="file" class="form-control fileupload" accept="image/*;capture=camera" id="p0">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="take-photo" class="btn btn-secondary">
+                               <i class="fas fa-upload"></i> <?= Yii::t('app','Nahrať'); ?>
+                            </button>
+                            <p id="p0-msg" class="mt-3"></p>
                         </div>
                     </form>
                 </div>
@@ -158,15 +177,38 @@ $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables
             </div>
         </div>
     </div>
-
-
-
 </div>
 
 <?php
 $csrf = "'" . Yii::$app->request->csrfParam . "':'" . Yii::$app->request->getCsrfToken() . "'";
+$uploadImgMessage = Yii::t('app','Nahrávam obrázok...');
+$uploadedImgMessage = Yii::t('app','Obrázok bol nahratý úspešne!');
+
 $js = <<<JS
 $(function() { $('.dattable').DataTable({ order: [] }); });
+
+$('#take-photo').click(function(){
+    var formData = new FormData();
+    formData.append('uid', $('#photo_userId').val());
+    formData.append('photo',$('input[type=file]')[0].files[0]);
+    $('#p0-msg').text('$uploadImgMessage');
+    $.ajax({
+            url: "/backoffice/user-attendance/save-photos",
+            dataType: "json",
+            data: formData,
+            type: "POST",
+            contentType: false,
+            processData: false
+    }).done(function(res){
+        if (res.status == 'error') {
+                console.log(res.message);
+                alert(res.message);
+            } else {    
+                $('#p0').val(null);
+                $('#p0-msg').text('$uploadedImgMessage');
+            }
+    });
+});
 
 $('#komentar').click(function(){
     $.ajax({
