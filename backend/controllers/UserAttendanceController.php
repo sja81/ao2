@@ -3,8 +3,10 @@
 namespace backend\controllers;
 
 use common\models\User;
+use common\models\users\UserFile;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use common\models\users\UserAttendance;
 use Yii;
@@ -177,6 +179,41 @@ class UserAttendanceController extends Controller
         $result = '';
         if (!is_null($str)) {
             $result = Html::encode(trim($str));
+        }
+        return $result;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function actionSavePhotos()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $result = ['status' => 'ok'];
+        $uid = Yii::$app->request->post('uid');
+        $dirName = Yii::getAlias('@backend')."/users/{$uid}";
+        if (!file_exists($dirName)) {
+            mkdir($dirName);
+        }
+        // first save to DB!
+        $tr = Yii::$app->db->beginTransaction();
+        try {
+
+            $file = new UserFile();
+            $file->user_id = $uid;
+            $file->file = $_FILES['photo']['name'];
+            $file->save();
+
+            $tr->commit();
+
+            move_uploaded_file($_FILES['photo']['tmp_name'],"{$dirName}/".$_FILES['photo']['name']);
+
+        } catch(\Exception $e) {
+            $tr->rollBack();
+            $result = [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         }
         return $result;
     }
