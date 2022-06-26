@@ -205,12 +205,14 @@ class AccountingController extends Controller
         ];
     }
 
-    //mal som problem s Csrf validaciou a toto bola jedina vec ktoru som nasiel ze fungovala
-    public $enableCsrfValidation = false;
+    // mal som problem s Csrf validaciou a toto bola jedina vec ktoru som nasiel ze fungovala
+    // public $enableCsrfValidation = false;
 
     public function actionInvoiceExport()
     {
-        if (Yii::$app->request->isPost){
+
+        /*if(Yii::$app->request->isPost)
+        {
             $data = Yii::$app->request->post();
             $nazovFirmy = $data['Invoice']['znak'];
             $datumOd = $data['Invoice']['datum_vystavenia'];
@@ -229,8 +231,22 @@ class AccountingController extends Controller
             $generator = new XmlGenerator($results, $settings);
             $generator->create();
             $generator->downloadFile('faktura.xml');
-        }
+
         return $this->render('invoice/invoice-export');
+
+        }*/
+        return $this->render('invoice/invoice-export',[
+            'offices' => Office::find()->select('id,name')->asArray()->all()
+        ]);
+    }
+
+    public function actionLoadInvoices()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        var_dump(Yii::$app->request->post('s'));
+        exit;
+
     }
 
     public function actionInvoiceImport()

@@ -3,8 +3,10 @@
 namespace backend\controllers;
 
 use common\models\User;
+use common\models\users\UserFile;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use common\models\users\UserAttendance;
 use Yii;
@@ -25,6 +27,11 @@ class UserAttendanceController extends Controller
         ];
     }
 
+    /**
+     * @param $action
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function beforeAction($action)
     {
         if (is_null(Yii::$app->user->identity)) {
@@ -51,17 +58,40 @@ class UserAttendanceController extends Controller
     public function actionIndex(int $uid)
     {
         $attendance = new UserAttendance();
-
         return $this->render('index', [
             "attendance" => $attendance->getListByUserId($uid) ?? [] ,
             "userId" => $uid ?? Yii::$app->user->identity->getId(),
             "pageTitle" =>  empty($uid) ? Yii::t('app','Dochádzka') : Yii::t('app','Moja dochádzka'),
             "yearlySummary" => $attendance->getYearlyWorkedHoursByUserId($uid,true),
             "monthlySummary" => $attendance->getMonthlyWorkedHoursByUserId($uid, true),
-            "dailySummary" => $attendance->getDailyWorkedHoursByUserId($uid, true)
+            "dailySummary" => $attendance->getDailyWorkedHoursByUserId($uid, true),
+            'isPresent' => Yii::$app->user->identity->isPresent((new \DateTime('now'))->format('Y-m-d')),
         ]);
     }
 
+    /**
+     * @return string[]
+     */
+    public function actionSaveComment(): array
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $userId = (int)Yii::$app->request->post('userId');
+        $note = Yii::$app->request->post('note');
+        $date = (new \DateTime('now'));
+        $user = UserAttendance::findOne([
+            'userId' => $userId,
+            'uaDate' => $date->format('Y-m-d'),
+        ]);
+        if ($user instanceof UserAttendance) {
+            $user->note .= nl2br($note);
+            $user->save();
+        }
+        $rows = (new UserAttendance())->getListByUserId($userId);
+        return [
+            'status' => 'ok',
+            'table_response'=> $this->renderPartial('tablebody',['rows'=>$rows]),
+        ];
+    }
 
     /**
      * @return array
@@ -140,11 +170,50 @@ class UserAttendanceController extends Controller
         ];
     }
 
+    /**
+     * @param string|null $str
+     * @return string
+     */
     private function sanitizeString(?string $str = null): string
     {
         $result = '';
         if (!is_null($str)) {
             $result = Html::encode(trim($str));
+        }
+        return $result;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function actionSavePhotos()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $result = ['status' => 'ok'];
+        $uid = Yii::$app->request->post('uid');
+        $dirName = Yii::getAlias('@backend')."/users/{$uid}";
+        if (!file_exists($dirName)) {
+            mkdir($dirName);
+        }
+        // first save to DB!
+        $tr = Yii::$app->db->beginTransaction();
+        try {
+
+            $file = new UserFile();
+            $file->user_id = $uid;
+            $file->file = $_FILES['photo']['name'];
+            $file->save();
+
+            $tr->commit();
+
+            move_uploaded_file($_FILES['photo']['tmp_name'],"{$dirName}/".$_FILES['photo']['name']);
+
+        } catch(\Exception $e) {
+            $tr->rollBack();
+            $result = [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         }
         return $result;
     }

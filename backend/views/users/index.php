@@ -61,6 +61,12 @@ $confirmRemoval = Yii::t('app','Naozaj chcete zmazať?');
                                     <span class="hidden-xs-down"><?= Yii::t('app','Funkcie') ?></span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#documents" role="tab">
+                                    <span class="hidden-sm-up"><i class="ti-package"></i></span>
+                                    <span class="hidden-xs-down"><?= Yii::t('app','Dokumenty') ?></span>
+                                </a>
+                            </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
@@ -195,6 +201,63 @@ $confirmRemoval = Yii::t('app','Naozaj chcete zmazať?');
                                                             <?= $item['name'] ?>
                                                             <a href="<?= Url::to(['edit-privilege','id'=>$item['id']]) ?>"><i class="fas fa-pencil-alt m-l-10" style="color: black"></i></a>
                                                             <!--<a href="#" onclick="removePrivilege(<?= $item['id'] ?>)"><i class="fas fa-trash-alt m-l-10" style="color: black"></i></a>-->
+                                                        </td>
+                                                        <?php
+
+                                                        foreach($usergroups as $group) {
+                                                            $checked = "";
+                                                            if (in_array($item['id'],$groupmatrix[$group['name']])) {
+                                                                $checked = " checked";
+                                                            }
+                                                            ?>
+                                                            <td>
+                                                                <input
+                                                                        type="checkbox"
+                                                                        data-priv="<?= $item['id']?>"
+                                                                        data-usr="0"
+                                                                        data-group="<?= $group['name'] ?>"
+                                                                        class="priv"
+                                                                    <?= $checked ?>
+                                                                >
+                                                            </td>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                ?>
+                                                </tbody>
+                                            </table>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="documents" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12" style="overflow: auto">
+                                        <form method="post" role="form" id="priv-form">
+                                            <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->csrfToken ?>">
+                                            <table class="table table-sm table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th><?= Yii::t('app','Funkcia') ?></th>
+                                                    <?php
+                                                    foreach($usergroups as $group) {
+                                                        echo "<th>{$group['name']}</th>";
+                                                    }
+                                                    ?>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                foreach($documents as $item){
+                                                    ?>
+                                                    <tr>
+                                                        <td>
+                                                            <?= $item['name'] ?>
+        
                                                         </td>
                                                         <?php
 
