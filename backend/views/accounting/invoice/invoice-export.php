@@ -19,7 +19,7 @@ $this->title = " Faktúry - Export ";
         <div class="card-body">
             <h4 class="card-title">Export</h4>
             <form method="post" class="form" id="">
-            <input id="form-token" type="hidden" name="<?=Yii::$app->request->csrfParam?>" value="<?=Yii::$app->request->csrfToken?>"/>
+                <input id="form-token" type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->csrfToken ?>" />
                 <label class="col-1 col-form-label">Názov Firmy</label>
                 <div class="col-5">
                     <input type="text" name="Invoice[znak]" class="form-control">
@@ -27,10 +27,10 @@ $this->title = " Faktúry - Export ";
 
                 <label class="col-1 col-form-label">Dátum od:</label>
                 <div class="col-5">
-                    <input type="date" name="Invoice[datum_vystavenia]" class="form-control" >
+                    <input type="date" name="Invoice[datum_vystavenia]" class="form-control">
                 </div>
 
-                <label class="col-1 col-form-label" >Dátum od:</label>
+                <label class="col-1 col-form-label">Dátum od:</label>
                 <div class="col-5">
                     <input type="date" name="Invoice[datum_dodania]" class="form-control">
                 </div>
