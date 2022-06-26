@@ -152,7 +152,7 @@ class OffersController extends Controller
     {
         if (Yii::$app->request->isPost) {
             $data = Yii::$app->request->post('Data');
-            $template = Template::findOne(['id' => $data['template']]);
+            $template = Template::findOne(['id' => 12]);
             $doc = new PdfTemplateDocument();
             $doc->setTemplateContent($template->content);
             unset($template);
