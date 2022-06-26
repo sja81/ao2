@@ -27,7 +27,7 @@ $this->registerJSFile('@web/js/faktura.js?v=2.8',['depends'=>RealAsset::class]);
         <input type="hidden" id="h-kuhrade" name="Invoice[k_uhrade]" value="0">
 
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-12">
             <a href="/backoffice/accounting/invoice" class="btn btn-danger"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;Späť</a>
             <input type="submit" class="btn btn-success" value="Vytvoriť faktúru">
         </div>

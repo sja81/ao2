@@ -17,11 +17,11 @@ class IndexAction extends Action
     public function run()
     {
 
-       // $calendarEvents = CalendarEventType::find()->all();
+//        $calendarEvents = CalendarEventType::find()->all();
 
         return $this->controller->render('index',[
-           // 'events' => $calendarEvents
-            'events' => []
+//            'events' => $calendarEvents
+            'events'    => []
         ]);
     }
 }

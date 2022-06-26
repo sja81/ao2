@@ -8,9 +8,12 @@ use common\models\uchadzac\UchadzacTest;
 
 class DevTestAction extends Action
 {
-    public function run()
+    /**
+     * @return string
+     */
+    public function run(): string
     {
-        if (\Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
             $applicantId = Yii::$app->request->post('applicant_id');
             $quiz = Yii::$app->request->post('Quiz');
 

@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use Yii;
 use yii\console\Controller;
 
 class TestController extends Controller
@@ -18,6 +19,7 @@ class TestController extends Controller
 
     public function actionIndex()
     {
-        echo " fungje to ";
+        $password = "";
+        echo Yii::$app->security->generatePasswordHash($password);
     }
 }

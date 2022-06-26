@@ -12,6 +12,9 @@ use yii\web\Controller;
 use common\models\Invoice;
 use yii\web\Response;
 use Yii;
+use common\models\mrp\xmlgenerator\MrpInvoice;
+use common\models\mrp\xmlgenerator\Settings;
+use common\models\mrp\xmlgenerator\XmlGenerator;
 
 class AccountingController extends Controller
 {
@@ -53,6 +56,9 @@ class AccountingController extends Controller
             ],
             'report'    =>  [
                 'class' =>  'backend\actions\accounting\ReportAction'
+            ],
+            'add-received-invoice' => [
+                'class' =>  'backend\actions\accounting\AddReceivedInvoiceAction'
             ]
         ];
     }
@@ -193,5 +199,45 @@ class AccountingController extends Controller
             'status'    =>  'ok',
             'invoice'   =>  $invoiceId
         ];
+    }
+
+    // mal som problem s Csrf validaciou a toto bola jedina vec ktoru som nasiel ze fungovala
+    // public $enableCsrfValidation = false;
+
+    public function actionInvoiceExport()
+    {
+        /*if(Yii::$app->request->isPost)
+        {
+            $data = Yii::$app->request->post();
+            $nazovFirmy = $data ['Invoice'] ['znak'];
+            $datumOd = $data ['Invoice'] ['datum_vystavenia'];
+            $datumDo = $data ['Invoice'] ['datum_dodania'];
+
+            $invoices = Invoice::find()->where([
+                'znak' => $nazovFirmy,
+                'datum_vystavenia' => $datumOd,
+                'datum_dodania' => $datumDo
+            ])->all();
+
+            $mrpInvoice = new MrpInvoice($invoices);
+            $results =  $mrpInvoice->process();
+
+            $settings = new Settings;
+            $generator = new XmlGenerator($results, $settings);
+            $generator->create();
+            $generator->downloadFile('faktura.xml');
+
+        }*/
+        return $this->render('invoice/invoice-export',[
+            'offices' => Office::find()->select('id,name')->asArray()->all()
+        ]);
+    }
+
+    public function actionLoadInvoices()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        var_dump(Yii::$app->request->post('s'));
+        exit;
     }
 }

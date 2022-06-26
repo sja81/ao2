@@ -1,0 +1,106 @@
+#registration {
+    width: 100%;
+    height: auto;
+    position: relative;
+    clear: both;
+}
+#registration .registration-container {
+    width: 60%;
+    margin: 20px auto;
+    position: relative;
+}
+#registration input[type=text],
+#registration input[type=tel],
+#registration input[type=email],
+#registration input[type=date],
+#registration input[type=number],
+#registration input[type=file],
+#registration select,
+#registration textarea {
+    border: 0;
+    border-bottom: solid 2px #133045;
+    background-image: none;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    display: block;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    outline: none !important;
+    color: #666666;
+    border-radius: 0px;
+}
+#registration input[type=file]{
+    font-size: 12px;
+}
+#registration .registration-container h4 {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(196, 148, 68);
+    border-radius: 3px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.wizard-content .wizard>.steps>ul>li.current .step {
+    border-color: rgb(196, 148, 68);
+    color: rgb(196, 148, 68);
+}
+.wizard-content .wizard>.steps>ul>li.done .step {
+    background-color: rgb(196, 148, 68);
+    border-color: rgb(196, 148, 68);
+}
+.wizard-content .wizard>.actions>ul>li>a {
+    background: rgb(196, 148, 68);
+}
+.wizard-content .wizard.wizard-circle>.steps>ul>li:after,
+.wizard-content .wizard.wizard-circle>.steps>ul>li:before {
+    background: rgb(196, 148, 68);
+}
+.flat-btn-hoo {
+    border-radius: 25%;
+    background: rgb(196, 148, 68);
+    font-weight: 700;
+    color: #fff;
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+.material-icons.aoreal { color: rgb(196, 148, 68); }

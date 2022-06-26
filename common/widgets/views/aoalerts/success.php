@@ -1,6 +1,6 @@
-<div class="alert alert-success alert-dismissible fade show" role="alert" id="success-<?= $i ?>">
+<div class="alert alert-success alert-dismissible">
     <?= $message ?>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"></span>
     </button>
 </div>

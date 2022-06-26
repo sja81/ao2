@@ -1,7 +1,6 @@
 <?php
 namespace common\models;
 
-
 class Clients
 {
     private $inputData = [];

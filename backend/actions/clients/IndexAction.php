@@ -13,6 +13,19 @@ class IndexAction extends Action
             return $this->controller->redirect(Url::to(['/site/login']));
         }
 
-        return $this->controller->render('index');
+
+        $sql = "SELECT 
+        c.id,
+        CONCAT(c.name_first,' ',name_last) AS meno, CONCAT(cc.perm_town,' ', cc.perm_street, ' ', cc.perm_zip) AS adresa, 
+        CONCAT(cc.mobile_area_code,cc.mobile) AS mobile, c.ssn, c.email, c.created_at
+    FROM 
+        client c
+    LEFT JOIN
+        client_contact cc ON cc.client_id = c.id";
+
+        $clients = Yii::$app->db->createCommand($sql)->queryAll();
+        return $this->controller->render('index',[
+            'clients' => $clients
+        ]);
     }
 }
