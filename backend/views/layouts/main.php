@@ -270,10 +270,11 @@ RealAsset::register($this);
                             <li><a href="/backoffice/users"><?= Yii::t('app','Užívatelia') ?></a></li>
                             <li><a href="/backoffice/task-manager"><?php echo Yii::t('app','Manažér úloh') ?></a></li>
                             <li><a href="/backoffice/calendar/settings"><?php echo Yii::t('app', 'Kalendár') ?></a></li>
-                        </ul>
-                    </li>
+                            <li> <a class="waves-effect waves-dark" href="/backoffice/template">
+                                <span class="hide-menu">Dokumenty</span></a></li>
+                                </ul>
+                            </li>
                             <?php } ?>
-
                     </ul>
                 </nav>
             </div>
