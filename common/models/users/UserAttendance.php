@@ -8,6 +8,9 @@ class UserAttendance extends ActiveRecord
 {
     const REGULAR_WORKTIME = 1; // regularny pracovny cas - 8hod + 30m prestavka na obed
     const SICKNESS_ABSENCE = 2; // PN
+    const DOCTOR_VISIT = 3;
+    const UNVERIFIED_ABSENCE = 4;
+    const ABSENCE = 5;
     /**
      * {@inheritdoc}
      */
@@ -23,8 +26,11 @@ class UserAttendance extends ActiveRecord
     public static function workType(int $id): string
     {
         $type = [
-            1   =>  Yii::t('app','Regulárny pracovný čas'),
-            2   =>  Yii::t('app','Práce neschopný')
+            1 => Yii::t('app','Regulárny pracovný čas'),
+            2 => Yii::t('app','Práce neschopný'),
+            3 => Yii::t('app','Návšteva lekára'),
+            4 => Yii::t('app','Neospravedlnené meškanie'),
+            5 => Yii::t('app','Ospravedlnené meškanie'),
         ];
 
         return $type[$id];
@@ -178,4 +184,57 @@ class UserAttendance extends ActiveRecord
         }
         return $result;
     }
+
+    /**
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getListForAdmin(): array
+    {
+        $sql = "
+            SELECT 
+                id,
+                (select concat(name_first, ' ', name_last) FROM agent WHERE user_id=ua.userId LIMIT 1) AS meno,
+                uaDate, inTime, outTime, SEC_TO_TIME(diffTime) AS diffTime, uaType,
+                (select group_concat(item_name) from auth_assignment where user_id=ua.userId) as user_groups
+            FROM 
+                userAttendance ua
+            ORDER BY 
+                uaDate DESC
+        ";
+        return Yii::$app->db->createCommand($sql)->queryAll();
+    }
+
+    /**
+     * @param string $group
+     * @param string $startDate
+     * @param string $endDate
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getListForAdminByOptions(string $group='', string $startDate='', string $endDate=''): array
+    {
+        $groupFilter = " AND ua.userId IN (select user_id from auth_assignment where item_name='{$group}')";
+        if ('' == $group) {
+            $groupFilter = '';
+        }
+        $dateFilter = " AND ua.uaDate between '{$startDate}' AND '{$endDate}'";
+        if ('' == $startDate) {
+            $dateFilter = '';
+        }
+        $sql = "SELECT 
+                id,
+                (select concat(name_first, ' ', name_last) FROM agent WHERE user_id=ua.userId LIMIT 1) AS meno,
+                uaDate, inTime, outTime, SEC_TO_TIME(diffTime) AS diffTime, uaType,
+                (select group_concat(item_name) from auth_assignment where user_id=ua.userId) as user_groups
+            FROM 
+                userAttendance ua
+            WHERE 
+                1=1{$groupFilter}{$dateFilter}
+            ORDER BY 
+                uaDate DESC";
+
+        return Yii::$app->db->createCommand($sql)->queryAll();
+    }
+
 }
