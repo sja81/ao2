@@ -36,6 +36,11 @@ $this->registerCSSFile('@web/assets/node_modules/bootstrap-daterangepicker/dater
             <button class="btn btn-success text-white" type="button" id="addatt">
                 <i class="fas fa-plus-circle"></i> <?= Yii::t('app','Pridať dochádzku') ?>
             </button>
+            <a href="/backoffice/user-attendance-admin/documents">
+                <button class="btn btn-info text-white" type="button">
+                        <?= Yii::t('app','Dokumenty') ?>
+                </button>
+            </a>
         </div>
     </div>
 

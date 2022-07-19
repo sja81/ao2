@@ -5,6 +5,8 @@ use common\helpers\TimeHelper;
 use common\models\Agent;
 use common\models\auth\AuthAssignment;
 use common\models\auth\AuthItem;
+use common\models\PrivilegesTemplates;
+use common\models\schools\Students;
 use common\models\users\UserAttendance;
 use yii\helpers\Html;
 use yii\web\Controller;
@@ -164,4 +166,11 @@ class UserAttendanceAdminController extends Controller
         return $result;
     }
 
+    public function actionDocuments()
+    {
+        return $this->render('documents', [
+            'privileges' => PrivilegesTemplates::find()->where(['=', 'user_function', 0])->all(),
+            'students' => Students::find()->all()
+        ]);
+    }
 }

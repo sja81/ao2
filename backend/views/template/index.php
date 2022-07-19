@@ -5,12 +5,12 @@ use common\models\PrivilegesTemplates;
 
 $this->title = Yii::t('app', 'Dokumenty');
 
-$this->registerCSSFile('@web/assets/node_modules/toast-master/css/jquery.toast.css', ['depends' => RealAsset::class]);
-$this->registerCSSFile('@web/assets/dist/css/pages/other-pages.css', ['depends' => RealAsset::class]);
-$this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js', ['depends' => RealAsset::class]);
-$this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css', ['depends' => RealAsset::class]);
-$this->registerCSSFile('@web/assets/dist/css/pages/tab-page.css', ['depends' => RealAsset::class]);
-$this->registerJSFile('@web/assets/node_modules/toast-master/js/jquery.toast.js', ['depends' => RealAsset::class]);
+    $this->registerCSSFile('@web/assets/node_modules/toast-master/css/jquery.toast.css', ['depends' => RealAsset::class]);
+    $this->registerCSSFile('@web/assets/dist/css/pages/other-pages.css', ['depends' => RealAsset::class]);
+    $this->registerJSFile('@web/assets/node_modules/datatables/datatables.min.js', ['depends' => RealAsset::class]);
+    $this->registerCSSFile('@web/assets/node_modules/datatables/media/css/dataTables.bootstrap4.css', ['depends' =>     RealAsset::class]);
+    $this->registerCSSFile('@web/assets/dist/css/pages/tab-page.css', ['depends' => RealAsset::class]);
+    $this->registerJSFile('@web/assets/node_modules/toast-master/js/jquery.toast.js', ['depends' => RealAsset::class]);
 
 ?>
 <div class="container-fluid">
@@ -92,8 +92,8 @@ $js = <<<JS
         var g = $(this).data('group'),
             t = $(this).data('template'),
             c = $(this).is(':checked') ? 1 : 0,
-            f = $( "#functions" ).val();
-        console.log(f)
+            f = $('#functions option:selected').val();
+            console.log(f);
         $.ajax({
                 url: '/backoffice/template/change-privilege',
                 dataType: 'json',
