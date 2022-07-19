@@ -21,38 +21,37 @@ class TemplateController extends Controller
         return $this->render('index', [
             'groups' => UserGroups::find()->asArray()->all(),
             'templates' => Template::find()->asArray()->all(),
-            'userFunctions' => $funcs->getProperties(ReflectionProperty::IS_PRIVATE),
-            'privileges' => $this->actionGetPrivileges(),
-            // 'userFunc' => $this->actionUserFunc()
+            'userFunctions' => $funcs->getProperties(ReflectionProperty::IS_PROTECTED),
+            'privileges' => $this->getPrivileges(),
         ]);
     }
 
-    public function actionGetPrivileges()
+    private function getPrivileges(?string $userFunction = null)
     {
         $groups = UserGroups::find()->select('name')->asArray()->all();
-        $privileges = [];
+        $results = [];
 
         foreach ($groups as $group) {
-            $tmp = PrivilegesTemplates::find()
+            $privileges = PrivilegesTemplates::find()
                 ->select(['template_id'])
                 ->andWhere(['=', 'group_name', $group['name']])
-                ->andWhere(['=', 'status', 1])
-                ->asArray()->all();
+                ->andWhere(['=', 'status', 1]);
+
+                if(!is_null($userFunction))
+                {
+                    $privileges->andWhere(['=', 'user_function', $userFunction]);
+                }
+               $tmp =  $privileges->asArray()->all();
 
             if (count($tmp) == 0) {
-                $privileges[$group['name']] = [];
+                $results[$group['name']] = [];
             } else {
                 foreach ($tmp as $i) {
-                    $privileges[$group['name']][] = $i['template_id'];
+                    $results[$group['name']][] = $i['template_id'];
                 }
             }
         }
-
-        //    $this->renderPartial('tbody', [
-        //         'privileges' => $privileges
-        //     ]);
-
-        return $privileges;
+        return $results;
     }
 
     public function actionChangePrivilege()
@@ -89,9 +88,20 @@ class TemplateController extends Controller
         return ['status' => 'ok', 'message' => Yii::t('app', 'Status bol zmenený!')];
     }
 
-    public function actionUserFunc($data)
+    public function actionUserFunc()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        return PrivilegesTemplates::find()->where(['user_function' => $data])->all();
+        $data = Yii::$app->request->post('data');
+
+        $body = $this->renderPartial('tbody', [
+            'groups' => UserGroups::find()->asArray()->all(),
+            'templates' => Template::find()->asArray()->all(),
+            'privileges' => $this->getPrivileges($data)
+        ]);
+
+        return [
+            'status' => 'ok',
+            'tbody' => $body
+        ];
     }
 }
