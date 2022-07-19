@@ -1,6 +1,7 @@
 <?php
 use backend\assets\RealAsset;
 use yii\helpers\Url;
+use common\models\users\UserAttendance;
 
 /**
  * @var $title
@@ -36,43 +37,68 @@ $this->registerJSFile('@web/assets/node_modules/Magnific-Popup-master/dist/jquer
                     <h4 class="card-title"><?= $item['meno'] ?></h4>
                     <h6 class="card-subtitle">(<?= $item['user_group'] ?>)</h6>
                     <form method="post" role="form" class="form p-t-20">
+                        <input type="hidden" id="uaid" value="<?= $item['id'] ?>">
                         <div class="form-group row">
                             <label class="form-label text-end col-sm-3"><?= Yii::t('app','Dátum'); ?></label>
                             <div class="col-sm-9">
-                                <input type="date" name="UsrAtt[uaDate]" class="form-control" value="<?= $item['uaDate'] ?>">
+                                <input type="date" id="uadate" class="form-control" value="<?= $item['uaDate'] ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="form-label text-end col-sm-3"><?= Yii::t('app','Príchod'); ?></label>
                             <div class="col-sm-4">
-                                <input type="time" name="UsrAtt[inTime]" class="form-control" value="<?= $item['inTime'] ?>" id="t0">
+                                <input type="time" id="intime" class="form-control" value="<?= $item['inTime'] ?>">
                             </div>
                             <label class="form-label text-end col-sm-1"><?= Yii::t('app','IP'); ?></label>
                             <div class="col-sm-4">
-                                <input type="text" name="UsrAtt[inIP]" class="form-control" value="<?= $item['inIP'] ?>" id="t1">
+                                <input type="text" id="inip" class="form-control" value="<?= $item['inIP'] ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="form-label text-end col-sm-3"><?= Yii::t('app','Odchod'); ?></label>
                             <div class="col-sm-4">
-                                <input type="time" name="UsrAtt[outTime]" class="form-control" value="<?= $item['outTime'] ?>">
+                                <input type="time" id="outtime" class="form-control" value="<?= $item['outTime'] ?>">
                             </div>
                             <label class="form-label text-end col-sm-1"><?= Yii::t('app','IP'); ?></label>
                             <div class="col-sm-4">
-                                <input type="text" name="UsrAtt[outIP]" class="form-control" value="<?= $item['outIP'] ?>">
+                                <input type="text" id="outip" class="form-control" value="<?= $item['outIP'] ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="form-label text-end col-sm-3"><?= Yii::t('app','Odpracované'); ?></label>
                             <div class="col-sm-4">
-                                <input type="text" name="UsrAtt[diffTime]" class="form-control" value="<?= $item['diffTime'] ?>">
+                                <input type="text" id="difftime" class="form-control" value="<?= $item['diffTime'] ?>">
                             </div>
                             <div class="col-sm-5"></div>
                         </div>
                         <div class="form-group row">
+                            <label class="form-label text-end col-sm-3">
+                                <?= Yii::t('app','Typ'); ?>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control form-select" id="uatype">
+                                    <option value=""><?= Yii::t('app','Zvoľte typ dochádzky'); ?></option>
+                                    <?php
+                                   for($i=0; $i<5; $i++) {
+                                       $selected = ((int)$item['uaType'] === ($i+1)) ? ' selected': '';
+                                       echo "<option value='{".($i+1)."}'{$selected}>".UserAttendance::workType($i+1)."</option>";
+                                   }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="form-label text-end col-sm-3"><?= Yii::t('app','Poznámky'); ?></label>
                             <div class="col-sm-9">
-                                <textarea name="" cols="30" rows="10" class="form-control"><?= $item['note'] ?></textarea>
+                                <textarea id="uanote" cols="30" rows="10" class="form-control"><?= $item['note'] ?></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9">
+                                <button class="btn btn-success text-white" type="button" id="svatt">
+                                    <?= Yii::t('app','Uložiť'); ?>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -90,32 +116,19 @@ $this->registerJSFile('@web/assets/node_modules/Magnific-Popup-master/dist/jquer
 
                     <div class="row el-element-overlay m-t-25">
 
-                        <div class="col-lg-2 col-md-6">
-                            <div class="card">
-                                <div class="el-card-item">
-                                    <div class="el-card-avatar el-overlay-1">
-                                        <img src="../assets/images/users/1.jpg" alt="user" style="border-radius: 5px" />
-                                        <div class="el-overlay">
-                                            <ul class="el-info">
-                                                <li>
-                                                    <a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg">
-                                                        <i class="icon-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:void(0)"
-                                                       class="btn default btn-outline"
-                                                       onclick="removeImage()"
-                                                    >
-                                                        <i class="icon-trash"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php
+                        /**
+                         * @var array $files
+                         */
+                        if (0 === count($files)) {
+                            echo 'No files in this day';
+                        } else {
+                            foreach($files as $file) {
+                                echo $this->render('userfiles',['fileinfo'=>$file]);
+                            }
+                        }
+                        ?>
+
                     </div>
                 </div>
             </div>
@@ -126,10 +139,50 @@ $this->registerJSFile('@web/assets/node_modules/Magnific-Popup-master/dist/jquer
 
 
 <?php
+$csrf = "'" . Yii::$app->request->csrfParam ."':'". Yii::$app->request->getCsrfToken() ."'";
 
 $js = <<<JS
 removeImage = function() {
     console.log(12);
 }
+
+updateDiffTime = function() {
+    
+}
+
+$('#intime').change(function(){
+   updateDiffTime();
+});
+
+$('#outtime').change(function(){
+   updateDiffTime(); 
+});
+
+$('#svatt').click(()=>{
+    $.ajax({
+            url: "/backoffice/user-attendance-admin/update-attendance",
+            dataType: "json",
+            data: { 
+                uid: $('#uaid').val(), 
+                uadate: $('#uadate').val(),
+                uatype: $('#uatype').val(),
+                intime: $('#intime').val(),
+                inip: $('#inip').val(),
+                outtime: $('#outtime').val(),
+                outip: $('#outip').val(),
+                uanote: $('#uanote').val(),
+                {$csrf} 
+            },
+            type: "post"
+        })
+        .done(function(res){
+            if (res.status == 'error') {
+                alert(res.message);
+            } 
+            else {
+                alert('Saved...');
+            }
+        });
+});
 JS;
 $this->registerJS($js);
