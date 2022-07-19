@@ -6,8 +6,7 @@ use yii\db\ActiveRecord;
 
 class PrivilegesTemplates extends ActiveRecord
 {
-    private $userFuncAttendance = 0;
-    private $test = 1;
+    protected $userFuncAttendance = 0;
 
     public static function tableName()
     {
@@ -18,7 +17,6 @@ class PrivilegesTemplates extends ActiveRecord
     {
        $func = [
             0 => 'userFuncAttendance',
-            1 => 'test'
        ];
 
        return $func[$id];

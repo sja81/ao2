@@ -27,16 +27,16 @@ $this->registerJSFile('@web/assets/node_modules/toast-master/js/jquery.toast.js'
                     <div class="col-md-12" style="overflow: auto">
                         <select id="functions" class="form-control dropdown w-25 mb-2" aria-label="Default select example">
                             <option value="null"> Zvolte typ dochádzky</option>
-                            <?php foreach($userFunctions as $i => $function){
+                            <?php foreach ($userFunctions as $i => $function) {
                             ?>
-                            <option value="<?= $i ?>" data-function="<?= PrivilegesTemplates::userFunctionText($i) ?>">
-                                <?=PrivilegesTemplates::userFunctionText($i)?>
-                            </option>
-                            <?php }?>
+                                <option value="<?= $i ?>" data-function="<?= PrivilegesTemplates::userFunctionText($i) ?>">
+                                    <?= PrivilegesTemplates::userFunctionText($i) ?>
+                                </option>
+                            <?php } ?>
                         </select>
                         <form method="post" role="form" id="priv-form">
                             <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->csrfToken ?>">
-                            <table class="table table-sm table-striped">
+                            <table class="table table-sm table-striped" id="ip01">
                                 <thead>
                                     <tr>
                                         <th><?= Yii::t('app', 'Funkcia') ?></th>
@@ -48,15 +48,15 @@ $this->registerJSFile('@web/assets/node_modules/toast-master/js/jquery.toast.js'
                                             </th>
                                     </tr>
                                 </thead>
-                                    <tbody>
+                                <tbody>
                                     <?php
-                                        echo $this->render('tbody',[
-                                                'groups'  =>  $groups,
-                                                'templates' => $templates,
-                                                'privileges' => $privileges
-                                        ]);
+                                    echo $this->render('tbody', [
+                                        'groups'  =>  $groups,
+                                        'templates' => $templates,
+                                        'privileges' => $privileges
+                                    ]);
                                     ?>
-                                    </tbody>
+                                </tbody>
                             </table>
                         </form>
                     </div>
@@ -73,17 +73,18 @@ $js = <<<JS
         var selectedOption = $(this).find(":selected").val();
         $.ajax({
             url: "/backoffice/template/user-func",
-            type: "get",
+            dataType: "json",
             data: { 
                 data: selectedOption
-            },
-            success: function(data)
-            {
-                console.log(data)
-            },
-            error: function(e)
-            {
-                console.log(e)
+                },
+            type: "post"
+        })
+        .done(function(res){
+            if (res.status == 'error') {
+                alert(res.message);
+            } 
+            else {
+                $('#ip01').find('tbody').empty().append(res.tbody);
             }
         });
     });
