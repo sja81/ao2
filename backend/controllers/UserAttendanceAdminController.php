@@ -8,6 +8,7 @@ use common\models\auth\AuthItem;
 use common\models\PrivilegesTemplates;
 use common\models\schools\Students;
 use common\models\users\UserAttendance;
+use common\models\users\UserFile;
 use yii\helpers\Html;
 use yii\web\Controller;
 use Yii;
@@ -93,6 +94,11 @@ class UserAttendanceAdminController extends Controller
         return $this->render('edit', [
             'title' => Yii::t('app','Dochádzka - editácia'),
             'item' => $item,
+            'files' => UserFile::find()
+                ->andWhere(['=','user_id',$item['userId']])
+                ->andWhere(['like','created_at',$item['uaDate'].'%'])
+                ->asArray()
+                ->all()
         ]);
     }
 
@@ -112,6 +118,48 @@ class UserAttendanceAdminController extends Controller
         return $result;
     }
 
+    /**
+     * @return string[]
+     */
+    public function actionUpdateAttendance()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $item = UserAttendance::findOne(['id'=>$data['uaid']]);
+        $result = ['status'=>'ok'];
+
+        if (!$item) {
+            $result = [
+                'status' => 'error',
+                'message' => Yii::t('app','Dochádzka nebola nájdená pre dátum ' . $data['uadate'])
+            ];
+        } else {
+            try{
+                $item->uaDate = $data['uadate'];
+                $item->note = $this->sanitizeString($data['uanote']);
+                $item->uaType = (int)$data['uatype'];
+                $item->inTime = $data['intime'];
+                $item->outTime = $data['outtime'];
+                $item->inIP = $data['inip'];
+                $item->outIP = $data['outip'];
+                $item->save();
+
+                $sql = "update userAttendance set diffTime=TIME_TO_SEC(TIMEDIFF(outTime,inTime)) where id={$item->id}";
+                Yii::$app->db->createCommand($sql)->execute();
+
+            } catch(\Exception $e) {
+                $result = [
+                    'status' => 'error',
+                    'message' => $e->getTraceAsString()
+                ];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @return array|string[]
+     */
     public function actionSaveAttendance()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
