@@ -81,7 +81,7 @@ $this->registerJSFile('@web/assets/node_modules/Magnific-Popup-master/dist/jquer
                                     <?php
                                    for($i=0; $i<5; $i++) {
                                        $selected = ((int)$item['uaType'] === ($i+1)) ? ' selected': '';
-                                       echo "<option value='{".($i+1)."}'{$selected}>".UserAttendance::workType($i+1)."</option>";
+                                       echo "<option value='".($i+1)."'{$selected}>".UserAttendance::workType($i+1)."</option>";
                                    }
                                     ?>
                                 </select>
@@ -147,7 +147,16 @@ removeImage = function() {
 }
 
 updateDiffTime = function() {
+    let i = $('#intime').val().split(':');
+    let o = $('#outtime').val().split(':');
+    let x = new Date(0,0,0,i[0],i[1],0);
+    let y = new Date(0,0,0,o[0],o[1],0);
+    let d = y.getTime() - x.getTime();
+    let h = Math.floor(d/1000/60/60);
+    d -= h * 1000 * 60 * 60;
+    let m = Math.floor(d/1000/60);
     
+    $('#difftime').val(h.toString().padStart(2,'0')+':'+m.toString().padStart(2,'0'));
 }
 
 $('#intime').change(function(){
@@ -163,7 +172,7 @@ $('#svatt').click(()=>{
             url: "/backoffice/user-attendance-admin/update-attendance",
             dataType: "json",
             data: { 
-                uid: $('#uaid').val(), 
+                uaid: $('#uaid').val(), 
                 uadate: $('#uadate').val(),
                 uatype: $('#uatype').val(),
                 intime: $('#intime').val(),
